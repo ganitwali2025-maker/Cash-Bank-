@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Mukta", system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", "Noto Serif Devanagari", Georgia, serif;
+  --font-display: "Cinzel", "Noto Serif Devanagari", serif;
+
+  --color-luxury-maroon: #5A0000;
+  --color-luxury-gold: #D4AF37;
+  --color-luxury-brightgold: #E8C34D;
+  --color-luxury-cream: #FFFDF8;
+  --color-luxury-cream-dark: #F5F3ED;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-luxury-cream);
+    color: #2D251E;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Print Styles */
+@media print {
+  #sidebar-container, .print\:hidden, header button, .no-print {
+    display: none !important;
+  }
+  
+  body, main {
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #reports-section {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+}

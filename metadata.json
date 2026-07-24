@@ -1,0 +1,6 @@
+{
+  "name": "Ujjwal Bhawishya Samiti",
+  "description": "मासिक बचत एवं ऋण प्रबंधन पासबुक (Monthly Savings and Loan Management Passbook) for Ujjwal Bhawishya Samiti.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
