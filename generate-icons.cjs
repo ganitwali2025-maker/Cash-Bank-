@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const inputImagePath = path.join('C:\\Users\\lr690\\.gemini\\antigravity\\brain\\52504738-6171-4f84-9052-ceba2963222c', 'media__1784876185017.png');
+const inputImagePath = path.join('C:\\Users\\lr690\\.gemini\\antigravity\\brain\\52504738-6171-4f84-9052-ceba2963222c', 'media__1784876536273.png');
 const outputDir = path.join(__dirname, 'public', 'icons');
 
 if (!fs.existsSync(outputDir)) {
@@ -17,18 +17,14 @@ async function generate() {
         const image = sharp(inputImagePath);
         const metadata = await image.metadata();
 
-        // 1. Crop out the bottom text (approx bottom 45%)
-        const cropHeight = Math.floor(metadata.height * 0.55);
-        let croppedBuffer = await image.extract({ left: 0, top: 0, width: metadata.width, height: cropHeight }).toBuffer();
-
-        // 2. Remove white background and find bounding box
-        const { data, info } = await sharp(croppedBuffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+        // 1. Remove white background and find bounding box of the FULL image
+        const { data, info } = await image.ensureAlpha().raw().toBuffer({ resolveWithObject: true });
         
         let minX = info.width, minY = info.height, maxX = 0, maxY = 0;
         let hasPixels = false;
         
         // Threshold for white
-        const threshold = 230;
+        const threshold = 240;
 
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
@@ -64,9 +60,9 @@ async function generate() {
 
         console.log("Extracted bounding box:", boxWidth, "x", boxHeight);
 
-        // 3. Generate icons with padding
+        // 2. Generate icons with padding
         for (const size of sizes) {
-            const logoSize = Math.floor(size * 0.75); // 25% padding
+            const logoSize = Math.floor(size * 0.90); // 10% padding so it fills nicely
             
             const resizedLogo = await sharp(croppedTransparentBuffer)
                 .resize(logoSize, logoSize, { fit: 'inside' })
