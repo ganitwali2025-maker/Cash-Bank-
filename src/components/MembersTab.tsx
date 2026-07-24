@@ -653,7 +653,7 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[320px] overflow-hidden group border border-gray-100"
+                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[290px] overflow-hidden group border border-gray-100"
                 >
                   {/* Card Background Decorations */}
                   <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -662,23 +662,23 @@ export default function MembersTab({
                     <div className="absolute -top-16 -left-16 w-32 h-32 sm:w-48 sm:h-48 bg-[#9a7940] rounded-full"></div>
                     <div className="absolute -top-20 -left-20 w-32 h-32 sm:w-40 sm:h-40 bg-[#470b0a] rounded-full"></div>
                     
-                    {/* Bottom Bar */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[100px] sm:h-[120px] bg-[#470b0a]"></div>
+                    {/* Bottom Bar - Reduced height from 100px/120px to ~75px */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[75px] sm:h-[80px] bg-[#470b0a]"></div>
                     
-                    {/* Bottom Right Curves */}
-                    <div className="absolute -bottom-20 -right-20 w-56 h-56 sm:w-[450px] sm:h-[450px] bg-[#b08745] rounded-full opacity-90"></div>
-                    <div className="absolute -bottom-24 -right-24 w-52 h-52 sm:w-[420px] sm:h-[420px] bg-[#470b0a] rounded-full"></div>
+                    {/* Bottom Right Curves - Reduced size by ~50% */}
+                    <div className="absolute -bottom-16 -right-16 w-36 h-36 sm:w-56 sm:h-56 bg-[#b08745] rounded-full opacity-90"></div>
+                    <div className="absolute -bottom-20 -right-20 w-32 h-32 sm:w-48 sm:h-48 bg-[#470b0a] rounded-full"></div>
 
-                    {/* Diagonal Texture */}
-                    <div className="absolute bottom-4 left-5 h-4 flex gap-2 sm:gap-4 overflow-hidden opacity-20">
+                    {/* Diagonal Texture - Reduced height */}
+                    <div className="absolute bottom-2 left-5 h-2.5 sm:h-3 flex gap-2 sm:gap-4 overflow-hidden opacity-20">
                       {[...Array(12)].map((_, i) => (
-                        <div key={i} className="w-[2px] sm:w-[3px] h-12 bg-white transform rotate-[30deg] -translate-y-2"></div>
+                        <div key={i} className="w-[2px] sm:w-[3px] h-10 bg-white transform rotate-[30deg] -translate-y-2"></div>
                       ))}
                     </div>
                   </div>
 
                   {/* Top Section */}
-                  <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1">
+                  <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1 pb-16 sm:pb-20">
                     
                     {/* Left Info */}
                     <div className="flex flex-col flex-1 pr-3 max-w-[calc(100%-100px)] sm:max-w-[calc(100%-160px)] pt-2 sm:pt-4">
@@ -730,48 +730,48 @@ export default function MembersTab({
                     </div>
                   </div>
 
-                  {/* Bottom Section */}
-                  <div className="relative z-10 px-5 pb-5 sm:px-7 sm:pb-7 flex flex-wrap items-center justify-between gap-4 mt-auto">
+                  {/* Bottom Section - Adjusted Height and Padding */}
+                  <div className="absolute bottom-0 left-0 right-0 z-10 px-5 sm:px-7 flex flex-wrap items-center justify-between gap-4 h-[75px] sm:h-[80px]">
                     
                     {/* Stats */}
-                    <div className="flex gap-4 sm:gap-8 items-center h-[80px]">
-                      <div className="flex flex-col justify-center">
-                        <p className="text-[#dcab42] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1">
+                    <div className="flex gap-4 sm:gap-8 items-center h-full py-3">
+                      <div className="flex flex-col justify-center h-full">
+                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
                           {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
                         </p>
-                        <p className="text-white text-xl sm:text-3xl font-bold font-mono leading-none">
+                        <p className="text-white text-lg sm:text-2xl font-bold font-mono leading-none">
                           ₹{totalSavings.toLocaleString('en-IN')}
                         </p>
                       </div>
-                      <div className="w-px h-10 sm:h-14 bg-white/20"></div>
-                      <div className="flex flex-col justify-center">
-                        <p className="text-[#dcab42] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1">
+                      <div className="w-px h-8 sm:h-10 bg-white/20"></div>
+                      <div className="flex flex-col justify-center h-full">
+                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
                           {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
                         </p>
-                        <p className="text-white text-xl sm:text-3xl font-bold font-mono leading-none">
+                        <p className="text-white text-lg sm:text-2xl font-bold font-mono leading-none">
                           {totalActiveLoans}
                         </p>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 sm:gap-4 shrink-0">
+                    <div className="flex gap-3 sm:gap-4 shrink-0 items-center h-full py-3">
                       <button
                         onClick={() => {
                           setSelectedMemberId(member.id);
                           setProfileTab('savings');
                         }}
-                        className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                        className="w-[36px] h-[36px] sm:w-[44px] sm:h-[44px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
                         title={t.viewProfile}
                       >
-                        <BookOpen className="w-5 h-5 text-[#470b0a]" />
+                        <BookOpen className="w-4 h-4 text-[#470b0a]" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(member)}
-                        className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                        className="w-[36px] h-[36px] sm:w-[44px] sm:h-[44px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
                         title={t.editMember}
                       >
-                        <Edit2 className="w-5 h-5 text-[#b08745]" />
+                        <Edit2 className="w-4 h-4 text-[#b08745]" />
                       </button>
                     </div>
                   </div>
