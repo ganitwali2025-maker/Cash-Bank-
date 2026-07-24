@@ -652,52 +652,112 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="bg-white rounded-lg border border-gray-100 shadow-sm p-5 hover:shadow-md transition-all flex flex-col justify-between"
+                  className="relative bg-[#FAF8F5] rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col justify-between border border-[#5A0000]/10 hover:shadow-[0_8px_25px_rgba(90,0,0,0.12)] transition-all min-h-[220px] group"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-bold text-gray-800 text-base">{member.name}</h3>
-                        <p className="text-xs text-gray-400 font-mono mt-0.5 flex items-center gap-1">
-                          <Phone className="w-3 h-3 text-[#D4AF37]" /> {member.phone}
-                        </p>
-                      </div>
-                      <span className="text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
-                        {language === 'hi' ? 'किस्त:' : 'Due:'} ₹{member.monthlyDeposit.toLocaleString('en-IN')}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 border-t border-b border-gray-50 py-3 text-xs">
-                      <div>
-                        <p className="text-gray-400 leading-none">{language === 'hi' ? 'कुल बचत' : 'Total Savings'}</p>
-                        <p className="font-black text-emerald-700 mt-1 font-mono">₹{totalSavings.toLocaleString('en-IN')}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400 leading-none">{t.activeLoans}</p>
-                        <p className="font-black text-amber-700 mt-1">{totalActiveLoans}</p>
-                      </div>
+                  {/* Decorative Background Elements */}
+                  <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none rounded-xl">
+                    {/* Top Left Swoosh */}
+                    <div className="absolute -top-24 -left-12 w-48 h-48 bg-[#D4AF37] rounded-full opacity-40"></div>
+                    <div className="absolute -top-20 -left-10 w-40 h-40 bg-[#5A0000] rounded-full"></div>
+                    <div className="absolute -top-16 -left-16 w-32 h-32 bg-[#FAF8F5] rounded-full"></div>
+                    <div className="absolute -top-20 -left-20 w-32 h-32 bg-[#D4AF37] rounded-full opacity-80"></div>
+                    
+                    {/* Bottom Solid Bar */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[70px] bg-[#5A0000]"></div>
+                    
+                    {/* Bottom Right Swoosh */}
+                    <div className="absolute -bottom-12 -right-8 w-48 h-48 bg-[#D4AF37] rounded-full opacity-40"></div>
+                    <div className="absolute -bottom-8 -right-4 w-40 h-40 bg-[#5A0000] rounded-full"></div>
+                    <div className="absolute -bottom-4 -right-12 w-32 h-32 bg-[#FAF8F5] rounded-full"></div>
+                    <div className="absolute -bottom-10 -right-20 w-40 h-40 bg-[#5A0000] rounded-full"></div>
+                    
+                    {/* Diagonal Lines Pattern at bottom bar */}
+                    <div className="absolute bottom-4 left-6 right-20 h-4 flex gap-4 overflow-hidden opacity-30">
+                      {[...Array(15)].map((_, i) => (
+                        <div key={i} className="w-[2px] h-12 bg-white transform rotate-45 -translate-y-2"></div>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      id={`view-profile-btn-${member.id}`}
-                      onClick={() => {
-                        setSelectedMemberId(member.id);
-                        setProfileTab('savings');
-                      }}
-                      className="flex-1 text-center py-2 text-[10px] uppercase tracking-wider font-bold bg-[#4a0404]/5 hover:bg-[#4a0404]/10 text-[#4a0404] rounded transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <BookOpen className="w-3.5 h-3.5" />
-                      {t.viewProfile}
-                    </button>
-                    <button
-                      onClick={() => handleOpenEdit(member)}
-                      className="p-2 bg-gray-50 hover:bg-[#faf5eb] text-[#c5a059] rounded border border-gray-100 transition-colors"
-                      title={t.editMember}
-                    >
-                      <Edit2 className="w-3.5 h-3.5" />
-                    </button>
+                  {/* Card Content */}
+                  <div className="relative z-10 p-5 flex-1 flex flex-col justify-between h-full">
+                    <div className="flex justify-between items-start gap-4">
+                      
+                      {/* Left Info */}
+                      <div className="flex-1 mt-1">
+                        <h3 className="font-serif font-bold text-xl text-[#5A0000] tracking-wide leading-tight drop-shadow-sm line-clamp-1">{member.name}</h3>
+                        <div className="text-[10px] text-[#8A4A4A] font-bold tracking-wider uppercase mt-1 mb-4 inline-block border-b border-[#8A4A4A]/30 pb-1">
+                          {language === 'hi' ? 'सदस्य (Member)' : 'Member'}
+                        </div>
+                        
+                        <div className="space-y-2.5">
+                          <div className="flex items-center gap-2.5 text-xs text-gray-700 font-medium">
+                            <div className="w-5 h-5 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-sm shrink-0">
+                              <Phone className="w-2.5 h-2.5" />
+                            </div>
+                            {member.phone}
+                          </div>
+                          
+                          <div className="flex items-center gap-2.5 text-xs text-gray-700 font-medium">
+                            <div className="w-5 h-5 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-sm shrink-0">
+                              <Calendar className="w-2.5 h-2.5" />
+                            </div>
+                            {member.joiningDate}
+                          </div>
+                          
+                          <div className="flex items-center gap-2.5 text-xs text-gray-700 font-medium">
+                            <div className="w-5 h-5 rounded-full bg-[#D4AF37] flex items-center justify-center text-[#5A0000] shadow-sm shrink-0">
+                              <PiggyBank className="w-3 h-3" />
+                            </div>
+                            ₹{member.monthlyDeposit.toLocaleString('en-IN')} / mo
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Avatar */}
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-full bg-white border-[3px] border-white outline outline-[2px] outline-[#5A0000] shadow-[0_4px_15px_rgba(90,0,0,0.15)] flex items-center justify-center relative z-10 mt-1 mr-1">
+                        <div className="w-full h-full rounded-full border border-gray-100 flex items-center justify-center overflow-hidden bg-[#FAF8F5] shadow-inner">
+                          <span className="text-3xl sm:text-4xl font-serif font-bold text-[#5A0000]">
+                            {member.name.charAt(0)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stats & Actions Row */}
+                    <div className="mt-8 flex items-end justify-between gap-2">
+                      <div className="flex gap-5">
+                        <div>
+                          <p className="text-[9px] uppercase tracking-wider text-white/70 font-bold mb-0.5">{language === 'hi' ? 'कुल बचत' : 'Total Savings'}</p>
+                          <p className="font-black text-white font-mono text-[15px] leading-none drop-shadow-md">₹{totalSavings.toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                          <p className="text-[9px] uppercase tracking-wider text-white/70 font-bold mb-0.5">{t.activeLoans}</p>
+                          <p className="font-black text-[#D4AF37] font-mono text-[15px] leading-none drop-shadow-md">{totalActiveLoans}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          id={`view-profile-btn-${member.id}`}
+                          onClick={() => {
+                            setSelectedMemberId(member.id);
+                            setProfileTab('savings');
+                          }}
+                          className="w-9 h-9 flex items-center justify-center bg-white text-[#5A0000] rounded-full shadow-md hover:scale-105 transition-transform"
+                          title={t.viewProfile}
+                        >
+                          <BookOpen className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleOpenEdit(member)}
+                          className="w-9 h-9 flex items-center justify-center bg-[#D4AF37] text-[#5A0000] rounded-full shadow-md hover:scale-105 transition-transform"
+                          title={t.editMember}
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
