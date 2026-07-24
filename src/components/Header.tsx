@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu, Calendar, User, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
 import { LanguageType } from '../types';
 import { translations } from '../translations';
+import InstallPWA from './InstallPWA';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -139,6 +140,7 @@ export default function Header({
 
         {/* User Badges */}
         <div className="flex items-center gap-3">
+          <InstallPWA />
           <button className="relative p-1.5 text-white md:text-[#4a0404] hover:bg-white/10 rounded-full transition md:hidden">
             <Bell className="w-6 h-6" />
             <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 bg-red-500 border-2 border-[#5A0000] rounded-full text-[8px] text-white flex items-center justify-center font-bold">3</span>

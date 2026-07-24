@@ -11,7 +11,7 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['icons/pwa-192x192.png', 'icons/pwa-512x512.png', 'icons/maskable-icon-512x512.png'],
+        includeAssets: ['favicon.ico', 'icons/apple-touch-icon.png', 'icons/pwa-192x192.png', 'icons/pwa-512x512.png', 'icons/maskable-icon-512x512.png'],
         manifest: {
           name: 'Cash Bank',
           short_name: 'UBS',
