@@ -644,6 +644,13 @@ export default function MembersTab({
           {/* Members list Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredMembers.map((member) => {
+              const getDisplayName = (fullName: string) => {
+                const match = fullName.match(/^(.*?)\s*\((.*?)\)$/);
+                if (match) {
+                  return language === 'hi' ? match[1].trim() : match[2].trim();
+                }
+                return fullName;
+              };
               // Stats
               const specificDeposits = deposits.filter(d => d.memberId === member.id && d.status === 'Paid');
               const totalSavings = specificDeposits.reduce((sum, d) => sum + d.amount, 0);
@@ -684,7 +691,7 @@ export default function MembersTab({
                     <div className="flex flex-col flex-1 pr-3 max-w-[calc(100%-100px)] sm:max-w-[calc(100%-160px)] pt-2 sm:pt-4">
                       {/* Name */}
                       <h3 className="font-serif font-bold text-[22px] md:text-[28px] sm:text-[32px] text-[#470b0a] leading-[1.2] drop-shadow-sm break-words whitespace-normal">
-                        {member.name}
+                        {getDisplayName(member.name)}
                       </h3>
                       {/* Badge */}
                       <div className="mt-2 mb-4">
