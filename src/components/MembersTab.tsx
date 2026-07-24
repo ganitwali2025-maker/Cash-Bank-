@@ -652,20 +652,21 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="relative bg-[#FAF8F5] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col border border-gray-100 overflow-hidden group"
+                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col border border-gray-100 overflow-hidden group"
                 >
                   {/* Card Background Decorations */}
                   <div className="absolute inset-0 pointer-events-none z-0">
                     {/* Top Left Curves */}
-                    <div className="absolute -top-16 -left-10 w-48 h-48 bg-[#c5a059] rounded-full opacity-80"></div>
-                    <div className="absolute -top-24 -left-16 w-48 h-48 bg-[#5A0000] rounded-full"></div>
+                    <div className="absolute -top-16 -left-10 w-56 h-56 bg-[#e1c170] rounded-full opacity-90"></div>
+                    <div className="absolute -top-20 -left-12 w-48 h-48 bg-[#9a7940] rounded-full"></div>
+                    <div className="absolute -top-24 -left-16 w-40 h-40 bg-[#470b0a] rounded-full"></div>
                     
                     {/* Bottom Dark Red Base */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[150px] sm:h-[130px] bg-[#5A0000]"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-[150px] sm:h-[130px] bg-[#470b0a]"></div>
                     
                     {/* Right Sweeping Curves */}
-                    <div className="absolute -bottom-40 -right-20 w-[450px] h-[450px] sm:w-[500px] sm:h-[500px] bg-[#c5a059] rounded-full opacity-90"></div>
-                    <div className="absolute -bottom-40 -right-20 w-[420px] h-[420px] sm:w-[470px] sm:h-[470px] bg-[#5A0000] rounded-full"></div>
+                    <div className="absolute -bottom-40 -right-20 w-[450px] h-[450px] sm:w-[500px] sm:h-[500px] bg-[#b08745] rounded-full opacity-90"></div>
+                    <div className="absolute -bottom-40 -right-20 w-[420px] h-[420px] sm:w-[470px] sm:h-[470px] bg-[#470b0a] rounded-full"></div>
                     
                     {/* Diagonal Lines Texture */}
                     <div className="absolute bottom-6 left-8 h-4 flex gap-4 overflow-hidden opacity-20">
@@ -680,11 +681,11 @@ export default function MembersTab({
                     {/* Info Side */}
                     <div className="flex-1 mt-2">
                       {/* Name */}
-                      <h3 className="font-serif font-bold text-[28px] sm:text-[32px] text-[#5A0000] leading-tight mb-2 drop-shadow-sm">
+                      <h3 className="font-serif font-bold text-[28px] sm:text-[32px] text-[#470b0a] leading-tight mb-2 drop-shadow-sm">
                         {member.name}
                       </h3>
                       {/* Badge */}
-                      <span className="inline-block bg-[#c5a059]/20 text-[#5A0000] text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full mb-6 shadow-sm">
+                      <span className="inline-block bg-[#ebd9b7] text-[#470b0a] text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full mb-6 shadow-sm">
                         {language === 'hi' ? 'सदस्य' : 'MEMBER'}
                       </span>
 
@@ -692,7 +693,7 @@ export default function MembersTab({
                       <div className="space-y-4">
                         {/* Phone */}
                         <div className="flex items-center gap-4">
-                          <div className="w-9 h-9 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-md shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
                             <Phone className="w-4 h-4" />
                           </div>
                           <div className="h-6 w-px bg-gray-300"></div>
@@ -700,7 +701,7 @@ export default function MembersTab({
                         </div>
                         {/* Date */}
                         <div className="flex items-center gap-4">
-                          <div className="w-9 h-9 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-md shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
                             <Calendar className="w-4 h-4" />
                           </div>
                           <div className="h-6 w-px bg-gray-300"></div>
@@ -708,7 +709,7 @@ export default function MembersTab({
                         </div>
                         {/* Deposit */}
                         <div className="flex items-center gap-4">
-                          <div className="w-9 h-9 rounded-full bg-[#c5a059] flex items-center justify-center text-[#5A0000] shadow-md shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shadow-md shrink-0">
                             <PiggyBank className="w-4 h-4" />
                           </div>
                           <div className="h-6 w-px bg-gray-300"></div>
@@ -718,8 +719,8 @@ export default function MembersTab({
                     </div>
 
                     {/* Avatar Side */}
-                    <div className="w-28 h-28 sm:w-40 sm:h-40 shrink-0 rounded-full border-[4px] border-white outline outline-[3px] outline-[#5A0000] shadow-[0_8px_16px_rgba(90,0,0,0.2)] flex items-center justify-center relative z-10 bg-[#FAF8F5] overflow-hidden ml-4 sm:ml-8 mt-2">
-                      <span className="text-5xl sm:text-7xl font-serif font-bold text-[#5A0000]">
+                    <div className="w-28 h-28 sm:w-40 sm:h-40 shrink-0 rounded-full border-[4px] border-white outline outline-[3px] outline-[#470b0a] shadow-[0_8px_16px_rgba(71,11,10,0.2)] flex items-center justify-center relative z-10 bg-[#FAF8F5] overflow-hidden ml-4 sm:ml-8 mt-2">
+                      <span className="text-5xl sm:text-7xl font-serif font-bold text-[#470b0a]">
                         {member.name.charAt(0)}
                       </span>
                     </div>
@@ -730,7 +731,7 @@ export default function MembersTab({
                     {/* Stats */}
                     <div className="flex gap-8 sm:gap-12 w-full sm:w-auto mt-2 sm:mt-0">
                       <div>
-                        <p className="text-[#c5a059] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
+                        <p className="text-[#dcab42] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
                           {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
                         </p>
                         <p className="text-white text-3xl sm:text-4xl font-bold font-mono">
@@ -739,7 +740,7 @@ export default function MembersTab({
                       </div>
                       <div className="w-px bg-white/20 self-stretch"></div>
                       <div>
-                        <p className="text-[#c5a059] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
+                        <p className="text-[#dcab42] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
                           {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
                         </p>
                         <p className="text-white text-3xl sm:text-4xl font-bold font-mono">
@@ -759,14 +760,14 @@ export default function MembersTab({
                         className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform shrink-0"
                         title={t.viewProfile}
                       >
-                        <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-[#5A0000]" />
+                        <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-[#470b0a]" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(member)}
                         className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform shrink-0"
                         title={t.editMember}
                       >
-                        <Edit2 className="w-6 h-6 sm:w-7 sm:h-7 text-[#c5a059]" />
+                        <Edit2 className="w-6 h-6 sm:w-7 sm:h-7 text-[#b08745]" />
                       </button>
                     </div>
                   </div>
