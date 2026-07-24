@@ -16,24 +16,25 @@ export default defineConfig(() => {
           name: 'Ujjwal Bhavishya',
           short_name: 'UB',
           display: 'standalone',
-          display_override: ['standalone', 'window-controls-overlay'],
+          display_override: ['standalone'],
           orientation: 'portrait',
           theme_color: '#5A0000',
           background_color: '#FFF8F3',
           start_url: '/',
           scope: '/',
+          categories: ['finance', 'productivity'],
           icons: [
             {
               src: '/icons/icon-192-maskable.png',
               sizes: '192x192',
               type: 'image/png',
-              purpose: 'maskable any'
+              purpose: 'any maskable'
             },
             {
               src: '/icons/icon-512-maskable.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'maskable any'
+              purpose: 'any maskable'
             }
           ]
         },
