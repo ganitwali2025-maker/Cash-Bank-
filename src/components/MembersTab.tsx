@@ -654,120 +654,120 @@ export default function MembersTab({
                   id={`member-card-${member.id}`}
                   className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col border border-gray-100 overflow-hidden group"
                 >
-                  {/* Card Background Decorations */}
-                  <div className="absolute inset-0 pointer-events-none z-0">
+                  {/* Card Background Decorations (Responsive Percentages) */}
+                  <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
                     {/* Top Left Curves */}
-                    <div className="absolute -top-16 -left-10 w-56 h-56 bg-[#e1c170] rounded-full opacity-90"></div>
-                    <div className="absolute -top-20 -left-12 w-48 h-48 bg-[#9a7940] rounded-full"></div>
-                    <div className="absolute -top-24 -left-16 w-40 h-40 bg-[#470b0a] rounded-full"></div>
+                    <div className="absolute -top-[15%] -left-[15%] w-[65%] aspect-square bg-[#e1c170] rounded-full opacity-90"></div>
+                    <div className="absolute -top-[20%] -left-[15%] w-[55%] aspect-square bg-[#9a7940] rounded-full"></div>
+                    <div className="absolute -top-[25%] -left-[15%] w-[45%] aspect-square bg-[#470b0a] rounded-full"></div>
                     
                     {/* Bottom Dark Red Base */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[150px] sm:h-[130px] bg-[#470b0a]"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-[35%] bg-[#470b0a]"></div>
                     
                     {/* Right Sweeping Curves */}
-                    <div className="absolute -bottom-40 -right-20 w-[450px] h-[450px] sm:w-[500px] sm:h-[500px] bg-[#b08745] rounded-full opacity-90"></div>
-                    <div className="absolute -bottom-40 -right-20 w-[420px] h-[420px] sm:w-[470px] sm:h-[470px] bg-[#470b0a] rounded-full"></div>
+                    <div className="absolute -bottom-[35%] -right-[20%] w-[110%] aspect-square bg-[#b08745] rounded-full opacity-90"></div>
+                    <div className="absolute -bottom-[40%] -right-[20%] w-[100%] aspect-square bg-[#470b0a] rounded-full"></div>
                     
                     {/* Diagonal Lines Texture */}
-                    <div className="absolute bottom-6 left-8 h-4 flex gap-4 overflow-hidden opacity-20">
-                      {[...Array(15)].map((_, i) => (
+                    <div className="absolute bottom-4 left-6 h-4 flex gap-3 overflow-hidden opacity-20">
+                      {[...Array(12)].map((_, i) => (
                         <div key={i} className="w-[3px] h-12 bg-white transform rotate-[30deg] -translate-y-2"></div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Top Content (White/Cream Background Area) */}
-                  <div className="relative z-10 px-6 sm:px-8 pt-10 pb-8 flex justify-between items-start min-h-[220px]">
+                  {/* Top Content */}
+                  <div className="relative z-10 p-5 sm:p-7 flex justify-between items-start min-h-[60%]">
                     {/* Info Side */}
-                    <div className="flex-1 mt-2">
+                    <div className="flex-1 mt-1 pr-2">
                       {/* Name */}
-                      <h3 className="font-serif font-bold text-[28px] sm:text-[32px] text-[#470b0a] leading-tight mb-2 drop-shadow-sm">
+                      <h3 className="font-serif font-bold text-xl sm:text-2xl lg:text-[26px] text-[#470b0a] leading-tight mb-2 drop-shadow-sm">
                         {member.name}
                       </h3>
                       {/* Badge */}
-                      <span className="inline-block bg-[#ebd9b7] text-[#470b0a] text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full mb-6 shadow-sm">
+                      <span className="inline-block bg-[#ebd9b7] text-[#470b0a] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4 shadow-sm">
                         {language === 'hi' ? 'सदस्य' : 'MEMBER'}
                       </span>
 
                       {/* Details List */}
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {/* Phone */}
-                        <div className="flex items-center gap-4">
-                          <div className="w-9 h-9 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
-                            <Phone className="w-4 h-4" />
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
+                            <Phone className="w-3.5 h-3.5" />
                           </div>
-                          <div className="h-6 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[15px] sm:text-[16px]">{member.phone}</span>
+                          <div className="h-5 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[13px] sm:text-[14px] truncate">{member.phone}</span>
                         </div>
                         {/* Date */}
-                        <div className="flex items-center gap-4">
-                          <div className="w-9 h-9 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
-                            <Calendar className="w-4 h-4" />
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
+                            <Calendar className="w-3.5 h-3.5" />
                           </div>
-                          <div className="h-6 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[15px] sm:text-[16px]">{member.joiningDate}</span>
+                          <div className="h-5 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[13px] sm:text-[14px] truncate">{member.joiningDate}</span>
                         </div>
                         {/* Deposit */}
-                        <div className="flex items-center gap-4">
-                          <div className="w-9 h-9 rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shadow-md shrink-0">
-                            <PiggyBank className="w-4 h-4" />
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shadow-md shrink-0">
+                            <PiggyBank className="w-3.5 h-3.5" />
                           </div>
-                          <div className="h-6 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[15px] sm:text-[16px]">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
+                          <div className="h-5 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[13px] sm:text-[14px] truncate">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Avatar Side */}
-                    <div className="w-28 h-28 sm:w-40 sm:h-40 shrink-0 rounded-full border-[4px] border-white outline outline-[3px] outline-[#470b0a] shadow-[0_8px_16px_rgba(71,11,10,0.2)] flex items-center justify-center relative z-10 bg-[#FAF8F5] overflow-hidden ml-4 sm:ml-8 mt-2">
-                      <span className="text-5xl sm:text-7xl font-serif font-bold text-[#470b0a]">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 shrink-0 rounded-full border-[3px] border-white outline outline-[2px] outline-[#470b0a] shadow-[0_8px_16px_rgba(71,11,10,0.2)] flex items-center justify-center relative z-10 bg-[#FAF8F5] overflow-hidden ml-2 mt-1">
+                      <span className="text-4xl sm:text-5xl font-serif font-bold text-[#470b0a]">
                         {member.name.charAt(0)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Bottom Content (Dark Red Area) */}
-                  <div className="relative z-10 px-6 sm:px-8 py-6 sm:py-0 flex flex-col sm:flex-row justify-between items-center gap-6 h-auto sm:h-[130px] mt-auto">
+                  {/* Bottom Content */}
+                  <div className="relative z-10 p-5 sm:p-7 flex items-center justify-between gap-4 mt-auto">
                     {/* Stats */}
-                    <div className="flex gap-8 sm:gap-12 w-full sm:w-auto mt-2 sm:mt-0">
+                    <div className="flex gap-4 sm:gap-8 flex-1">
                       <div>
-                        <p className="text-[#dcab42] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
+                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
                           {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
                         </p>
-                        <p className="text-white text-3xl sm:text-4xl font-bold font-mono">
+                        <p className="text-white text-xl sm:text-2xl font-bold font-mono">
                           ₹{totalSavings.toLocaleString('en-IN')}
                         </p>
                       </div>
-                      <div className="w-px bg-white/20 self-stretch"></div>
+                      <div className="w-px bg-white/20 self-stretch my-1"></div>
                       <div>
-                        <p className="text-[#dcab42] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
+                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
                           {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
                         </p>
-                        <p className="text-white text-3xl sm:text-4xl font-bold font-mono">
+                        <p className="text-white text-xl sm:text-2xl font-bold font-mono">
                           {totalActiveLoans}
                         </p>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-4 sm:gap-5 w-full sm:w-auto justify-end pb-2 sm:pb-0">
+                    <div className="flex gap-3 shrink-0">
                       <button
                         id={`view-profile-btn-${member.id}`}
                         onClick={() => {
                           setSelectedMemberId(member.id);
                           setProfileTab('savings');
                         }}
-                        className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform shrink-0"
+                        className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
                         title={t.viewProfile}
                       >
-                        <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-[#470b0a]" />
+                        <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#470b0a]" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(member)}
-                        className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform shrink-0"
+                        className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
                         title={t.editMember}
                       >
-                        <Edit2 className="w-6 h-6 sm:w-7 sm:h-7 text-[#b08745]" />
+                        <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#b08745]" />
                       </button>
                     </div>
                   </div>
