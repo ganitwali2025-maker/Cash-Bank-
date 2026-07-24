@@ -12,7 +12,8 @@ import {
   Undo2, 
   Plus,
   BookOpen,
-  DollarSign
+  DollarSign,
+  User
 } from 'lucide-react';
 import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -652,122 +653,125 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col border border-gray-100 overflow-hidden group"
+                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[320px] overflow-hidden group border border-gray-100"
                 >
-                  {/* Card Background Decorations (Responsive Percentages) */}
+                  {/* Card Background Decorations */}
                   <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                    {/* Top Left Curves */}
-                    <div className="absolute -top-[15%] -left-[15%] w-[65%] aspect-square bg-[#e1c170] rounded-full opacity-90"></div>
-                    <div className="absolute -top-[20%] -left-[15%] w-[55%] aspect-square bg-[#9a7940] rounded-full"></div>
-                    <div className="absolute -top-[25%] -left-[15%] w-[45%] aspect-square bg-[#470b0a] rounded-full"></div>
+                    {/* Top Left Curves (Fixed size limits to prevent overlap) */}
+                    <div className="absolute -top-12 -left-12 w-32 h-32 sm:w-56 sm:h-56 bg-[#e1c170] rounded-full opacity-90"></div>
+                    <div className="absolute -top-16 -left-16 w-32 h-32 sm:w-48 sm:h-48 bg-[#9a7940] rounded-full"></div>
+                    <div className="absolute -top-20 -left-20 w-32 h-32 sm:w-40 sm:h-40 bg-[#470b0a] rounded-full"></div>
                     
-                    {/* Bottom Dark Red Base */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[35%] bg-[#470b0a]"></div>
+                    {/* Bottom Bar */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[100px] sm:h-[120px] bg-[#470b0a]"></div>
                     
-                    {/* Right Sweeping Curves */}
-                    <div className="absolute -bottom-[35%] -right-[20%] w-[110%] aspect-square bg-[#b08745] rounded-full opacity-90"></div>
-                    <div className="absolute -bottom-[40%] -right-[20%] w-[100%] aspect-square bg-[#470b0a] rounded-full"></div>
-                    
-                    {/* Diagonal Lines Texture */}
-                    <div className="absolute bottom-4 left-6 h-4 flex gap-3 overflow-hidden opacity-20">
+                    {/* Bottom Right Curves */}
+                    <div className="absolute -bottom-20 -right-20 w-56 h-56 sm:w-[450px] sm:h-[450px] bg-[#b08745] rounded-full opacity-90"></div>
+                    <div className="absolute -bottom-24 -right-24 w-52 h-52 sm:w-[420px] sm:h-[420px] bg-[#470b0a] rounded-full"></div>
+
+                    {/* Diagonal Texture */}
+                    <div className="absolute bottom-4 left-5 h-4 flex gap-2 sm:gap-4 overflow-hidden opacity-20">
                       {[...Array(12)].map((_, i) => (
-                        <div key={i} className="w-[3px] h-12 bg-white transform rotate-[30deg] -translate-y-2"></div>
+                        <div key={i} className="w-[2px] sm:w-[3px] h-12 bg-white transform rotate-[30deg] -translate-y-2"></div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Top Content */}
-                  <div className="relative z-10 p-5 sm:p-7 flex justify-between items-start min-h-[60%]">
-                    {/* Info Side */}
-                    <div className="flex-1 mt-1 pr-2">
+                  {/* Top Section */}
+                  <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1">
+                    
+                    {/* Left Info */}
+                    <div className="flex flex-col flex-1 pr-3 max-w-[calc(100%-100px)] sm:max-w-[calc(100%-160px)] pt-2 sm:pt-4">
                       {/* Name */}
-                      <h3 className="font-serif font-bold text-xl sm:text-2xl lg:text-[26px] text-[#470b0a] leading-tight mb-2 drop-shadow-sm">
+                      <h3 className="font-serif font-bold text-[22px] md:text-[28px] sm:text-[32px] text-[#470b0a] leading-[1.2] drop-shadow-sm break-words whitespace-normal">
                         {member.name}
                       </h3>
                       {/* Badge */}
-                      <span className="inline-block bg-[#ebd9b7] text-[#470b0a] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4 shadow-sm">
-                        {language === 'hi' ? 'सदस्य' : 'MEMBER'}
-                      </span>
+                      <div className="mt-2 mb-4">
+                        <span className="inline-block w-fit bg-[#ebd9b7] text-[#470b0a] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                          {language === 'hi' ? 'सदस्य' : 'MEMBER'}
+                        </span>
+                      </div>
 
                       {/* Details List */}
-                      <div className="space-y-3">
+                      <div className="flex flex-col">
                         {/* Phone */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
-                            <Phone className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-[12px] h-[44px]">
+                          <div className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
+                            <Phone className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
                           </div>
-                          <div className="h-5 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[13px] sm:text-[14px] truncate">{member.phone}</span>
+                          <div className="h-full w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[13px] sm:text-[15px] truncate">{member.phone}</span>
                         </div>
                         {/* Date */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-full bg-[#470b0a] flex items-center justify-center text-white shadow-md shrink-0">
-                            <Calendar className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-[12px] h-[44px]">
+                          <div className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
+                            <Calendar className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
                           </div>
-                          <div className="h-5 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[13px] sm:text-[14px] truncate">{member.joiningDate}</span>
+                          <div className="h-full w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[13px] sm:text-[15px] truncate">{member.joiningDate}</span>
                         </div>
                         {/* Deposit */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shadow-md shrink-0">
-                            <PiggyBank className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-[12px] h-[44px]">
+                          <div className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shrink-0 shadow-sm">
+                            <PiggyBank className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
                           </div>
-                          <div className="h-5 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[13px] sm:text-[14px] truncate">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
+                          <div className="h-full w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[13px] sm:text-[15px] truncate">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Avatar Side */}
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 shrink-0 rounded-full border-[3px] border-white outline outline-[2px] outline-[#470b0a] shadow-[0_8px_16px_rgba(71,11,10,0.2)] flex items-center justify-center relative z-10 bg-[#FAF8F5] overflow-hidden ml-2 mt-1">
-                      <span className="text-4xl sm:text-5xl font-serif font-bold text-[#470b0a]">
-                        {member.name.charAt(0)}
-                      </span>
+                    {/* Right Avatar */}
+                    <div className="w-[90px] h-[90px] sm:w-[140px] sm:h-[140px] shrink-0 rounded-full border-[3px] sm:border-[4px] border-white outline outline-[2px] sm:outline-[3px] outline-[#470b0a] shadow-[0_4px_15px_rgba(71,11,10,0.15)] flex items-center justify-center bg-[#FAF8F5] overflow-hidden mt-2 object-cover">
+                      <div className="w-full h-full bg-[#ebd9b7] flex items-center justify-center text-[#470b0a]">
+                        <User className="w-10 h-10 sm:w-16 sm:h-16 opacity-80" />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Bottom Content */}
-                  <div className="relative z-10 p-5 sm:p-7 flex items-center justify-between gap-4 mt-auto">
+                  {/* Bottom Section */}
+                  <div className="relative z-10 px-5 pb-5 sm:px-7 sm:pb-7 flex flex-wrap items-center justify-between gap-4 mt-auto">
+                    
                     {/* Stats */}
-                    <div className="flex gap-4 sm:gap-8 flex-1">
-                      <div>
-                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
+                    <div className="flex gap-4 sm:gap-8 items-center h-[80px]">
+                      <div className="flex flex-col justify-center">
+                        <p className="text-[#dcab42] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1">
                           {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
                         </p>
-                        <p className="text-white text-xl sm:text-2xl font-bold font-mono">
+                        <p className="text-white text-xl sm:text-3xl font-bold font-mono leading-none">
                           ₹{totalSavings.toLocaleString('en-IN')}
                         </p>
                       </div>
-                      <div className="w-px bg-white/20 self-stretch my-1"></div>
-                      <div>
-                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
+                      <div className="w-px h-10 sm:h-14 bg-white/20"></div>
+                      <div className="flex flex-col justify-center">
+                        <p className="text-[#dcab42] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1">
                           {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
                         </p>
-                        <p className="text-white text-xl sm:text-2xl font-bold font-mono">
+                        <p className="text-white text-xl sm:text-3xl font-bold font-mono leading-none">
                           {totalActiveLoans}
                         </p>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 shrink-0">
+                    <div className="flex gap-3 sm:gap-4 shrink-0">
                       <button
-                        id={`view-profile-btn-${member.id}`}
                         onClick={() => {
                           setSelectedMemberId(member.id);
                           setProfileTab('savings');
                         }}
-                        className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                        className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
                         title={t.viewProfile}
                       >
-                        <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#470b0a]" />
+                        <BookOpen className="w-5 h-5 text-[#470b0a]" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(member)}
-                        className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                        className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
                         title={t.editMember}
                       >
-                        <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#b08745]" />
+                        <Edit2 className="w-5 h-5 text-[#b08745]" />
                       </button>
                     </div>
                   </div>
