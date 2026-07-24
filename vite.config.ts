@@ -11,33 +11,29 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'icons/apple-touch-icon.png', 'icons/pwa-192x192.png', 'icons/pwa-512x512.png', 'icons/maskable-icon-512x512.png'],
+        includeAssets: ['favicon.ico', 'icons/apple-touch-icon.png', 'icons/icon-192-maskable.png', 'icons/icon-512-maskable.png'],
         manifest: {
-          name: 'Cash Bank',
-          short_name: 'UBS',
-          description: 'Ujjwal Bhawishya Samiti Budget Summary',
+          name: 'Ujjwal Bhavishya',
+          short_name: 'UB',
+          display: 'standalone',
+          display_override: ['standalone', 'window-controls-overlay'],
+          orientation: 'portrait',
           theme_color: '#5A0000',
           background_color: '#FFF8F3',
-          display: 'standalone',
           start_url: '/',
           scope: '/',
-          orientation: 'portrait',
           icons: [
             {
-              src: 'icons/pwa-192x192.png',
+              src: '/icons/icon-192-maskable.png',
               sizes: '192x192',
-              type: 'image/png'
+              type: 'image/png',
+              purpose: 'maskable any'
             },
             {
-              src: 'icons/pwa-512x512.png',
-              sizes: '512x512',
-              type: 'image/png'
-            },
-            {
-              src: 'icons/maskable-icon-512x512.png',
+              src: '/icons/icon-512-maskable.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'any maskable'
+              purpose: 'maskable any'
             }
           ]
         },

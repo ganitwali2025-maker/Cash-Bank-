@@ -78,9 +78,17 @@ async function generate() {
             
             await finalImage.toFile(path.join(outputDir, `icon-${size}x${size}.png`));
             
-            if (size === 192) await finalImage.toFile(path.join(outputDir, `pwa-192x192.png`));
+            if (size === 192) {
+                await finalImage.toFile(path.join(outputDir, `pwa-192x192.png`));
+                await sharp({
+                    create: { width: size, height: size, channels: 4, background: '#FFF8F3' }
+                }).composite([{ input: resizedLogo, gravity: 'center' }]).png().toFile(path.join(outputDir, `icon-192-maskable.png`));
+            }
             if (size === 512) {
                 await finalImage.toFile(path.join(outputDir, `pwa-512x512.png`));
+                await sharp({
+                    create: { width: size, height: size, channels: 4, background: '#FFF8F3' }
+                }).composite([{ input: resizedLogo, gravity: 'center' }]).png().toFile(path.join(outputDir, `icon-512-maskable.png`));
                 await sharp({
                     create: { width: size, height: size, channels: 4, background: '#FFF8F3' }
                 }).composite([{ input: resizedLogo, gravity: 'center' }]).png().toFile(path.join(outputDir, `maskable-icon-512x512.png`));
