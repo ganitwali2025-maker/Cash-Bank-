@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Icon Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #FFF8F3; color: #5A0000; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(90,0,0,0.08); margin-bottom: 24px; }
+        h1 { margin-top: 0; color: #5A0000; }
+        .control-group { margin-bottom: 16px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; }
+        input[type="range"] { width: 100%; accent-color: #D4AF37; }
+        .preview-container { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+        .canvas-wrapper { position: relative; border: 2px dashed #D4AF37; border-radius: 8px; overflow: hidden; background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/OweD3vw8+DBBEyhgZDDqAIIRAABs2B8FsF/T1wAAAABJRU5ErkJggg=='); }
+        canvas { display: block; max-width: 100%; height: auto; }
+        .crop-line { position: absolute; left: 0; right: 0; border-top: 2px solid red; z-index: 10; cursor: ns-resize; }
+        button { background: #5A0000; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #7A0000; }
+        .result-preview { width: 192px; height: 192px; border-radius: 20%; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; overflow: hidden;}
+        .result-preview img { max-width: 80%; max-height: 80%; object-fit: contain; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🛠️ Premium PWA Icon Generator</h1>
+        <p>This tool will automatically remove the white background, crop out the Hindi text, center the logo, and generate all required PWA icon sizes in a single ZIP file.</p>
+        
+        <div class="control-group">
+            <label>1. Upload the Logo Image</label>
+            <input type="file" id="imageInput" accept="image/png, image/jpeg" />
+        </div>
+
+        <div class="control-group">
+            <label>2. Adjust Crop Line (Removes text below the red line)</label>
+            <input type="range" id="cropSlider" min="0" max="100" value="55" />
+        </div>
+
+        <div class="control-group">
+            <label>3. White Background Removal Tolerance</label>
+            <input type="range" id="toleranceSlider" min="0" max="100" value="10" />
+        </div>
+    </div>
+
+    <div class="card" id="previewCard" style="display: none;">
+        <h2>Preview</h2>
+        <div class="preview-container">
+            <div>
+                <h3>Original Image (Adjust Crop)</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="sourceCanvas"></canvas>
+                    <div id="cropOverlay" class="crop-line"></div>
+                </div>
+            </div>
+            <div>
+                <h3>Final App Icon (192x192)</h3>
+                <div class="result-preview" style="background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/OweD3vw8+DBBEyhgZDDqAIIRAABs2B8FsF/T1wAAAABJRU5ErkJggg==');">
+                    <canvas id="resultCanvas" width="192" height="192" style="width: 192px; height: 192px;"></canvas>
+                </div>
+                <br/>
+                <button id="downloadBtn">Download All Icons (ZIP)</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const sourceCanvas = document.getElementById('sourceCanvas');
+    const resultCanvas = document.getElementById('resultCanvas');
+    const sourceCtx = sourceCanvas.getContext('2d');
+    const resultCtx = resultCanvas.getContext('2d');
+    const cropSlider = document.getElementById('cropSlider');
+    const toleranceSlider = document.getElementById('toleranceSlider');
+    const cropOverlay = document.getElementById('cropOverlay');
+    
+    let originalImage = null;
+    const sizes = [16, 32, 48, 64, 72, 96, 128, 144, 152, 180, 192, 256, 384, 512, 1024];
+
+    imageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                originalImage = img;
+                document.getElementById('previewCard').style.display = 'block';
+                
+                // Scale down for preview if too large
+                const MAX_WIDTH = 400;
+                let scale = 1;
+                if (img.width > MAX_WIDTH) {
+                    scale = MAX_WIDTH / img.width;
+                }
+                
+                sourceCanvas.width = img.width * scale;
+                sourceCanvas.height = img.height * scale;
+                sourceCtx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
+                
+                processImage();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    [cropSlider, toleranceSlider].forEach(el => el.addEventListener('input', () => {
+        if (originalImage) processImage();
+    }));
+
+    function processImage() {
+        // Update crop line visually
+        const cropPercent = cropSlider.value;
+        cropOverlay.style.top = `${cropPercent}%`;
+
+        // Create an offscreen canvas for processing the full resolution image
+        const off = document.createElement('canvas');
+        off.width = originalImage.width;
+        // Crop height
+        const cropHeight = Math.floor(originalImage.height * (cropPercent / 100));
+        off.height = cropHeight;
+        const offCtx = off.getContext('2d', { willReadFrequently: true });
+        
+        // Draw only the cropped portion
+        offCtx.drawImage(originalImage, 0, 0, originalImage.width, cropHeight, 0, 0, originalImage.width, cropHeight);
+
+        // Remove white background
+        const imageData = offCtx.getImageData(0, 0, off.width, off.height);
+        const data = imageData.data;
+        const tolerance = parseInt(toleranceSlider.value); // 0-100
+        const threshold = 255 - (tolerance * 2.55); // Convert % to 0-255 range
+
+        let minX = off.width, minY = off.height, maxX = 0, maxY = 0;
+        let hasPixels = false;
+
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i+1];
+            const b = data[i+2];
+            const a = data[i+3];
+
+            // If pixel is white-ish, make it transparent
+            if (r > threshold && g > threshold && b > threshold) {
+                data[i+3] = 0; // Alpha 0
+            } else if (a > 10) {
+                // Track bounding box of non-transparent pixels
+                const x = (i / 4) % off.width;
+                const y = Math.floor((i / 4) / off.width);
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+                hasPixels = true;
+            }
+        }
+
+        offCtx.putImageData(imageData, 0, 0);
+
+        if (!hasPixels) return;
+
+        // Bounding box dimensions
+        const boxWidth = maxX - minX;
+        const boxHeight = maxY - minY;
+        const size = Math.max(boxWidth, boxHeight);
+        
+        // Add 15% padding so it looks good in a circle/square
+        const paddedSize = size * 1.3; 
+        
+        // Draw to result canvas (192x192 preview)
+        resultCtx.clearRect(0, 0, 192, 192);
+        
+        // Calculate center
+        const scale = 192 / paddedSize;
+        const dx = (192 - (boxWidth * scale)) / 2;
+        const dy = (192 - (boxHeight * scale)) / 2;
+
+        resultCtx.drawImage(off, minX, minY, boxWidth, boxHeight, dx, dy, boxWidth * scale, boxHeight * scale);
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+        if (!originalImage) return;
+        
+        const zip = new JSZip();
+        const iconsFolder = zip.folder("icons");
+        
+        // Repeat processing to get the cropped/transparent offscreen canvas
+        const cropPercent = cropSlider.value;
+        const off = document.createElement('canvas');
+        off.width = originalImage.width;
+        const cropHeight = Math.floor(originalImage.height * (cropPercent / 100));
+        off.height = cropHeight;
+        const offCtx = off.getContext('2d', { willReadFrequently: true });
+        offCtx.drawImage(originalImage, 0, 0, originalImage.width, cropHeight, 0, 0, originalImage.width, cropHeight);
+        
+        const imageData = offCtx.getImageData(0, 0, off.width, off.height);
+        const data = imageData.data;
+        const tolerance = parseInt(toleranceSlider.value);
+        const threshold = 255 - (tolerance * 2.55);
+        let minX = off.width, minY = off.height, maxX = 0, maxY = 0;
+        
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i] > threshold && data[i+1] > threshold && data[i+2] > threshold) {
+                data[i+3] = 0;
+            } else if (data[i+3] > 10) {
+                const x = (i / 4) % off.width;
+                const y = Math.floor((i / 4) / off.width);
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+        offCtx.putImageData(imageData, 0, 0);
+
+        const boxWidth = maxX - minX;
+        const boxHeight = maxY - minY;
+        const size = Math.max(boxWidth, boxHeight);
+        const paddedSize = size * 1.3;
+
+        // Generate all sizes
+        for (const s of sizes) {
+            const c = document.createElement('canvas');
+            c.width = s;
+            c.height = s;
+            const ctx = c.getContext('2d');
+            
+            const scale = s / paddedSize;
+            const dx = (s - (boxWidth * scale)) / 2;
+            const dy = (s - (boxHeight * scale)) / 2;
+            
+            ctx.drawImage(off, minX, minY, boxWidth, boxHeight, dx, dy, boxWidth * scale, boxHeight * scale);
+            
+            const base64 = c.toDataURL('image/png').split(',')[1];
+            
+            if (s === 16) iconsFolder.file('favicon.ico', base64, {base64: true});
+            iconsFolder.file(`pwa-${s}x${s}.png`, base64, {base64: true});
+            if (s === 512) iconsFolder.file(`maskable-icon-512x512.png`, base64, {base64: true});
+        }
+
+        zip.generateAsync({type:"blob"}).then(function(content) {
+            saveAs(content, "CashBank-PWA-Icons.zip");
+        });
+    });
+
+</script>
+</body>
+</html>
