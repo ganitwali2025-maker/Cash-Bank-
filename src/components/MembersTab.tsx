@@ -660,126 +660,165 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[290px] overflow-hidden group border border-gray-100"
+                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[250px] overflow-hidden group border border-gray-100"
                 >
                   {/* Card Background Decorations */}
                   <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                    {/* Top Left Curves (Fixed size limits to prevent overlap) */}
-                    <div className="absolute -top-12 -left-12 w-32 h-32 sm:w-56 sm:h-56 bg-[#e1c170] rounded-full opacity-90"></div>
-                    <div className="absolute -top-16 -left-16 w-32 h-32 sm:w-48 sm:h-48 bg-[#9a7940] rounded-full"></div>
-                    <div className="absolute -top-20 -left-20 w-32 h-32 sm:w-40 sm:h-40 bg-[#470b0a] rounded-full"></div>
+                    {/* Top Left Curves (Smaller, tighter to corner) */}
+                    <div className="absolute -top-16 -left-16 w-32 h-32 sm:w-48 sm:h-48 bg-[#e1c170] rounded-full opacity-90"></div>
+                    <div className="absolute -top-20 -left-20 w-32 h-32 sm:w-40 sm:h-40 bg-[#9a7940] rounded-full"></div>
+                    <div className="absolute -top-24 -left-24 w-32 h-32 sm:w-32 sm:h-32 bg-[#470b0a] rounded-full"></div>
                     
-                    {/* Bottom Bar - Reduced height from 100px/120px to ~75px */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[75px] sm:h-[80px] bg-[#470b0a]"></div>
+                    {/* Bottom Bar - Fixed height */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[85px] sm:h-[90px] bg-[#470b0a]"></div>
                     
-                    {/* Bottom Right Curves - Reduced size by ~50% */}
-                    <div className="absolute -bottom-16 -right-16 w-36 h-36 sm:w-56 sm:h-56 bg-[#b08745] rounded-full opacity-90"></div>
-                    <div className="absolute -bottom-20 -right-20 w-32 h-32 sm:w-48 sm:h-48 bg-[#470b0a] rounded-full"></div>
+                    {/* Bottom Right Gold Curve */}
+                    <div className="absolute -bottom-16 -right-10 w-32 h-32 sm:w-48 sm:h-48 bg-[#b08745] rounded-full opacity-90"></div>
 
-                    {/* Diagonal Texture - Reduced height */}
-                    <div className="absolute bottom-2 left-5 h-2.5 sm:h-3 flex gap-2 sm:gap-4 overflow-hidden opacity-20">
-                      {[...Array(12)].map((_, i) => (
-                        <div key={i} className="w-[2px] sm:w-[3px] h-10 bg-white transform rotate-[30deg] -translate-y-2"></div>
+                    {/* Diagonal Texture */}
+                    <div className="absolute bottom-2 left-6 h-3 flex gap-2 sm:gap-3 overflow-hidden opacity-10">
+                      {[...Array(15)].map((_, i) => (
+                        <div key={i} className="w-[2px] h-10 bg-white transform rotate-[30deg] -translate-y-2"></div>
                       ))}
                     </div>
                   </div>
 
                   {/* Top Section */}
-                  <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1 pb-16 sm:pb-20">
+                  <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1 pb-24">
                     
                     {/* Left Info */}
-                    <div className="flex flex-col flex-1 pr-3 max-w-[calc(100%-100px)] sm:max-w-[calc(100%-160px)] pt-2 sm:pt-4">
+                    <div className="flex flex-col flex-1 pr-2 pt-1">
                       {/* Name */}
-                      <h3 className="font-serif font-bold text-[22px] md:text-[28px] sm:text-[32px] text-[#470b0a] leading-[1.2] drop-shadow-sm break-words whitespace-normal">
+                      <h3 className="font-serif font-bold text-[24px] sm:text-[30px] lg:text-[32px] text-[#470b0a] leading-[1.1] drop-shadow-sm mb-2 break-words">
                         {getDisplayName(member.name)}
                       </h3>
                       {/* Badge */}
-                      <div className="mt-2 mb-4">
-                        <span className="inline-block w-fit bg-[#ebd9b7] text-[#470b0a] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                      <div className="mb-4">
+                        <span className="inline-block w-fit bg-[#ebd9b7] text-[#470b0a] text-[11px] sm:text-[13px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
                           {language === 'hi' ? 'सदस्य' : 'MEMBER'}
                         </span>
                       </div>
 
                       {/* Details List */}
-                      <div className="flex flex-col">
+                      <div className="flex flex-col gap-2">
                         {/* Phone */}
-                        <div className="flex items-center gap-[12px] h-[44px]">
-                          <div className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
+                        <div className="flex items-center gap-[12px]">
+                          <div className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
                             <Phone className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
                           </div>
-                          <div className="h-full w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[13px] sm:text-[15px] truncate">{member.phone}</span>
+                          <div className="h-5 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[14px] sm:text-[16px] truncate">{member.phone}</span>
                         </div>
                         {/* Date */}
-                        <div className="flex items-center gap-[12px] h-[44px]">
-                          <div className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
+                        <div className="flex items-center gap-[12px]">
+                          <div className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
                             <Calendar className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
                           </div>
-                          <div className="h-full w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[13px] sm:text-[15px] truncate">{member.joiningDate}</span>
+                          <div className="h-5 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[14px] sm:text-[16px] truncate">{member.joiningDate}</span>
                         </div>
                         {/* Deposit */}
-                        <div className="flex items-center gap-[12px] h-[44px]">
-                          <div className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shrink-0 shadow-sm">
+                        <div className="flex items-center gap-[12px]">
+                          <div className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shrink-0 shadow-sm">
                             <PiggyBank className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
                           </div>
-                          <div className="h-full w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[13px] sm:text-[15px] truncate">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
+                          <div className="h-5 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[14px] sm:text-[16px] truncate">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Right Avatar */}
-                    <div className="w-[90px] h-[90px] sm:w-[140px] sm:h-[140px] shrink-0 rounded-full border-[3px] sm:border-[4px] border-white outline outline-[2px] sm:outline-[3px] outline-[#470b0a] shadow-[0_4px_15px_rgba(71,11,10,0.15)] flex items-center justify-center bg-[#FAF8F5] overflow-hidden mt-2 object-cover">
-                      <div className="w-full h-full bg-[#ebd9b7] flex items-center justify-center text-[#470b0a]">
-                        <User className="w-10 h-10 sm:w-16 sm:h-16 opacity-80" />
-                      </div>
+                    <div className="w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] shrink-0 rounded-full border-[3px] sm:border-[4px] border-white outline outline-[2px] sm:outline-[3px] outline-[#470b0a] shadow-[0_4px_15px_rgba(71,11,10,0.15)] flex items-center justify-center bg-[#ebd9b7] overflow-hidden mt-1 object-cover">
+                      {/* Avatar SVG resembling the generic one in the image */}
+                      <svg viewBox="0 0 100 100" className="w-full h-full text-[#cfb78f]" fill="currentColor">
+                        <circle cx="50" cy="35" r="20" />
+                        <path d="M15,90 C15,65 30,55 50,55 C70,55 85,65 85,90 Z" />
+                      </svg>
                     </div>
                   </div>
 
-                  {/* Bottom Section - Adjusted Height and Padding */}
-                  <div className="absolute bottom-0 left-0 right-0 z-10 px-5 sm:px-7 flex flex-wrap items-center justify-between gap-4 h-[75px] sm:h-[80px]">
+                  {/* Bottom Section */}
+                  <div className="absolute bottom-0 left-0 right-0 z-10 px-4 sm:px-6 flex items-center justify-between h-[85px] sm:h-[90px]">
                     
                     {/* Stats */}
-                    <div className="flex gap-4 sm:gap-8 items-center h-full py-3">
-                      <div className="flex flex-col justify-center h-full">
-                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
-                          {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
-                        </p>
-                        <p className="text-white text-lg sm:text-2xl font-bold font-mono leading-none">
-                          ₹{totalSavings.toLocaleString('en-IN')}
-                        </p>
+                    <div className="flex gap-3 sm:gap-6 items-center h-full flex-1">
+                      {/* Savings */}
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-[10px] sm:rounded-xl border border-[#b08745] flex items-center justify-center text-[#b08745] shrink-0">
+                          {/* Money Bag Custom Icon */}
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 sm:w-5 sm:h-5">
+                            <path d="M8 8v-1a4 4 0 0 1 8 0v1" />
+                            <path d="M4 10.5a2.5 2.5 0 0 1 2.5-2.5h11a2.5 2.5 0 0 1 2.5 2.5v7A4.5 4.5 0 0 1 15.5 22h-7A4.5 4.5 0 0 1 4 17.5v-7z" />
+                            <text x="12" y="17" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">₹</text>
+                          </svg>
+                        </div>
+                        <div className="flex flex-col justify-center">
+                          <p className="text-[#dcab42] text-[8px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">
+                            {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
+                          </p>
+                          <p className="text-white text-[18px] sm:text-[22px] font-bold font-mono leading-none">
+                            ₹{totalSavings.toLocaleString('en-IN')}
+                          </p>
+                        </div>
                       </div>
+
                       <div className="w-px h-8 sm:h-10 bg-white/20"></div>
-                      <div className="flex flex-col justify-center h-full">
-                        <p className="text-[#dcab42] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5">
-                          {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
-                        </p>
-                        <p className="text-white text-lg sm:text-2xl font-bold font-mono leading-none">
-                          {totalActiveLoans}
-                        </p>
+
+                      {/* Loans */}
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-[10px] sm:rounded-xl border border-[#b08745] flex items-center justify-center text-[#b08745] shrink-0">
+                          {/* Bank Custom Icon */}
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 sm:w-5 sm:h-5">
+                            <line x1="3" y1="22" x2="21" y2="22"></line>
+                            <line x1="6" y1="18" x2="6" y2="11"></line>
+                            <line x1="10" y1="18" x2="10" y2="11"></line>
+                            <line x1="14" y1="18" x2="14" y2="11"></line>
+                            <line x1="18" y1="18" x2="18" y2="11"></line>
+                            <polygon points="12 2 20 7 4 7"></polygon>
+                          </svg>
+                        </div>
+                        <div className="flex flex-col justify-center">
+                          <p className="text-[#dcab42] text-[8px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">
+                            {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
+                          </p>
+                          <p className="text-white text-[18px] sm:text-[22px] font-bold font-mono leading-none">
+                            {totalActiveLoans}
+                          </p>
+                        </div>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 sm:gap-4 shrink-0 items-center h-full py-3">
-                      <button
-                        onClick={() => {
-                          setSelectedMemberId(member.id);
-                          setProfileTab('savings');
-                        }}
-                        className="w-[36px] h-[36px] sm:w-[44px] sm:h-[44px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-                        title={t.viewProfile}
-                      >
-                        <BookOpen className="w-4 h-4 text-[#470b0a]" />
-                      </button>
-                      <button
-                        onClick={() => handleOpenEdit(member)}
-                        className="w-[36px] h-[36px] sm:w-[44px] sm:h-[44px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-                        title={t.editMember}
-                      >
-                        <Edit2 className="w-4 h-4 text-[#b08745]" />
-                      </button>
+                    <div className="flex gap-2 sm:gap-4 shrink-0 items-center h-full">
+                      <div className="flex flex-col items-center">
+                        <button
+                          onClick={() => {
+                            setSelectedMemberId(member.id);
+                            setProfileTab('savings');
+                          }}
+                          className="w-[40px] h-[40px] sm:w-[48px] sm:h-[48px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                          title={t.viewProfile}
+                        >
+                          <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#470b0a]" />
+                        </button>
+                        <span className="text-white text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-1.5 whitespace-nowrap">
+                          {language === 'hi' ? 'प्रोफ़ाइल' : 'VIEW PROFILE'}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col items-center">
+                        <button
+                          onClick={() => handleOpenEdit(member)}
+                          className="w-[40px] h-[40px] sm:w-[48px] sm:h-[48px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                          title={t.editMember}
+                        >
+                          <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#b08745]" />
+                        </button>
+                        <span className="text-white text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-1.5 whitespace-nowrap">
+                          {language === 'hi' ? 'संपादित करें' : 'EDIT MEMBER'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
