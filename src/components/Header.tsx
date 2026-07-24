@@ -90,11 +90,11 @@ export default function Header({
             <span className="text-[#5A0000] font-bold font-display text-[15px] tracking-tight">UBS</span>
           </div>
           <div className="flex flex-col">
-            <h1 className="font-bold text-white text-[17px] leading-tight font-display tracking-wide">
-              {formatMonthLabel(selectedMonth, language)}
+            <h1 className="font-bold text-white text-[17px] leading-tight font-display tracking-wide uppercase">
+              CASH BANK
             </h1>
             <span className="text-[#D4AF37] text-[11px] font-sans font-medium tracking-wide">
-              {language === 'hi' ? 'खाता विवरण' : 'Budget Summary'}
+              {language === 'hi' ? 'उज्जवल भविष्य समिति' : 'Ujjwal Bhavisya Samiti'}
             </span>
           </div>
         </div>
@@ -103,8 +103,11 @@ export default function Header({
         <div className="hidden md:flex items-center gap-2">
           <div>
             <h1 className="font-bold text-sm sm:text-lg tracking-[0.1em] leading-tight uppercase font-display">
-              {formatMonthLabel(selectedMonth, language)} — {language === 'hi' ? 'खाता विवरण' : 'Ledger Summary'}
+              CASH BANK
             </h1>
+            <span className="text-[#D4AF37] md:text-[#4a0404]/80 text-[11px] sm:text-[10px] font-sans font-bold tracking-wide block mt-0.5 uppercase tracking-[0.15em]">
+              {language === 'hi' ? 'उज्जवल भविष्य समिति' : 'Ujjwal Bhavisya Samiti'}
+            </span>
           </div>
         </div>
       </div>

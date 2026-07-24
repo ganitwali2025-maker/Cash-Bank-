@@ -253,6 +253,8 @@ export default function App() {
         isOpen={sidebarOpen}
         setIsOpen={setSidebarOpen}
         memberCount={members.length}
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
       />
 
       {/* MAIN CONTAINER LAYOUT */}

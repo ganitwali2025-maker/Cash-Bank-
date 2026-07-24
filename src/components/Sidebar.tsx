@@ -11,10 +11,12 @@ import {
   ChevronRight,
   Sparkles,
   Settings,
-  LogOut
+  LogOut,
+  Calendar
 } from 'lucide-react';
 import { TabType, LanguageType } from '../types';
 import { translations } from '../translations';
+import { formatMonthLabel } from './Header';
 
 interface SidebarProps {
   currentTab: TabType;
@@ -24,6 +26,8 @@ interface SidebarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   memberCount: number;
+  selectedMonth: string;
+  setSelectedMonth: (month: string) => void;
 }
 
 export default function Sidebar({
@@ -33,9 +37,29 @@ export default function Sidebar({
   setLanguage,
   isOpen,
   setIsOpen,
-  memberCount
+  memberCount,
+  selectedMonth,
+  setSelectedMonth
 }: SidebarProps) {
   const t = translations[language];
+
+  const handlePrevMonth = () => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    let year = parseInt(yearStr);
+    let month = parseInt(monthStr);
+    month--;
+    if (month < 1) { month = 12; year--; }
+    setSelectedMonth(`${year}-${String(month).padStart(2, '0')}`);
+  };
+
+  const handleNextMonth = () => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    let year = parseInt(yearStr);
+    let month = parseInt(monthStr);
+    month++;
+    if (month > 12) { month = 1; year++; }
+    setSelectedMonth(`${year}-${String(month).padStart(2, '0')}`);
+  };
 
   const menuItems = [
     { id: 'dashboard' as TabType, menuText: language === 'hi' ? 'डैशबोर्ड' : 'Dashboard', icon: LayoutDashboard },
@@ -65,6 +89,27 @@ export default function Sidebar({
         }`}
       >
         <div className="overflow-y-auto flex-1 custom-scrollbar">
+          
+          {/* Month Selector in Sidebar */}
+          <div className="mx-4 mt-2 mb-4 md:hidden">
+            <div className="flex items-center justify-between bg-white/10 rounded-xl p-3 border border-[#D4AF37]/20">
+              <div className="p-1.5 bg-[#D4AF37]/20 rounded-lg text-[#D4AF37]">
+                <Calendar className="w-4 h-4" />
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={handlePrevMonth} className="p-1 text-[#D4AF37] hover:bg-[#D4AF37]/20 rounded-full transition-colors">
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <span className="font-bold font-sans text-xs uppercase tracking-wider text-white w-24 text-center">
+                  {formatMonthLabel(selectedMonth, 'en')}
+                </span>
+                <button onClick={handleNextMonth} className="p-1 text-[#D4AF37] hover:bg-[#D4AF37]/20 rounded-full transition-colors">
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Member Counter Summary Block */}
           <div className="mx-4 my-4 p-3 bg-[#D4AF37]/10 rounded-lg border border-[#D4AF37]/20 flex items-center justify-between">
             <div>

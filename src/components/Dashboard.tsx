@@ -108,23 +108,7 @@ export default function Dashboard({
 
   return (
     <div className="space-y-5 max-w-lg mx-auto pb-6">
-      {/* 1. Mobile Month Selector Card */}
-      <div className="md:hidden flex items-center justify-between bg-white rounded-2xl p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-[#D4AF37]/20">
-        <div className="p-2 bg-[#5A0000]/5 rounded-xl text-[#5A0000]">
-          <Calendar className="w-5 h-5" />
-        </div>
-        <div className="flex items-center gap-4">
-          <button onClick={handlePrevMonth} className="p-1 text-[#5A0000]">
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <span className="font-bold font-sans text-sm uppercase tracking-wider text-[#5A0000] w-28 text-center">
-            {formatMonthLabel(selectedMonth, 'en')}
-          </span>
-          <button onClick={handleNextMonth} className="p-1 text-[#5A0000]">
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+
 
       {/* 2. Dashboard Header */}
       <div className="flex items-center justify-between pt-2 px-1">
