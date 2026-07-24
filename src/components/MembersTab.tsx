@@ -652,111 +652,122 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="relative bg-[#FAF8F5] rounded-xl shadow-[0_4px_15px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col justify-between border border-[#5A0000]/10 hover:shadow-[0_8px_25px_rgba(90,0,0,0.12)] transition-all min-h-[220px] group"
+                  className="relative bg-[#FAF8F5] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col border border-gray-100 overflow-hidden group"
                 >
-                  {/* Decorative Background Elements */}
-                  <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none rounded-xl">
-                    {/* Top Left Swoosh */}
-                    <div className="absolute -top-24 -left-12 w-48 h-48 bg-[#D4AF37] rounded-full opacity-40"></div>
-                    <div className="absolute -top-20 -left-10 w-40 h-40 bg-[#5A0000] rounded-full"></div>
-                    <div className="absolute -top-16 -left-16 w-32 h-32 bg-[#FAF8F5] rounded-full"></div>
-                    <div className="absolute -top-20 -left-20 w-32 h-32 bg-[#D4AF37] rounded-full opacity-80"></div>
+                  {/* Card Background Decorations */}
+                  <div className="absolute inset-0 pointer-events-none z-0">
+                    {/* Top Left Curves */}
+                    <div className="absolute -top-16 -left-10 w-48 h-48 bg-[#c5a059] rounded-full opacity-80"></div>
+                    <div className="absolute -top-24 -left-16 w-48 h-48 bg-[#5A0000] rounded-full"></div>
                     
-                    {/* Bottom Solid Bar */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[70px] bg-[#5A0000]"></div>
+                    {/* Bottom Dark Red Base */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[150px] sm:h-[130px] bg-[#5A0000]"></div>
                     
-                    {/* Bottom Right Swoosh */}
-                    <div className="absolute -bottom-12 -right-8 w-48 h-48 bg-[#D4AF37] rounded-full opacity-40"></div>
-                    <div className="absolute -bottom-8 -right-4 w-40 h-40 bg-[#5A0000] rounded-full"></div>
-                    <div className="absolute -bottom-4 -right-12 w-32 h-32 bg-[#FAF8F5] rounded-full"></div>
-                    <div className="absolute -bottom-10 -right-20 w-40 h-40 bg-[#5A0000] rounded-full"></div>
+                    {/* Right Sweeping Curves */}
+                    <div className="absolute -bottom-40 -right-20 w-[450px] h-[450px] sm:w-[500px] sm:h-[500px] bg-[#c5a059] rounded-full opacity-90"></div>
+                    <div className="absolute -bottom-40 -right-20 w-[420px] h-[420px] sm:w-[470px] sm:h-[470px] bg-[#5A0000] rounded-full"></div>
                     
-                    {/* Diagonal Lines Pattern at bottom bar */}
-                    <div className="absolute bottom-4 left-6 right-20 h-4 flex gap-4 overflow-hidden opacity-30">
+                    {/* Diagonal Lines Texture */}
+                    <div className="absolute bottom-6 left-8 h-4 flex gap-4 overflow-hidden opacity-20">
                       {[...Array(15)].map((_, i) => (
-                        <div key={i} className="w-[2px] h-12 bg-white transform rotate-45 -translate-y-2"></div>
+                        <div key={i} className="w-[3px] h-12 bg-white transform rotate-[30deg] -translate-y-2"></div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Card Content */}
-                  <div className="relative z-10 p-5 flex-1 flex flex-col justify-between h-full">
-                    <div className="flex justify-between items-start gap-4">
-                      
-                      {/* Left Info */}
-                      <div className="flex-1 mt-1">
-                        <h3 className="font-serif font-bold text-xl text-[#5A0000] tracking-wide leading-tight drop-shadow-sm line-clamp-1">{member.name}</h3>
-                        <div className="text-[10px] text-[#8A4A4A] font-bold tracking-wider uppercase mt-1 mb-4 inline-block border-b border-[#8A4A4A]/30 pb-1">
-                          {language === 'hi' ? 'सदस्य (Member)' : 'Member'}
-                        </div>
-                        
-                        <div className="space-y-2.5">
-                          <div className="flex items-center gap-2.5 text-xs text-gray-700 font-medium">
-                            <div className="w-5 h-5 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-sm shrink-0">
-                              <Phone className="w-2.5 h-2.5" />
-                            </div>
-                            {member.phone}
-                          </div>
-                          
-                          <div className="flex items-center gap-2.5 text-xs text-gray-700 font-medium">
-                            <div className="w-5 h-5 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-sm shrink-0">
-                              <Calendar className="w-2.5 h-2.5" />
-                            </div>
-                            {member.joiningDate}
-                          </div>
-                          
-                          <div className="flex items-center gap-2.5 text-xs text-gray-700 font-medium">
-                            <div className="w-5 h-5 rounded-full bg-[#D4AF37] flex items-center justify-center text-[#5A0000] shadow-sm shrink-0">
-                              <PiggyBank className="w-3 h-3" />
-                            </div>
-                            ₹{member.monthlyDeposit.toLocaleString('en-IN')} / mo
-                          </div>
-                        </div>
-                      </div>
+                  {/* Top Content (White/Cream Background Area) */}
+                  <div className="relative z-10 px-6 sm:px-8 pt-10 pb-8 flex justify-between items-start min-h-[220px]">
+                    {/* Info Side */}
+                    <div className="flex-1 mt-2">
+                      {/* Name */}
+                      <h3 className="font-serif font-bold text-[28px] sm:text-[32px] text-[#5A0000] leading-tight mb-2 drop-shadow-sm">
+                        {member.name}
+                      </h3>
+                      {/* Badge */}
+                      <span className="inline-block bg-[#c5a059]/20 text-[#5A0000] text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full mb-6 shadow-sm">
+                        {language === 'hi' ? 'सदस्य' : 'MEMBER'}
+                      </span>
 
-                      {/* Right Avatar */}
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-full bg-white border-[3px] border-white outline outline-[2px] outline-[#5A0000] shadow-[0_4px_15px_rgba(90,0,0,0.15)] flex items-center justify-center relative z-10 mt-1 mr-1">
-                        <div className="w-full h-full rounded-full border border-gray-100 flex items-center justify-center overflow-hidden bg-[#FAF8F5] shadow-inner">
-                          <span className="text-3xl sm:text-4xl font-serif font-bold text-[#5A0000]">
-                            {member.name.charAt(0)}
-                          </span>
+                      {/* Details List */}
+                      <div className="space-y-4">
+                        {/* Phone */}
+                        <div className="flex items-center gap-4">
+                          <div className="w-9 h-9 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-md shrink-0">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                          <div className="h-6 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[15px] sm:text-[16px]">{member.phone}</span>
+                        </div>
+                        {/* Date */}
+                        <div className="flex items-center gap-4">
+                          <div className="w-9 h-9 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-md shrink-0">
+                            <Calendar className="w-4 h-4" />
+                          </div>
+                          <div className="h-6 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[15px] sm:text-[16px]">{member.joiningDate}</span>
+                        </div>
+                        {/* Deposit */}
+                        <div className="flex items-center gap-4">
+                          <div className="w-9 h-9 rounded-full bg-[#c5a059] flex items-center justify-center text-[#5A0000] shadow-md shrink-0">
+                            <PiggyBank className="w-4 h-4" />
+                          </div>
+                          <div className="h-6 w-px bg-gray-300"></div>
+                          <span className="text-gray-800 font-medium text-[15px] sm:text-[16px]">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Stats & Actions Row */}
-                    <div className="mt-8 flex items-end justify-between gap-2">
-                      <div className="flex gap-5">
-                        <div>
-                          <p className="text-[9px] uppercase tracking-wider text-white/70 font-bold mb-0.5">{language === 'hi' ? 'कुल बचत' : 'Total Savings'}</p>
-                          <p className="font-black text-white font-mono text-[15px] leading-none drop-shadow-md">₹{totalSavings.toLocaleString('en-IN')}</p>
-                        </div>
-                        <div>
-                          <p className="text-[9px] uppercase tracking-wider text-white/70 font-bold mb-0.5">{t.activeLoans}</p>
-                          <p className="font-black text-[#D4AF37] font-mono text-[15px] leading-none drop-shadow-md">{totalActiveLoans}</p>
-                        </div>
-                      </div>
+                    {/* Avatar Side */}
+                    <div className="w-28 h-28 sm:w-40 sm:h-40 shrink-0 rounded-full border-[4px] border-white outline outline-[3px] outline-[#5A0000] shadow-[0_8px_16px_rgba(90,0,0,0.2)] flex items-center justify-center relative z-10 bg-[#FAF8F5] overflow-hidden ml-4 sm:ml-8 mt-2">
+                      <span className="text-5xl sm:text-7xl font-serif font-bold text-[#5A0000]">
+                        {member.name.charAt(0)}
+                      </span>
+                    </div>
+                  </div>
 
-                      <div className="flex gap-2">
-                        <button
-                          id={`view-profile-btn-${member.id}`}
-                          onClick={() => {
-                            setSelectedMemberId(member.id);
-                            setProfileTab('savings');
-                          }}
-                          className="w-9 h-9 flex items-center justify-center bg-white text-[#5A0000] rounded-full shadow-md hover:scale-105 transition-transform"
-                          title={t.viewProfile}
-                        >
-                          <BookOpen className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleOpenEdit(member)}
-                          className="w-9 h-9 flex items-center justify-center bg-[#D4AF37] text-[#5A0000] rounded-full shadow-md hover:scale-105 transition-transform"
-                          title={t.editMember}
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
+                  {/* Bottom Content (Dark Red Area) */}
+                  <div className="relative z-10 px-6 sm:px-8 py-6 sm:py-0 flex flex-col sm:flex-row justify-between items-center gap-6 h-auto sm:h-[130px] mt-auto">
+                    {/* Stats */}
+                    <div className="flex gap-8 sm:gap-12 w-full sm:w-auto mt-2 sm:mt-0">
+                      <div>
+                        <p className="text-[#c5a059] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
+                          {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
+                        </p>
+                        <p className="text-white text-3xl sm:text-4xl font-bold font-mono">
+                          ₹{totalSavings.toLocaleString('en-IN')}
+                        </p>
                       </div>
+                      <div className="w-px bg-white/20 self-stretch"></div>
+                      <div>
+                        <p className="text-[#c5a059] text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
+                          {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
+                        </p>
+                        <p className="text-white text-3xl sm:text-4xl font-bold font-mono">
+                          {totalActiveLoans}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-4 sm:gap-5 w-full sm:w-auto justify-end pb-2 sm:pb-0">
+                      <button
+                        id={`view-profile-btn-${member.id}`}
+                        onClick={() => {
+                          setSelectedMemberId(member.id);
+                          setProfileTab('savings');
+                        }}
+                        className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform shrink-0"
+                        title={t.viewProfile}
+                      >
+                        <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-[#5A0000]" />
+                      </button>
+                      <button
+                        onClick={() => handleOpenEdit(member)}
+                        className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform shrink-0"
+                        title={t.editMember}
+                      >
+                        <Edit2 className="w-6 h-6 sm:w-7 sm:h-7 text-[#c5a059]" />
+                      </button>
                     </div>
                   </div>
                 </div>
