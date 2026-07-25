@@ -545,100 +545,103 @@ export default function MembersTab({
       {/* ----------------- MEMBERS LIST VIEW ----------------- */}
       {!selectedMemberId && (
         <div className="space-y-6">
-          {/* Header Banner */}
-          <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">{t.memberList}</h1>
-              <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans">{t.membersSubtitle}</p>
-            </div>
-            
-            <button
-              onClick={handleOpenAdd}
-              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#c5a059] hover:bg-[#d4af37] text-[#4a0404] px-4 py-2.5 rounded shadow transition-all self-start sm:self-auto hover:scale-[1.02]"
-            >
-              <UserPlus className="w-4 h-4" />
-              {t.addMember}
-            </button>
-          </div>
-
-          {/* Add Member form overlay block */}
-          {isAdding && (
-            <div className="bg-white p-5 rounded border border-[#c5a059]/40 shadow-md">
-              <div className="border-b border-gray-100 pb-2 mb-4">
-                <h3 className="font-bold text-sm uppercase tracking-wider text-[#4a0404] font-display">{t.addMember}</h3>
+          {/* STICKY TOP CONTROLS */}
+          <div className="sticky top-24 md:top-16 z-40 bg-[#FAF8F5] pt-2 pb-4 -mx-2 px-2 sm:-mx-0 sm:px-0 space-y-4">
+            {/* Header Banner */}
+            <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">{t.memberList}</h1>
+                <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans">{t.membersSubtitle}</p>
               </div>
-              <form onSubmit={handleSaveAdd} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">{t.memberName}</label>
-                  <input
-                    type="text"
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                    placeholder="e.g. राम प्रसाद (Ram Prasad)"
-                    className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
-                  <input
-                    type="text"
-                    value={formPhone}
-                    onChange={(e) => setFormPhone(e.target.value)}
-                    placeholder="9876543210"
-                    className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">{t.monthlyDepositAmount} (₹)</label>
-                  <input
-                    type="number"
-                    value={formDeposit}
-                    onChange={(e) => setFormDeposit(Number(e.target.value))}
-                    className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">{t.joiningDate}</label>
-                  <input
-                    type="date"
-                    value={formDate}
-                    onChange={(e) => setFormDate(e.target.value)}
-                    className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-4 flex justify-end gap-2 pt-2">
-                  <button
-                    type="submit"
-                    className="text-[10px] uppercase tracking-wider font-bold bg-[#4a0404] hover:bg-[#2d0202] text-white px-5 py-2.5 rounded transition-all"
-                  >
-                    {t.save}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsAdding(false)}
-                    className="text-[10px] uppercase tracking-wider font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded transition-all"
-                  >
-                    {t.cancel}
-                  </button>
-                </div>
-              </form>
+              
+              <button
+                onClick={handleOpenAdd}
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#c5a059] hover:bg-[#d4af37] text-[#4a0404] px-4 py-2.5 rounded shadow transition-all self-start sm:self-auto hover:scale-[1.02]"
+              >
+                <UserPlus className="w-4 h-4" />
+                {t.addMember}
+              </button>
             </div>
-          )}
 
-          {/* Search bar */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-[#c5a059] absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={t.searchMember}
-              className="w-full pl-11 pr-4 py-3 rounded border border-[#c5a059]/20 bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4a0404] text-sm"
-            />
+            {/* Add Member form overlay block */}
+            {isAdding && (
+              <div className="bg-white p-5 rounded border border-[#c5a059]/40 shadow-md">
+                <div className="border-b border-gray-100 pb-2 mb-4">
+                  <h3 className="font-bold text-sm uppercase tracking-wider text-[#4a0404] font-display">{t.addMember}</h3>
+                </div>
+                <form onSubmit={handleSaveAdd} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.memberName}</label>
+                    <input
+                      type="text"
+                      value={formName}
+                      onChange={(e) => setFormName(e.target.value)}
+                      placeholder="e.g. राम प्रसाद (Ram Prasad)"
+                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
+                    <input
+                      type="text"
+                      value={formPhone}
+                      onChange={(e) => setFormPhone(e.target.value)}
+                      placeholder="9876543210"
+                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.monthlyDepositAmount} (₹)</label>
+                    <input
+                      type="number"
+                      value={formDeposit}
+                      onChange={(e) => setFormDeposit(Number(e.target.value))}
+                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.joiningDate}</label>
+                    <input
+                      type="date"
+                      value={formDate}
+                      onChange={(e) => setFormDate(e.target.value)}
+                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-4 flex justify-end gap-2 pt-2">
+                    <button
+                      type="submit"
+                      className="text-[10px] uppercase tracking-wider font-bold bg-[#4a0404] hover:bg-[#2d0202] text-white px-5 py-2.5 rounded transition-all"
+                    >
+                      {t.save}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsAdding(false)}
+                      className="text-[10px] uppercase tracking-wider font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded transition-all"
+                    >
+                      {t.cancel}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* Search bar */}
+            <div className="relative">
+              <Search className="w-4 h-4 text-[#c5a059] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={t.searchMember}
+                className="w-full pl-11 pr-4 py-3 rounded border border-[#c5a059]/20 bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4a0404] text-sm"
+              />
+            </div>
           </div>
 
           {/* Members list Grid */}

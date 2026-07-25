@@ -54,26 +54,29 @@ export default function MonthlyDepositsTab({
 
   return (
     <div className="space-y-6">
-      {/* Title Banner */}
-      <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[#c5a059]/5 rounded-full -mr-10 -mt-10 pointer-events-none"></div>
-        <div>
-          <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">
-            {formatMonthLabel(selectedMonth, language)} — {t.monthlyDeposits}
-          </h1>
-          <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans">{t.depositsSubtitle}</p>
-        </div>
-
-        {/* Month Progress Info card */}
-        <div className="bg-[#faf5eb]/10 border border-[#c5a059]/20 rounded p-3 shrink-0 flex items-center gap-4 text-sm font-bold text-[#faf5eb]">
-          <div className="text-center md:text-right">
-            <p className="text-[9px] uppercase tracking-wider text-[#fdfbf7]/60 leading-none">{language === 'hi' ? 'कुल एकत्रित' : 'Total Collected'}</p>
-            <p className="text-lg font-bold font-serif text-[#c5a059] mt-0.5">₹{totalCollectedThisMonth.toLocaleString('en-IN')}</p>
-          </div>
-          <div className="h-8 w-px bg-[#c5a059]/30"></div>
+      {/* STICKY TOP CONTROLS */}
+      <div className="sticky top-24 md:top-16 z-40 bg-[#FAF8F5] pt-2 pb-4 -mx-2 px-2 sm:-mx-0 sm:px-0 space-y-6">
+        {/* Title Banner */}
+        <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#c5a059]/5 rounded-full -mr-10 -mt-10 pointer-events-none"></div>
           <div>
-            <p className="text-[9px] uppercase tracking-wider text-[#fdfbf7]/60 leading-none">{language === 'hi' ? 'अपेक्षित कुल' : 'Expected Total'}</p>
-            <p className="text-lg font-bold font-serif mt-0.5 text-[#fdfbf7]">₹{expectedThisMonth.toLocaleString('en-IN')}</p>
+            <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">
+              {formatMonthLabel(selectedMonth, language)} — {t.monthlyDeposits}
+            </h1>
+            <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans">{t.depositsSubtitle}</p>
+          </div>
+
+          {/* Month Progress Info card */}
+          <div className="bg-[#faf5eb]/10 border border-[#c5a059]/20 rounded p-3 shrink-0 flex items-center gap-4 text-sm font-bold text-[#faf5eb]">
+            <div className="text-center md:text-right">
+              <p className="text-[9px] uppercase tracking-wider text-[#fdfbf7]/60 leading-none">{language === 'hi' ? 'कुल एकत्रित' : 'Total Collected'}</p>
+              <p className="text-lg font-bold font-serif text-[#c5a059] mt-0.5">₹{totalCollectedThisMonth.toLocaleString('en-IN')}</p>
+            </div>
+            <div className="h-8 w-px bg-[#c5a059]/30"></div>
+            <div>
+              <p className="text-[9px] uppercase tracking-wider text-[#fdfbf7]/60 leading-none">{language === 'hi' ? 'अपेक्षित कुल' : 'Expected Total'}</p>
+              <p className="text-lg font-bold font-serif mt-0.5 text-[#fdfbf7]">₹{expectedThisMonth.toLocaleString('en-IN')}</p>
+            </div>
           </div>
         </div>
       </div>

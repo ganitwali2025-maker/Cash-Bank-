@@ -69,7 +69,7 @@ export default function Header({
   return (
     <header 
       id="app-header"
-      className="bg-[#5A0000] text-white shadow-[0_4px_20px_rgba(90,0,0,0.15)] h-24 md:h-16 px-5 sm:px-8 flex items-center justify-between transition-all z-50 print:hidden rounded-b-[28px] md:rounded-none md:bg-[#D4AF37] md:text-[#4a0404] relative"
+      className="bg-[#5A0000] text-white shadow-[0_4px_20px_rgba(90,0,0,0.15)] h-24 md:h-16 px-5 sm:px-8 flex items-center justify-between transition-all z-50 print:hidden rounded-b-[28px] md:rounded-none md:bg-[#D4AF37] md:text-[#4a0404] sticky top-0"
     >
       {/* Left section: Hamburger & App title */}
       <div className="flex items-center gap-3">
@@ -86,9 +86,6 @@ export default function Header({
         
         {/* Mobile Title Area */}
         <div className="md:hidden flex items-center gap-3 pl-1">
-          <div className="w-12 h-12 rounded-full bg-[#D4AF37] flex items-center justify-center shadow-inner">
-            <span className="text-[#5A0000] font-bold font-display text-[15px] tracking-tight">UBS</span>
-          </div>
           <div className="flex flex-col">
             <h1 className="font-bold text-white text-[17px] leading-tight font-display tracking-wide uppercase">
               CASH BANK

@@ -105,31 +105,34 @@ export default function ReportsTab({
 
   return (
     <div className="space-y-6" id="reports-section">
-      {/* Heading Banner */}
-      <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden print:bg-white print:text-black print:border-black print:shadow-none">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[#c5a059]/5 rounded-full -mr-10 -mt-10 pointer-events-none print:hidden"></div>
-        <div>
-          <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">{t.reportsAndSummary}</h1>
-          <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans print:text-black/70">{t.reportsSubtitle}</p>
-        </div>
+      {/* STICKY TOP CONTROLS */}
+      <div className="sticky top-24 md:top-16 z-40 bg-[#FAF8F5] pt-2 pb-4 -mx-2 px-2 sm:-mx-0 sm:px-0 space-y-6 print:static print:bg-transparent print:p-0">
+        {/* Heading Banner */}
+        <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden print:bg-white print:text-black print:border-black print:shadow-none">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#c5a059]/5 rounded-full -mr-10 -mt-10 pointer-events-none print:hidden"></div>
+          <div>
+            <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">{t.reportsAndSummary}</h1>
+            <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans print:text-black/70">{t.reportsSubtitle}</p>
+          </div>
 
-        {/* Print / Export buttons */}
-        <div className="flex gap-2 self-start sm:self-auto print:hidden">
-          <button
-            onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#faf5eb] hover:bg-gray-100 text-[#4a0404] border border-[#c5a059]/30 px-3.5 py-2.5 rounded shadow-sm transition-all"
-          >
-            <Printer className="w-4 h-4 text-[#c5a059]" />
-            {t.printReport}
-          </button>
-          
-          <button
-            onClick={handleExportCSV}
-            className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#c5a059] hover:bg-[#d4af37] text-[#4a0404] px-3.5 py-2.5 rounded shadow-sm transition-all"
-          >
-            <Download className="w-4 h-4" />
-            {t.downloadCsv}
-          </button>
+          {/* Print / Export buttons */}
+          <div className="flex gap-2 self-start sm:self-auto print:hidden">
+            <button
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#faf5eb] hover:bg-gray-100 text-[#4a0404] border border-[#c5a059]/30 px-3.5 py-2.5 rounded shadow-sm transition-all"
+            >
+              <Printer className="w-4 h-4 text-[#c5a059]" />
+              {t.printReport}
+            </button>
+            
+            <button
+              onClick={handleExportCSV}
+              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#c5a059] hover:bg-[#d4af37] text-[#4a0404] px-3.5 py-2.5 rounded shadow-sm transition-all"
+            >
+              <Download className="w-4 h-4" />
+              {t.downloadCsv}
+            </button>
+          </div>
         </div>
       </div>
 

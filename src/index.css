@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", "Mukta", system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair Display", "Noto Serif Devanagari", Georgia, serif;
-  --font-display: "Cinzel", "Noto Serif Devanagari", serif;
+  --font-sans: "Inter", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
+  --font-serif: "Merriweather", "Noto Serif Devanagari", Georgia, serif;
+  --font-display: "Merriweather", "Noto Serif Devanagari", serif;
 
   --color-luxury-maroon: #5A0000;
   --color-luxury-gold: #D4AF37;
