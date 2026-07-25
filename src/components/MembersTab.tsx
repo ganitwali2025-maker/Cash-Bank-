@@ -663,7 +663,11 @@ export default function MembersTab({
                 <div 
                   key={member.id} 
                   id={`member-card-${member.id}`}
-                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[250px] overflow-hidden group border border-gray-100"
+                  onClick={() => {
+                    setSelectedMemberId(member.id);
+                    setProfileTab('savings');
+                  }}
+                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[250px] overflow-hidden group border border-gray-100 cursor-pointer hover:shadow-[0_12px_40px_rgba(71,11,10,0.15)] transition-shadow duration-300"
                 >
                   {/* Card Background Decorations */}
                   <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -690,7 +694,7 @@ export default function MembersTab({
                   <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1 pb-24">
                     
                     {/* Left Info */}
-                    <div className="flex flex-col flex-1 pr-2 pt-1">
+                    <div className="flex flex-col flex-1 pr-2 pt-4 pl-8 sm:pl-10 z-10 relative">
                       {/* Name */}
                       <h3 className="font-serif font-bold text-[24px] sm:text-[30px] lg:text-[32px] text-[#470b0a] leading-[1.1] drop-shadow-sm mb-2 break-words">
                         {getDisplayName(member.name)}
@@ -792,37 +796,6 @@ export default function MembersTab({
                       </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex gap-2 sm:gap-4 shrink-0 items-center h-full">
-                      <div className="flex flex-col items-center">
-                        <button
-                          onClick={() => {
-                            setSelectedMemberId(member.id);
-                            setProfileTab('savings');
-                          }}
-                          className="w-[40px] h-[40px] sm:w-[48px] sm:h-[48px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-                          title={t.viewProfile}
-                        >
-                          <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#470b0a]" />
-                        </button>
-                        <span className="text-white text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-1.5 whitespace-nowrap">
-                          {language === 'hi' ? 'प्रोफ़ाइल' : 'VIEW PROFILE'}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col items-center">
-                        <button
-                          onClick={() => handleOpenEdit(member)}
-                          className="w-[40px] h-[40px] sm:w-[48px] sm:h-[48px] bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-                          title={t.editMember}
-                        >
-                          <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#b08745]" />
-                        </button>
-                        <span className="text-white text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-1.5 whitespace-nowrap">
-                          {language === 'hi' ? 'संपादित करें' : 'EDIT MEMBER'}
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               );

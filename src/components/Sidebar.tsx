@@ -75,7 +75,7 @@ export default function Sidebar({
       {/* Dark Semi-Transparent Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 z-30 transition-opacity duration-300"
+          className="fixed inset-0 bg-black/60 z-50 transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
@@ -84,11 +84,21 @@ export default function Sidebar({
       {/* Sliding Sidebar */}
       <aside 
         id="sidebar-container"
-        className={`fixed top-0 left-0 z-40 h-screen w-[280px] pt-24 md:pt-16 pb-20 md:pb-0 transition-transform duration-300 ease-in-out bg-[#5A0000] text-white flex flex-col justify-between border-r border-[#D4AF37]/30 shadow-2xl ${
+        className={`fixed top-0 left-0 z-[60] h-screen w-[280px] pt-8 md:pt-16 pb-20 md:pb-0 transition-transform duration-300 ease-in-out bg-[#5A0000] text-white flex flex-col justify-between border-r border-[#D4AF37]/30 shadow-2xl ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="overflow-y-auto flex-1 custom-scrollbar">
+          
+          {/* Brand Header inside Sidebar */}
+          <div className="px-6 mb-4 md:hidden">
+            <h2 className="font-serif text-2xl font-black text-white tracking-widest drop-shadow-md">
+              CASH BANK
+            </h2>
+            <p className="text-[#D4AF37] font-sans font-bold text-[10px] tracking-widest mt-1 uppercase">
+              Ujjwal Bhavisya Samiti
+            </p>
+          </div>
           
           {/* Month Selector in Sidebar */}
           <div className="mx-4 mt-2 mb-4 md:hidden">
