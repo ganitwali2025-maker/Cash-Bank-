@@ -32,8 +32,8 @@ export function generateEmiSchedule(
       pComp = Math.round((principal - sumPrev) * 100) / 100;
     }
 
-    // Interest component on outstanding principal
-    const iComp = Math.round((outstandingPrincipal * (interestRate / 100)) * 100) / 100;
+    // Interest component on original principal (Flat Rate: 1 rupee per 100)
+    const iComp = Math.round((principal * (interestRate / 100)) * 100) / 100;
     const total = Math.round((pComp + iComp) * 100) / 100;
 
     emis.push({

@@ -67,17 +67,17 @@ export default function App() {
 
   // 2. Data Persistence States (from localStorage or seed)
   const [members, setMembers] = useState<Member[]>(() => {
-    const saved = localStorage.getItem('ub_members');
+    const saved = localStorage.getItem('ub_members_v3');
     return saved ? JSON.parse(saved) : initialMembers;
   });
 
   const [deposits, setDeposits] = useState<Deposit[]>(() => {
-    const saved = localStorage.getItem('ub_deposits');
+    const saved = localStorage.getItem('ub_deposits_v3');
     return saved ? JSON.parse(saved) : getInitialDeposits();
   });
 
   const [loans, setLoans] = useState<Loan[]>(() => {
-    const saved = localStorage.getItem('ub_loans');
+    const saved = localStorage.getItem('ub_loans_v3');
     return saved ? JSON.parse(saved) : getInitialLoans();
   });
 
@@ -86,15 +86,15 @@ export default function App() {
 
   // Auto-save data changes to localStorage
   useEffect(() => {
-    localStorage.setItem('ub_members', JSON.stringify(members));
+    localStorage.setItem('ub_members_v3', JSON.stringify(members));
   }, [members]);
 
   useEffect(() => {
-    localStorage.setItem('ub_deposits', JSON.stringify(deposits));
+    localStorage.setItem('ub_deposits_v3', JSON.stringify(deposits));
   }, [deposits]);
 
   useEffect(() => {
-    localStorage.setItem('ub_loans', JSON.stringify(loans));
+    localStorage.setItem('ub_loans_v3', JSON.stringify(loans));
   }, [loans]);
 
   useEffect(() => {

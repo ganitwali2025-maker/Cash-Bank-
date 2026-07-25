@@ -124,15 +124,15 @@ export default function Dashboard({
 
       {/* 3. Stats Grid (2 Columns) */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {/* Members Card */}
+        {/* Expected Monthly Card */}
         <div className="bg-[#FFF8F8] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-[#5A0000]/5">
-          <Users className="absolute -bottom-2 -right-2 w-16 h-16 text-[#5A0000]/5 pointer-events-none" />
+          <Calendar className="absolute -bottom-2 -right-2 w-16 h-16 text-[#5A0000]/5 pointer-events-none" />
           <div className="w-10 h-10 rounded-full bg-[#5A0000]/10 flex items-center justify-center text-[#5A0000] mb-3">
-            <Users className="w-5 h-5" />
+            <Calendar className="w-5 h-5" />
           </div>
-          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">{t.totalMembers}</p>
-          <h3 className="text-xl font-bold text-gray-900 font-serif">{totalMembers}</h3>
-          <p className="text-[10px] text-gray-400 mt-1">Total Members</p>
+          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Expected Monthly</p>
+          <h3 className="text-xl font-bold text-gray-900 font-serif">₹{expectedMonthlySavings.toLocaleString('en-IN')}</h3>
+          <p className="text-[10px] text-gray-400 mt-1">Per Month</p>
         </div>
 
         {/* Expected Savings Card */}
@@ -141,8 +141,8 @@ export default function Dashboard({
           <div className="w-10 h-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] mb-3">
             <TrendingUp className="w-5 h-5 text-yellow-700" />
           </div>
-          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Expected Monthly</p>
-          <h3 className="text-xl font-bold text-gray-900 font-serif">₹{expectedMonthlySavings.toLocaleString('en-IN')}</h3>
+          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Total Deposit</p>
+          <h3 className="text-xl font-bold text-gray-900 font-serif">₹{totalSavingsReceived.toLocaleString('en-IN')}</h3>
         </div>
 
         {/* Available Fund Card */}
@@ -157,13 +157,13 @@ export default function Dashboard({
         </div>
 
         {/* Outstanding Loan Card */}
-        <div className="bg-[#F2F7FF] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-blue-600/10">
-          <BarChart3 className="absolute -bottom-2 -right-2 w-16 h-16 text-blue-600/5 pointer-events-none" />
-          <div className="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-700 mb-3">
+        <div className="bg-[#FFF0F0] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-red-600/10">
+          <BarChart3 className="absolute -bottom-2 -right-2 w-16 h-16 text-red-600/5 pointer-events-none" />
+          <div className="w-10 h-10 rounded-full bg-red-600/10 flex items-center justify-center text-red-700 mb-3">
             <Landmark className="w-5 h-5" />
           </div>
           <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Outstanding Loan</p>
-          <h3 className="text-xl font-bold text-blue-800 font-serif">₹{totalOutstandingLoan.toLocaleString('en-IN')}</h3>
+          <h3 className="text-xl font-bold text-red-800 font-serif">₹{totalOutstandingLoan.toLocaleString('en-IN')}</h3>
           <p className="text-[10px] text-gray-400 mt-1">Total Outstanding</p>
         </div>
       </div>
@@ -175,9 +175,9 @@ export default function Dashboard({
             <TrendingUp className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold tracking-wider text-purple-900 mb-0.5">Interest Earned</p>
-            <h3 className="text-2xl font-bold text-purple-950 font-serif">₹{currentMonthInterest.toLocaleString('en-IN')}</h3>
-            <p className="text-[10px] text-purple-600/60 mt-0.5">This Month</p>
+            <p className="text-[10px] uppercase font-bold tracking-wider text-purple-900 mb-0.5">Total Interest</p>
+            <h3 className="text-2xl font-bold text-purple-950 font-serif">₹{totalInterestEarned.toLocaleString('en-IN')}</h3>
+            <p className="text-[10px] text-purple-600/60 mt-0.5">Overall Earned</p>
           </div>
         </div>
         <div className="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center text-purple-700">
