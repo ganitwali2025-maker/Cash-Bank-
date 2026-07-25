@@ -22,6 +22,7 @@ import MonthlyDepositsTab from './components/MonthlyDepositsTab';
 import LoansTab from './components/LoansTab';
 import EmiPaymentsTab from './components/EmiPaymentsTab';
 import ReportsTab from './components/ReportsTab';
+import WelcomeScreen from './components/WelcomeScreen';
 import { translations } from './translations';
 import { 
   CheckCircle2, 
@@ -40,6 +41,8 @@ export default function App() {
   const location = useLocation();
 
   // 1. Core States
+  const [hasStarted, setHasStarted] = useState(false);
+
   const [language, setLanguage] = useState<LanguageType>(() => {
     const saved = localStorage.getItem('ub_lang');
     return (saved === 'en' || saved === 'hi') ? saved : 'hi';
@@ -235,6 +238,10 @@ export default function App() {
     setCurrentTab('members');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (!hasStarted) {
+    return <WelcomeScreen onStart={() => setHasStarted(true)} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-gray-800 font-sans antialiased selection:bg-[#5E121E]/10 selection:text-[#5E121E]">
