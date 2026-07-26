@@ -88,7 +88,11 @@ export const translations = {
     back: "वापस",
     close: "बंद करें",
     totalDue: "कुल देय",
-    memberCountDesc: "पंजीकृत समिति सदस्य"
+    memberCountDesc: "पंजीकृत समिति सदस्य",
+    consolidatedLedger: "समेकित खाता बही",
+    printSavePdf: "प्रिंट / PDF सहेजें",
+    totalSavingsPaid: "कुल जमा राशि",
+    totalLoanSanctioned: "कुल स्वीकृत ऋण"
   },
   en: {
     appName: "Ujjwal Bhawishya Samiti",
@@ -179,6 +183,10 @@ export const translations = {
     back: "Back",
     close: "Close",
     totalDue: "Total Due",
-    memberCountDesc: "Registered committee members"
+    memberCountDesc: "Registered committee members",
+    consolidatedLedger: "Consolidated Ledger",
+    printSavePdf: "Print / Save PDF",
+    totalSavingsPaid: "Total Savings Paid",
+    totalLoanSanctioned: "Total Loan Sanctioned"
   }
 };

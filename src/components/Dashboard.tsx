@@ -30,7 +30,10 @@ import {
   Book,
   QrCode,
   Percent,
-  LayoutGrid
+  LayoutGrid,
+  Wallet,
+  History,
+  ShieldCheck
 } from 'lucide-react';
 import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -127,7 +130,7 @@ export default function Dashboard({
   React.useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
-      setActiveCardIndex((prev) => (prev === 3 ? 0 : prev + 1));
+      setActiveCardIndex((prev) => (prev === 4 ? 0 : prev + 1));
     }, 3500);
     return () => clearInterval(interval);
   }, [isPaused]);
@@ -137,49 +140,91 @@ export default function Dashboard({
       id: 0,
       title: 'MONTHLY COLLECTION',
       amount: expectedMonthlySavings,
-      subtitle: 'Per Month',
+      subtitle: 'Regular monthly savings',
       icon: Calendar,
-      bgClass: 'bg-gradient-to-br from-[#7a0505] to-[#4a0000] border-[#3a0000]',
-      amountClass: 'text-[#D4AF37]',
-      iconBg: 'bg-[#D4AF37]/20',
+      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: Calendar,
-      cardNumber: '**** **** **** 1001'
+      cardNumber: '**** **** **** 1001',
+      stats: [
+        { label: 'Total Members', value: totalMembers, icon: Users },
+        { label: 'Total Collected', value: `₹${totalSavingsReceived.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Next Collection', value: '05 Aug 2025', icon: History },
+        { label: 'Status', value: 'Active', icon: ShieldCheck, status: true }
+      ]
     },
     {
       id: 1,
       title: 'TOTAL DEPOSIT',
       amount: totalSavingsReceived,
-      subtitle: 'Overall Deposited',
+      subtitle: 'Overall Deposited Amount',
       icon: TrendingUp,
-      bgClass: 'bg-gradient-to-br from-[#7a0505] to-[#4a0000] border-[#3a0000]',
-      amountClass: 'text-[#D4AF37]',
-      iconBg: 'bg-[#D4AF37]/20',
+      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: TrendingUp,
-      cardNumber: '**** **** **** 1002'
+      cardNumber: '**** **** **** 1002',
+      stats: [
+        { label: 'This Month', value: `₹${currentMonthDeposits.reduce((a, b) => a + b.amount, 0).toLocaleString('en-IN')}`, icon: Calendar },
+        { label: 'Members Paid', value: paidMembersCount, icon: Users },
+        { label: 'Collection Rate', value: `${collectionPercentage}%`, icon: Percent },
+        { label: 'Status', value: 'Healthy', icon: ShieldCheck, status: true }
+      ]
     },
     {
       id: 2,
       title: 'AVAILABLE BALANCE',
       amount: availableFund,
-      subtitle: 'Total Available',
+      subtitle: 'Total Cash on Hand',
       icon: PiggyBank,
-      bgClass: 'bg-gradient-to-br from-[#7a0505] to-[#4a0000] border-[#3a0000]',
-      amountClass: 'text-[#D4AF37]',
-      iconBg: 'bg-[#D4AF37]/20',
+      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: PiggyBank,
-      cardNumber: '**** **** **** 1003'
+      cardNumber: '**** **** **** 1003',
+      stats: [
+        { label: 'Total Savings', value: `₹${totalSavingsReceived.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Interest Earned', value: `₹${totalInterestEarned.toLocaleString('en-IN')}`, icon: TrendingUp },
+        { label: 'Loans Given', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Landmark },
+        { label: 'Status', value: 'Secure', icon: ShieldCheck, status: true }
+      ]
     },
     {
       id: 3,
       title: 'OUTSTANDING LOAN',
       amount: totalOutstandingLoan,
-      subtitle: 'Total Outstanding',
+      subtitle: 'Total Amount to be recovered',
       icon: Landmark,
-      bgClass: 'bg-gradient-to-br from-[#7a0505] to-[#4a0000] border-[#3a0000]',
-      amountClass: 'text-[#D4AF37]',
-      iconBg: 'bg-[#D4AF37]/20',
+      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: Landmark,
-      cardNumber: '**** **** **** 1004'
+      cardNumber: '**** **** **** 1004',
+      stats: [
+        { label: 'Total Principal', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Principal Paid', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: History },
+        { label: 'Active Loans', value: loans.filter(l => l.status === 'Active').length, icon: Users },
+        { label: 'Status', value: 'Pending', icon: AlertCircle, status: false }
+      ]
+    },
+    {
+      id: 4,
+      title: 'TOTAL INTEREST',
+      amount: totalInterestEarned,
+      subtitle: 'Overall Interest Earned',
+      icon: LineChart,
+      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
+      Watermark: LineChart,
+      cardNumber: '**** **** **** 1005',
+      stats: [
+        { label: 'This Month', value: `₹${currentMonthInterest.toLocaleString('en-IN')}`, icon: Calendar },
+        { label: 'Total Principal', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Expected Total', value: `₹${loans.reduce((sum, l) => sum + l.emis.reduce((s, e) => s + e.interestComponent, 0), 0).toLocaleString('en-IN')}`, icon: TrendingUp },
+        { label: 'Status', value: 'Growing', icon: ShieldCheck, status: true }
+      ]
     }
   ];
 
@@ -205,7 +250,7 @@ export default function Dashboard({
         
         {/* Cards Container */}
         <div 
-          className="w-[92%] max-w-[400px] overflow-hidden relative rounded-[24px] cursor-pointer"
+          className="w-[95%] max-w-[550px] overflow-hidden relative rounded-[24px] md:rounded-[32px] cursor-pointer"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
@@ -224,44 +269,80 @@ export default function Dashboard({
               return (
                 <div key={card.id} className="w-full shrink-0 flex justify-center py-2">
                   <div 
-                    className={`w-full aspect-[1.7/1] min-h-[190px] rounded-[24px] p-6 shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden border transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
+                    className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[24px] md:rounded-[32px] p-6 shadow-[0_8px_40px_rgba(0,0,0,0.15)] relative overflow-hidden border border-[#D4AF37]/10 transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
                   >
-                    {/* Glassmorphism subtle overlay */}
-                    <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]"></div>
+                    {/* Background noise/dots overlay */}
+                    <div className="absolute top-0 left-0 w-full h-full opacity-5 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
                     
                     {/* Watermark Icon */}
-                    <Watermark className="absolute -bottom-6 -right-6 w-40 h-40 opacity-[0.04] text-black pointer-events-none -rotate-12" />
+                    <Watermark className="absolute -bottom-10 -right-10 w-64 h-64 opacity-[0.03] text-white pointer-events-none -rotate-12" />
 
                     <div className="relative z-10 h-full flex flex-col justify-between">
-                      {/* Top Row: Icon */}
-                      <div className="flex items-center justify-between">
-                        <div className={`w-12 h-12 rounded-full ${card.iconBg} flex items-center justify-center text-[#D4AF37]`}>
-                          <Icon className="w-6 h-6" />
+                      {/* Top Row: Icon, Title & Pill */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-[#E8C34D] shadow-inner ${card.iconBg} border border-[#E8C34D]/20`}>
+                            <Icon className="w-6 h-6 md:w-7 md:h-7" />
+                          </div>
+                          <div className="flex flex-col">
+                            <h3 className="text-sm md:text-base font-bold text-white tracking-widest">{card.title}</h3>
+                            <p className="text-xs md:text-sm text-white/60 font-medium">{card.subtitle}</p>
+                          </div>
                         </div>
-                        {/* Fake Credit Card Chip */}
-                        <div className="w-10 h-8 bg-gradient-to-br from-[#E8C34D] to-[#D4AF37] rounded-md shadow-sm border border-[#c5a059]/50 flex items-center justify-center relative overflow-hidden">
-                          <div className="w-full h-[1px] bg-black/20 absolute top-1/2"></div>
-                          <div className="w-[1px] h-full bg-black/20 absolute left-1/3"></div>
-                          <div className="w-[1px] h-full bg-black/20 absolute right-1/3"></div>
+
+                        {/* +12% Pill (hidden on very small screens for space) */}
+                        <div className="hidden sm:flex flex-col items-end bg-[#EAF5E5] px-3 py-1.5 rounded-lg border border-green-200 shadow-sm ml-2">
+                          <div className="flex items-center gap-1 text-green-700 font-bold text-sm">
+                            <TrendingUp className="w-4 h-4" />
+                            <span>+12%</span>
+                          </div>
+                          <p className="text-[9px] text-green-600/80 font-medium whitespace-nowrap">vs last month</p>
                         </div>
                       </div>
 
-                      {/* Middle Row: Content */}
-                      <div className="mt-4 text-white">
-                        <p className="text-[10px] uppercase font-bold tracking-widest text-white/80 mb-1">
-                          {card.title}
-                        </p>
-                        <h3 className={`text-3xl md:text-4xl font-bold font-serif ${card.amountClass} tracking-tight`}>
+                      {/* Middle Row: Amount */}
+                      <div className="mt-8 mb-6 text-white">
+                        <h2 className={`text-5xl md:text-6xl font-black font-sans ${card.amountClass} tracking-tight drop-shadow-md`}>
                           ₹{card.amount.toLocaleString('en-IN')}
-                        </h3>
-                        <p className="text-xs text-white/80 font-medium mt-1">
-                          {card.subtitle}
+                        </h2>
+                        <p className="text-sm md:text-base text-white/90 font-bold mt-1">
+                          Per Month
                         </p>
                       </div>
 
-                      {/* Bottom Row: Card Number */}
-                      <div className="mt-6 flex items-center justify-between">
-                        <p className="text-xs sm:text-sm font-mono font-bold text-white/70 tracking-widest">
+                      {/* Stats Row */}
+                      <div className="flex items-center justify-between bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 md:p-4 mb-5 shadow-inner w-full overflow-x-auto no-scrollbar">
+                        {card.stats.map((stat, i) => (
+                          <React.Fragment key={i}>
+                            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 bg-white/5 flex items-center justify-center text-[#E8C34D]">
+                                <stat.icon className="w-4 h-4 md:w-5 md:h-5" />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[9px] md:text-[10px] text-white/60 uppercase font-medium">{stat.label}</span>
+                                {stat.label === 'Status' ? (
+                                  <div className="flex items-center gap-1.5 bg-[#2E7D32]/20 border border-[#2E7D32]/30 px-2 py-0.5 rounded-full mt-0.5 w-max">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${stat.status ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                                    <span className={`text-[9px] md:text-[11px] font-bold ${stat.status ? 'text-green-400' : 'text-red-400'}`}>{stat.value}</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-xs md:text-sm text-white font-bold">{stat.value}</span>
+                                )}
+                              </div>
+                            </div>
+                            {i < card.stats.length - 1 && <div className="w-[1px] h-8 md:h-10 bg-white/10 mx-2 md:mx-4 shrink-0"></div>}
+                          </React.Fragment>
+                        ))}
+                      </div>
+
+                      {/* Bottom Footer: Chip & Card Number */}
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-7 border border-[#E8C34D]/40 rounded bg-gradient-to-br from-[#D4AF37]/30 to-[#A57C1B]/10 flex items-center justify-center relative overflow-hidden shadow-sm">
+                           <div className="w-full h-[1px] bg-[#E8C34D]/30 absolute top-1/2"></div>
+                           <div className="w-[1px] h-full bg-[#E8C34D]/30 absolute left-1/3"></div>
+                           <div className="w-[1px] h-full bg-[#E8C34D]/30 absolute right-1/3"></div>
+                        </div>
+                        <p className="text-sm md:text-base font-mono font-bold text-white/70 tracking-widest">
                           {card.cardNumber}
                         </p>
                       </div>
@@ -278,22 +359,7 @@ export default function Dashboard({
 
 
 
-      {/* 4. Full Width Interest Card */}
-      <div className="bg-[#F8F5FF] rounded-[20px] p-5 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-purple-600/10">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-purple-600/10 flex items-center justify-center text-purple-700">
-            <TrendingUp className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-[10px] uppercase font-bold tracking-wider text-purple-900 mb-0.5">Total Interest</p>
-            <h3 className="text-2xl font-bold text-purple-950 font-serif">₹{totalInterestEarned.toLocaleString('en-IN')}</h3>
-            <p className="text-[10px] text-purple-600/60 mt-0.5">Overall Earned</p>
-          </div>
-        </div>
-        <div className="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center text-purple-700">
-          <LineChart className="w-5 h-5" />
-        </div>
-      </div>
+
 
       {/* QUICK ACTIONS */}
       <div className="pt-2">
