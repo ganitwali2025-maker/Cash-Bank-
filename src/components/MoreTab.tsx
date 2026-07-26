@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Bell, 
   Shield, 
@@ -6,11 +7,15 @@ import {
   FileText, 
   Info, 
   LogOut,
-  ChevronRight
+  ChevronRight,
+  PieChart
 } from 'lucide-react';
 
 export default function MoreTab() {
+  const navigate = useNavigate();
+  
   const menuItems = [
+    { icon: <PieChart className="w-5 h-5" />, label: 'Reports & Summaries', path: '/reports' },
     { icon: <Bell className="w-5 h-5" />, label: 'Notification' },
     { icon: <Shield className="w-5 h-5" />, label: 'Privacy Policy' },
     { icon: <HelpCircle className="w-5 h-5" />, label: 'Help & Support' },
@@ -28,7 +33,11 @@ export default function MoreTab() {
       <div className="p-4 pt-6 space-y-4">
         <div className="bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 overflow-hidden divide-y divide-gray-50">
           {menuItems.map((item, idx) => (
-            <button key={idx} className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors">
+            <button 
+              key={idx} 
+              onClick={() => item.path && navigate(item.path)}
+              className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+            >
               <div className="flex items-center gap-4">
                 <div className="text-gray-400">
                   {item.icon}

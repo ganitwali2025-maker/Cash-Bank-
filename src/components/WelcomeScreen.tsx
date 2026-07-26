@@ -66,9 +66,14 @@ export default function WelcomeScreen({ onStart }: WelcomeScreenProps) {
             )}
           </button>
           
-          <div className="flex items-center justify-center gap-2 text-white/50">
-            <ShieldCheck className="w-4 h-4" />
-            <span className="text-[10px] uppercase font-bold tracking-widest">Secure & Private</span>
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-2 text-white/50">
+              <ShieldCheck className="w-4 h-4" />
+              <span className="text-[10px] uppercase font-bold tracking-widest">Secure & Private</span>
+            </div>
+            <p className="text-[9px] text-[#D4AF37]/80 uppercase tracking-[0.2em] font-sans font-bold flex items-center justify-center">
+              Developer: Lokesh Rajak
+            </p>
           </div>
         </div>
       </div>

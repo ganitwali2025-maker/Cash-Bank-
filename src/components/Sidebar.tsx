@@ -211,6 +211,9 @@ export default function Sidebar({
             <p className="text-[9px] text-white/40 flex items-center justify-center gap-1 uppercase tracking-widest">
               <Sparkles className="w-2.5 h-2.5 text-[#D4AF37]" /> © 2026 Ujjwal Bhawishya
             </p>
+            <p className="text-[8px] text-[#D4AF37]/80 mt-1.5 uppercase tracking-[0.2em] font-sans font-bold flex items-center justify-center">
+              Developer: Lokesh Rajak
+            </p>
           </div>
         </div>
       </aside>

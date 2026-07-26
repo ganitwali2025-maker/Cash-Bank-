@@ -38,7 +38,8 @@ import {
   Users,
   Plus,
   PieChart,
-  LayoutGrid
+  LayoutGrid,
+  ArrowRightLeft
 } from 'lucide-react';
 
 export default function App() {
@@ -454,20 +455,20 @@ export default function App() {
         <div className="w-12"></div>
 
         <button 
-          onClick={() => setCurrentTab('reports')}
-          className={`flex flex-col items-center gap-1 ${currentTab === 'reports' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          onClick={() => setCurrentTab('transactions')}
+          className={`flex flex-col items-center gap-1 ${currentTab === 'transactions' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-1.5 rounded-xl ${currentTab === 'reports' ? 'bg-[#5A0000]/10' : ''}`}>
-            <PieChart className="w-6 h-6" />
+          <div className={`p-1.5 rounded-xl ${currentTab === 'transactions' ? 'bg-[#5A0000]/10' : ''}`}>
+            <ArrowRightLeft className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-bold">Reports</span>
+          <span className="text-[10px] font-bold">Transactions</span>
         </button>
 
         <button 
           onClick={() => setCurrentTab('more')}
-          className={`flex flex-col items-center gap-1 ${currentTab === 'more' || currentTab === 'profile' || currentTab === 'transactions' || currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 ${currentTab === 'more' || currentTab === 'profile' || currentTab === 'reports' || currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-1.5 rounded-xl ${currentTab === 'more' || currentTab === 'profile' || currentTab === 'transactions' || currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'bg-[#5A0000]/10' : ''}`}>
+          <div className={`p-1.5 rounded-xl ${currentTab === 'more' || currentTab === 'profile' || currentTab === 'reports' || currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'bg-[#5A0000]/10' : ''}`}>
             <LayoutGrid className="w-6 h-6" />
           </div>
           <span className="text-[10px] font-bold">More</span>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   PiggyBank, 
@@ -66,6 +67,7 @@ export default function Dashboard({
   onUndoEmiPayment,
   onNavigateToMember
 }: DashboardProps) {
+  const navigate = useNavigate();
   const t = translations[language];
 
   // 1. Calculations
@@ -367,90 +369,6 @@ export default function Dashboard({
 
 
 
-      {/* 6. Recent Transactions Section */}
-      <div className="pt-4">
-        <div className="flex items-center justify-between px-2 mb-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-md">
-               <History className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm sm:text-base text-gray-900">Recent Transactions</h3>
-              <p className="text-[10px] sm:text-xs text-gray-500 font-medium mt-0.5">Latest member collection & payment updates</p>
-            </div>
-          </div>
-          <button className="text-[10px] sm:text-xs font-bold text-[#5A0000] border border-[#5A0000]/20 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#5A0000]/5 transition-colors">
-            View All <ChevronRightIcon className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 overflow-y-auto max-h-[400px] no-scrollbar divide-y divide-gray-50">
-          {members.slice(0, 10).map(member => {
-            const deposit = deposits.find(d => d.memberId === member.id && d.monthKey === selectedMonth && d.status === 'Paid');
-            const isPaid = !!deposit;
-            
-            let dateStr = '';
-            if (isPaid && deposit.date) {
-              const d = new Date(deposit.date);
-              dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-            } else {
-              const [year, month] = selectedMonth.split('-');
-              const d = new Date(parseInt(year), parseInt(month) - 1, 1);
-              dateStr = d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-            }
-            
-            return (
-              <div key={member.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[#5A0000]/5 flex items-center justify-center text-[#5A0000] shrink-0 border border-[#5A0000]/10 font-bold text-sm">
-                    {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
-                  </div>
-                  <div className="flex flex-col">
-                    <h4 className="font-bold text-gray-900 text-sm cursor-pointer hover:underline" onClick={() => onNavigateToMember(member.id)}>
-                      {member.name}
-                    </h4>
-                    <p className="text-[11px] text-gray-500 font-medium flex items-center gap-1.5 mt-1">
-                      {isPaid ? (
-                        <>
-                          <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-                          <span className="text-green-600">Paid • {dateStr}</span>
-                        </>
-                      ) : (
-                        <>
-                          <AlertCircle className="w-3.5 h-3.5 text-orange-400" />
-                          <span className="text-orange-500">Pending • {dateStr}</span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="flex flex-col items-end">
-                    <p className={`font-bold text-sm ${isPaid ? 'text-green-600' : 'text-gray-900'}`}>
-                      +₹{member.monthlyDeposit.toLocaleString('en-IN')}
-                    </p>
-                  </div>
-                  
-                  {isPaid ? (
-                    <div className="flex items-center gap-1 bg-[#5A0000]/10 text-[#5A0000] px-3 py-1.5 rounded-full border border-[#5A0000]/20">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider">Paid</span>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => onRecordDeposit(member.id, member.monthlyDeposit, todayStr)}
-                      className="text-[10px] font-bold px-4 py-2 bg-[#5A0000] text-white hover:bg-[#4a0404] transition-colors rounded-full uppercase tracking-wider shadow-md"
-                    >
-                      Pay
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
