@@ -1,24 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   UserPlus, 
-  Phone, 
-  Calendar, 
-  PiggyBank, 
-  HandCoins, 
-  ArrowLeft, 
-  Edit2, 
-  CheckCircle2, 
-  Undo2, 
-  Plus,
-  BookOpen,
-  DollarSign,
-  User
+  ChevronRight,
+  Filter
 } from 'lucide-react';
-import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
+import { Member, Deposit, Loan, LanguageType } from '../types';
 import { translations } from '../translations';
-import { generateEmiSchedule } from '../utils/loanCalc';
-import { formatMonthLabel } from './Header';
 
 interface MembersTabProps {
   members: Member[];
@@ -41,64 +30,26 @@ export default function MembersTab({
   deposits,
   loans,
   language,
-  selectedMonth,
-  onUpdateMember,
   onAddMember,
-  onRecordDeposit,
-  onUndoDepositSpecific,
-  onRecordEmiPayment,
-  onUndoEmiPayment,
-  selectedMemberId,
-  setSelectedMemberId
 }: MembersTabProps) {
   const t = translations[language];
+  const navigate = useNavigate();
 
   // Search & Navigation States
   const [searchTerm, setSearchTerm] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
   // Edit / Add Form Local States
   const [formName, setFormName] = useState('');
   const [formPhone, setFormPhone] = useState('');
   const [formDeposit, setFormDeposit] = useState(1000);
-  const [formDate, setFormDate] = useState('2026-01-01');
-
-  // Profile Specific Tab
-  const [profileTab, setProfileTab] = useState<'savings' | 'loans'>('savings');
+  const [formDate, setFormDate] = useState(new Date().toISOString().split('T')[0]);
 
   // Filters members list
   const filteredMembers = members.filter(m => 
     m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     m.phone.includes(searchTerm)
   );
-
-  const selectedMember = members.find(m => m.id === selectedMemberId);
-
-  // Open Edit Form
-  const handleOpenEdit = (m: Member) => {
-    setFormName(m.name);
-    setFormPhone(m.phone);
-    setFormDeposit(m.monthlyDeposit);
-    setFormDate(m.joiningDate);
-    setIsEditing(true);
-  };
-
-  // Save Edit Form
-  const handleSaveEdit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedMemberId) return;
-    if (!formName.trim() || !formPhone.trim()) return;
-
-    onUpdateMember({
-      id: selectedMemberId,
-      name: formName,
-      phone: formPhone,
-      monthlyDeposit: Number(formDeposit),
-      joiningDate: formDate
-    });
-    setIsEditing(false);
-  };
 
   // Open Add Form
   const handleOpenAdd = () => {
@@ -126,683 +77,187 @@ export default function MembersTab({
     setIsAdding(false);
   };
 
-  // Calculations for selected member profile
-  const memberDeposits = selectedMember 
-    ? deposits.filter(d => d.memberId === selectedMember.id) 
-    : [];
-  
-  const memberTotalSavings = memberDeposits
-    .filter(d => d.status === 'Paid')
-    .reduce((sum, d) => sum + d.amount, 0);
+  // Calculate balances
+  const getSavingsBalance = (memberId: string) => {
+    return deposits
+      .filter(d => d.memberId === memberId && d.status === 'Paid')
+      .reduce((sum, d) => sum + d.amount, 0);
+  };
 
-  const memberLoans = selectedMember 
-    ? loans.filter(l => l.memberId === selectedMember.id) 
-    : [];
-
-  const todayStr = new Date().toISOString().split('T')[0];
+  const getLoanBalance = (memberId: string) => {
+    const memberLoans = loans.filter(l => l.memberId === memberId && l.status === 'Active');
+    let totalOutstanding = 0;
+    memberLoans.forEach(loan => {
+      const paidPrincipal = loan.emis
+        .filter(e => e.status === 'Paid')
+        .reduce((sum, e) => sum + e.principalComponent, 0);
+      totalOutstanding += (loan.principal - paidPrincipal);
+    });
+    return totalOutstanding;
+  };
 
   return (
-    <div className="space-y-6">
-      {/* ----------------- MEMBER PROFILE VIEW ----------------- */}
-      {selectedMember && (
-        <div className="space-y-6">
-          {/* Back Button & Title banner */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => {
-                setSelectedMemberId(null);
-                setIsEditing(false);
-              }}
-              className="p-2 bg-white rounded-full hover:bg-[#faf5eb] border border-gray-200 shadow-sm transition-colors text-[#4a0404]"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold font-serif text-[#4a0404] uppercase tracking-wide">{selectedMember.name}</h2>
-              <p className="text-xs text-gray-500 font-medium tracking-wider uppercase font-sans">{t.memberProfile}</p>
-            </div>
-          </div>
+    <div className="space-y-4 px-4 pt-4 pb-24">
+      {/* Search and Filter Row */}
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1">
+          <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search members..."
+            className="w-full pl-12 pr-4 py-3.5 rounded-full border border-gray-100 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] focus:outline-none focus:ring-1 focus:ring-[#5A0000] text-sm"
+          />
+        </div>
+        <button 
+          className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 text-gray-500 hover:text-[#5A0000] transition-colors"
+        >
+          <Filter className="w-5 h-5" />
+        </button>
+      </div>
 
-          {/* Profile Header Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Left: General Card / Edit Form */}
-            <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm space-y-4">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wider">{language === 'hi' ? 'बुनियादी जानकारी' : 'Basic Info'}</h3>
-                {!isEditing && (
-                  <button
-                    onClick={() => handleOpenEdit(selectedMember)}
-                    className="p-1.5 text-gray-500 hover:text-[#4a0404] hover:bg-gray-50 rounded transition-colors flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider"
-                  >
-                    <Edit2 className="w-3.5 h-3.5 text-[#c5a059]" />
-                    {language === 'hi' ? 'संपादित करें' : 'Edit'}
-                  </button>
+      {/* Add Member form overlay block */}
+      {isAdding && (
+        <div className="bg-white p-5 rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#5A0000]/10 mb-6">
+          <div className="border-b border-gray-100 pb-3 mb-4">
+            <h3 className="font-bold text-sm uppercase tracking-wider text-[#5A0000]">{t.addMember}</h3>
+          </div>
+          <form onSubmit={handleSaveAdd} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">{t.memberName}</label>
+              <input
+                type="text"
+                value={formName}
+                onChange={(e) => setFormName(e.target.value)}
+                className="w-full text-sm px-4 py-3 rounded-[12px] border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#5A0000]"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
+              <input
+                type="text"
+                value={formPhone}
+                onChange={(e) => setFormPhone(e.target.value)}
+                className="w-full text-sm px-4 py-3 rounded-[12px] border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#5A0000]"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">{t.monthlyDepositAmount} (₹)</label>
+              <input
+                type="number"
+                value={formDeposit}
+                onChange={(e) => setFormDeposit(Number(e.target.value))}
+                className="w-full text-sm px-4 py-3 rounded-[12px] border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#5A0000]"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">{t.joiningDate}</label>
+              <input
+                type="date"
+                value={formDate}
+                onChange={(e) => setFormDate(e.target.value)}
+                className="w-full text-sm px-4 py-3 rounded-[12px] border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#5A0000]"
+                required
+              />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsAdding(false)}
+                className="flex-1 text-[11px] uppercase tracking-wider font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 py-3.5 rounded-[12px] transition-colors"
+              >
+                {t.cancel}
+              </button>
+              <button
+                type="submit"
+                className="flex-1 text-[11px] uppercase tracking-wider font-bold bg-[#5A0000] hover:bg-[#4a0404] text-white py-3.5 rounded-[12px] transition-colors shadow-md"
+              >
+                {t.save}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Member Cards List */}
+      <div className="space-y-4">
+        {filteredMembers.map((member) => {
+          const savingsBalance = getSavingsBalance(member.id);
+          const loanBalance = getLoanBalance(member.id);
+          const isActive = savingsBalance > 0 || loanBalance > 0; // Simple logic for active badge
+
+          return (
+            <div 
+              key={member.id} 
+              className="bg-white rounded-[24px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-50 flex flex-col"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  {/* Photo Avatar */}
+                  <img 
+                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.name}&backgroundColor=5A0000`} 
+                    alt={member.name}
+                    className="w-12 h-12 rounded-full shadow-sm"
+                  />
+                  <div>
+                    <h3 className="font-bold text-gray-900 leading-tight">{member.name}</h3>
+                    <p className="text-[10px] text-gray-500 font-medium">ID: {member.id.replace('member-', 'MB')}</p>
+                    <p className="text-[10px] text-gray-500 font-medium">{member.phone}</p>
+                  </div>
+                </div>
+                
+                {/* Active Badge */}
+                {isActive ? (
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-[9px] font-bold uppercase tracking-wider rounded-full self-start">
+                    Active
+                  </span>
+                ) : (
+                  <span className="px-3 py-1 bg-red-100 text-red-700 text-[9px] font-bold uppercase tracking-wider rounded-full self-start">
+                    Inactive
+                  </span>
                 )}
               </div>
 
-              {isEditing ? (
-                <form onSubmit={handleSaveEdit} className="space-y-3">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.memberName}</label>
-                    <input
-                      type="text"
-                      value={formName}
-                      onChange={(e) => setFormName(e.target.value)}
-                      className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#5E121E]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
-                    <input
-                      type="text"
-                      value={formPhone}
-                      onChange={(e) => setFormPhone(e.target.value)}
-                      className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#5E121E]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.monthlyDepositAmount} (₹)</label>
-                    <input
-                      type="number"
-                      value={formDeposit}
-                      onChange={(e) => setFormDeposit(Number(e.target.value))}
-                      className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#5E121E]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.joiningDate}</label>
-                    <input
-                      type="date"
-                      value={formDate}
-                      onChange={(e) => setFormDate(e.target.value)}
-                      className="w-full text-sm px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#5E121E]"
-                      required
-                    />
-                  </div>
-                    <div className="flex gap-2 pt-2">
-                      <button
-                        type="submit"
-                        className="flex-1 text-[10px] uppercase tracking-wider font-bold bg-[#4a0404] hover:bg-[#2d0202] text-white py-2 rounded transition-colors"
-                      >
-                        {t.save}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsEditing(false)}
-                        className="flex-1 text-[10px] uppercase tracking-wider font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded transition-colors"
-                      >
-                        {t.cancel}
-                      </button>
-                    </div>
-                </form>
-              ) : (
-                <div className="space-y-3.5 text-sm">
-                  <div className="flex items-center gap-2.5 text-gray-700">
-                    <Phone className="w-4 h-4 text-[#D4AF37]" />
-                    <div>
-                      <p className="text-xs text-gray-400 leading-none">{t.phone}</p>
-                      <p className="font-bold mt-0.5">{selectedMember.phone}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-gray-700">
-                    <PiggyBank className="w-4 h-4 text-[#D4AF37]" />
-                    <div>
-                      <p className="text-xs text-gray-400 leading-none">{t.monthlyDepositAmount}</p>
-                      <p className="font-bold mt-0.5">₹{selectedMember.monthlyDeposit.toLocaleString('en-IN')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-gray-700">
-                    <Calendar className="w-4 h-4 text-[#D4AF37]" />
-                    <div>
-                      <p className="text-xs text-gray-400 leading-none">{t.joiningDate}</p>
-                      <p className="font-bold mt-0.5">{selectedMember.joiningDate}</p>
-                    </div>
-                  </div>
+              {/* Balances row */}
+              <div className="flex items-center justify-between mb-4 px-2">
+                <div>
+                  <p className="text-[10px] text-gray-500 font-medium">Savings</p>
+                  <p className="text-sm font-bold text-green-600 font-serif">₹{savingsBalance.toLocaleString('en-IN')}</p>
                 </div>
-              )}
-            </div>
+                <div className="text-right">
+                  <p className="text-[10px] text-gray-500 font-medium">Loan</p>
+                  <p className="text-sm font-bold text-red-600 font-serif">₹{loanBalance.toLocaleString('en-IN')}</p>
+                </div>
+              </div>
 
-            {/* Middle: Savings overview */}
-            <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm flex flex-col justify-between">
-              <div className="border-b border-gray-100 pb-3">
-                <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wider">{t.totalSavingsReceived}</h3>
-              </div>
-              <div className="py-4">
-                <h2 className="text-4xl font-black text-emerald-700">₹{memberTotalSavings.toLocaleString('en-IN')}</h2>
-                <p className="text-xs text-gray-500 mt-1">
-                  {memberDeposits.filter(d => d.status === 'Paid').length} {language === 'hi' ? 'महीनों की किस्त जमा' : 'months deposits collected'}
-                </p>
-              </div>
-              <div className="bg-emerald-50 text-emerald-800 text-xs p-2.5 rounded-lg font-medium">
-                {language === 'hi' ? 'सभी जमा बचत पर 0% ब्याज देय है।' : 'All savings deposits carry 0% raw cost.'}
-              </div>
-            </div>
-
-            {/* Right: Loan summary */}
-            <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm flex flex-col justify-between">
-              <div className="border-b border-gray-100 pb-3">
-                <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wider">{t.loanHistory}</h3>
-              </div>
-              <div className="py-4">
-                <h2 className="text-4xl font-black text-amber-700">{memberLoans.length}</h2>
-                <p className="text-xs text-gray-500 mt-1">
-                  {memberLoans.filter(l => l.status === 'Active').length} {t.active} • {memberLoans.filter(l => l.status === 'Closed').length} {t.closed}
-                </p>
-              </div>
-              <div className="bg-amber-50 text-amber-800 text-xs p-2.5 rounded-lg font-medium">
-                {language === 'hi' ? 'ऋण पर देय ब्याज राशि उपलब्ध कोष में जुड़ती है।' : 'Loan interest earned goes back into the common fund.'}
-              </div>
-            </div>
-          </div>
-
-          {/* Profile Tabs: Savings History OR Loans Detail */}
-          <div className="bg-white rounded border border-[#c5a059]/20 shadow-sm overflow-hidden">
-            <div className="flex border-b border-gray-100">
-              <button
-                onClick={() => setProfileTab('savings')}
-                className={`flex-1 py-3.5 text-center font-bold text-xs uppercase tracking-wider transition-all border-b-2 ${
-                  profileTab === 'savings'
-                    ? 'border-[#4a0404] text-[#4a0404] bg-[#faf5eb]/60'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
+              {/* View Button */}
+              <button 
+                onClick={() => navigate(`/savings/${member.id}`)}
+                className="w-full flex items-center justify-end gap-1 text-[#5A0000] text-xs font-bold uppercase tracking-wider hover:opacity-80 transition-opacity"
               >
-                {t.depositHistory}
-              </button>
-              <button
-                onClick={() => setProfileTab('loans')}
-                className={`flex-1 py-3.5 text-center font-bold text-xs uppercase tracking-wider transition-all border-b-2 ${
-                  profileTab === 'loans'
-                    ? 'border-[#4a0404] text-[#4a0404] bg-[#faf5eb]/60'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {t.loans}
+                View <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+          );
+        })}
 
-            <div className="p-5">
-              {/* SAVINGS SUBTAB */}
-              {profileTab === 'savings' && (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-sm">
-                    <thead>
-                      <tr className="bg-gray-50 text-gray-700 font-bold border-b border-gray-200">
-                        <th className="p-3">{t.month}</th>
-                        <th className="p-3">{language === 'hi' ? 'जमा राशि' : 'Deposit Amount'}</th>
-                        <th className="p-3">{t.status}</th>
-                        <th className="p-3">{t.action}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {/* We will generate previous 12 months for visual check */}
-                      {['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12'].map(monthKey => {
-                        const deposit = memberDeposits.find(d => d.monthKey === monthKey);
-                        const isPaid = deposit && deposit.status === 'Paid';
-
-                        return (
-                          <tr key={monthKey} className="hover:bg-gray-50/40">
-                            <td className="p-3 font-bold text-gray-700">
-                              {formatMonthLabel(monthKey, language)}
-                            </td>
-                            <td className="p-3 font-mono">
-                              ₹{selectedMember.monthlyDeposit.toLocaleString('en-IN')}
-                            </td>
-                            <td className="p-3">
-                              {isPaid ? (
-                                <div className="flex flex-col">
-                                  <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 w-fit">
-                                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                                    {t.paid}
-                                  </span>
-                                  <span className="text-[10px] text-gray-400 mt-0.5 font-mono">
-                                    {deposit.date}
-                                  </span>
-                                </div>
-                              ) : (
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200 w-fit">
-                                  {t.pending}
-                                </span>
-                              )}
-                            </td>
-                            <td className="p-3">
-                              {isPaid ? (
-                                <button
-                                  onClick={() => onUndoDepositSpecific(deposit.id)}
-                                  className="text-[10px] uppercase tracking-wider font-bold text-rose-700 hover:bg-rose-50 px-2.5 py-1 rounded border border-rose-200 transition-colors"
-                                >
-                                  {t.undo}
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => onRecordDeposit(selectedMember.id, selectedMember.monthlyDeposit, todayStr, monthKey)}
-                                  className="text-[10px] uppercase tracking-wider font-bold bg-[#4a0404] hover:bg-[#2d0202] text-white px-2.5 py-1 rounded transition-all shadow-sm"
-                                >
-                                  {t.recordPayment}
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              {/* LOANS SUBTAB */}
-              {profileTab === 'loans' && (
-                <div className="space-y-6">
-                  {memberLoans.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
-                      <HandCoins className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-                      <p className="font-bold text-sm">{t.noLoans}</p>
-                    </div>
-                  ) : (
-                    memberLoans.map(loan => {
-                      // Loan Progress
-                      const totalEmis = loan.durationMonths;
-                      const paidEmis = loan.emis.filter(e => e.status === 'Paid').length;
-                      const pctCompleted = Math.round((paidEmis / totalEmis) * 100);
-
-                      // Summary math
-                      const principalPaid = loan.emis.filter(e => e.status === 'Paid').reduce((sum, e) => sum + e.principalComponent, 0);
-                      const interestPaid = loan.emis.filter(e => e.status === 'Paid').reduce((sum, e) => sum + e.interestComponent, 0);
-                      const outstanding = Math.max(0, loan.principal - principalPaid);
-
-                      return (
-                        <div key={loan.id} className="p-4 rounded-lg border border-gray-100 bg-gray-50/50 space-y-4">
-                          {/* Loan header */}
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-200 pb-3">
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h4 className="font-black text-base text-gray-800">
-                                  ₹{loan.principal.toLocaleString('en-IN')} @ {loan.interestRate}% {language === 'hi' ? 'ब्याज' : 'int.'}
-                                </h4>
-                                <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
-                                  loan.status === 'Active' 
-                                    ? 'bg-amber-100 text-amber-800 border border-amber-200' 
-                                    : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                                }`}>
-                                  {loan.status === 'Active' ? t.active : t.closed}
-                                </span>
-                              </div>
-                              <p className="text-xs text-gray-500 mt-1 font-mono">
-                                {language === 'hi' ? 'ऋण स्वीकृत तिथि' : 'Sanctioned Date'}: {loan.dateIssued} • {loan.durationMonths} {language === 'hi' ? 'महीने' : 'Months'}
-                              </p>
-                            </div>
-
-                            {/* Progress bar info */}
-                            <div className="w-full sm:w-48 text-right space-y-1">
-                              <div className="flex justify-between text-xs font-bold text-gray-600">
-                                <span>{language === 'hi' ? 'किश्त प्रगति' : 'EMI Progress'}</span>
-                                <span className="font-mono">{paidEmis} / {totalEmis} ({pctCompleted}%)</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                <div 
-                                  className="bg-emerald-600 h-full rounded-full" 
-                                  style={{ width: `${pctCompleted}%` }}
-                                ></div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Loan micro grid metrics */}
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-                            <div className="bg-white p-2.5 rounded border border-gray-100">
-                              <p className="text-[10px] uppercase text-gray-400 font-bold leading-none">{language === 'hi' ? 'भुगतान मूलधन' : 'Paid Principal'}</p>
-                              <p className="font-black mt-1 text-emerald-700 font-mono">₹{principalPaid.toLocaleString('en-IN')}</p>
-                            </div>
-                            <div className="bg-white p-2.5 rounded border border-gray-100">
-                              <p className="text-[10px] uppercase text-gray-400 font-bold leading-none">{language === 'hi' ? 'भुगतान ब्याज' : 'Paid Interest'}</p>
-                              <p className="font-black mt-1 text-emerald-700 font-mono">₹{interestPaid.toLocaleString('en-IN')}</p>
-                            </div>
-                            <div className="bg-white p-2.5 rounded border border-gray-100">
-                              <p className="text-[10px] uppercase text-gray-400 font-bold leading-none">{t.outstandingPrincipal}</p>
-                              <p className="font-black mt-1 text-rose-700 font-mono">₹{outstanding.toLocaleString('en-IN')}</p>
-                            </div>
-                            <div className="bg-white p-2.5 rounded border border-gray-100">
-                              <p className="text-[10px] uppercase text-gray-400 font-bold leading-none">{language === 'hi' ? 'बचे हुए महीने' : 'Remaining Months'}</p>
-                              <p className="font-black mt-1 text-gray-700 font-mono">{totalEmis - paidEmis}</p>
-                            </div>
-                          </div>
-
-                          {/* EMI Detailed table nested inside loan info */}
-                          <div className="space-y-2">
-                            <h5 className="font-bold text-xs text-gray-600 uppercase tracking-wider">{t.emiSchedule}</h5>
-                            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg bg-white">
-                              <table className="w-full text-left border-collapse text-xs">
-                                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
-                                  <tr>
-                                    <th className="p-2 font-bold text-gray-600">{language === 'hi' ? 'किस्त' : 'EMI'}</th>
-                                    <th className="p-2 font-bold text-gray-600">{t.month}</th>
-                                    <th className="p-2 font-bold text-gray-600 font-mono">{t.principal}</th>
-                                    <th className="p-2 font-bold text-gray-600 font-mono">{t.interest}</th>
-                                    <th className="p-2 font-bold text-gray-600 font-mono">{t.total}</th>
-                                    <th className="p-2 font-bold text-gray-600">{t.status}</th>
-                                    <th className="p-2 font-bold text-gray-600">{t.action}</th>
-                                  </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100 font-mono">
-                                  {loan.emis.map(emi => {
-                                    const isPaid = emi.status === 'Paid';
-                                    return (
-                                      <tr key={emi.id} className="hover:bg-gray-50/40">
-                                        <td className="p-2 font-bold text-gray-700">#{emi.emiNumber}</td>
-                                        <td className="p-2 font-bold text-gray-700 font-sans">{formatMonthLabel(emi.monthKey, language)}</td>
-                                        <td className="p-2">₹{emi.principalComponent.toLocaleString('en-IN')}</td>
-                                        <td className="p-2">₹{emi.interestComponent.toLocaleString('en-IN')}</td>
-                                    <td className="p-2 font-black text-[#4a0404]">₹{emi.totalAmount.toLocaleString('en-IN')}</td>
-                                        <td className="p-2">
-                                          {isPaid ? (
-                                            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 font-sans">
-                                              {t.paid}
-                                            </span>
-                                          ) : (
-                                            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 font-sans">
-                                              {t.pending}
-                                            </span>
-                                          )}
-                                        </td>
-                                        <td className="p-2">
-                                          {isPaid ? (
-                                            <button
-                                              onClick={() => onUndoEmiPayment(loan.id, emi.emiNumber)}
-                                              className="p-1 text-rose-600 hover:bg-rose-50 rounded"
-                                              title={t.undo}
-                                            >
-                                              <Undo2 className="w-3.5 h-3.5" />
-                                            </button>
-                                          ) : (
-                                            <button
-                                              onClick={() => onRecordEmiPayment(loan.id, emi.emiNumber, todayStr)}
-                                              className="bg-[#4a0404] hover:bg-[#2d0202] text-white text-[9px] uppercase tracking-wider font-bold py-1 px-2 rounded shadow-sm hover:shadow transition-all"
-                                            >
-                                              {t.recordPayment}
-                                            </button>
-                                          )}
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              )}
-            </div>
+        {filteredMembers.length === 0 && (
+          <div className="text-center py-10 bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+            <UserPlus className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <h3 className="text-gray-500 font-medium mb-4">No members found</h3>
+            <button 
+              onClick={handleOpenAdd}
+              className="px-6 py-2 bg-[#5A0000] text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-md"
+            >
+              Add New Member
+            </button>
           </div>
-        </div>
-      )}
-
-      {/* ----------------- MEMBERS LIST VIEW ----------------- */}
-      {!selectedMemberId && (
-        <div className="space-y-6">
-          {/* STICKY TOP CONTROLS */}
-          <div className="sticky top-24 md:top-16 z-40 bg-[#FAF8F5] pt-2 pb-4 -mx-2 px-2 sm:-mx-0 sm:px-0 space-y-4">
-            {/* Header Banner */}
-            <div className="bg-[#4a0404] text-[#fdfbf7] p-6 rounded border-b-2 border-[#c5a059] shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-xl sm:text-2xl tracking-[0.1em] font-black uppercase font-display text-[#c5a059]">{t.memberList}</h1>
-                <p className="text-[10px] uppercase tracking-wider text-[#fdfbf7]/80 mt-1 font-sans">{t.membersSubtitle}</p>
-              </div>
-              
-              <button
-                onClick={handleOpenAdd}
-                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold bg-[#c5a059] hover:bg-[#d4af37] text-[#4a0404] px-4 py-2.5 rounded shadow transition-all self-start sm:self-auto hover:scale-[1.02]"
-              >
-                <UserPlus className="w-4 h-4" />
-                {t.addMember}
-              </button>
-            </div>
-
-            {/* Add Member form overlay block */}
-            {isAdding && (
-              <div className="bg-white p-5 rounded border border-[#c5a059]/40 shadow-md">
-                <div className="border-b border-gray-100 pb-2 mb-4">
-                  <h3 className="font-bold text-sm uppercase tracking-wider text-[#4a0404] font-display">{t.addMember}</h3>
-                </div>
-                <form onSubmit={handleSaveAdd} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.memberName}</label>
-                    <input
-                      type="text"
-                      value={formName}
-                      onChange={(e) => setFormName(e.target.value)}
-                      placeholder="e.g. राम प्रसाद (Ram Prasad)"
-                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
-                    <input
-                      type="text"
-                      value={formPhone}
-                      onChange={(e) => setFormPhone(e.target.value)}
-                      placeholder="9876543210"
-                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.monthlyDepositAmount} (₹)</label>
-                    <input
-                      type="number"
-                      value={formDeposit}
-                      onChange={(e) => setFormDeposit(Number(e.target.value))}
-                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.joiningDate}</label>
-                    <input
-                      type="date"
-                      value={formDate}
-                      onChange={(e) => setFormDate(e.target.value)}
-                      className="w-full text-sm px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#4a0404]"
-                      required
-                    />
-                  </div>
-                  <div className="md:col-span-4 flex justify-end gap-2 pt-2">
-                    <button
-                      type="submit"
-                      className="text-[10px] uppercase tracking-wider font-bold bg-[#4a0404] hover:bg-[#2d0202] text-white px-5 py-2.5 rounded transition-all"
-                    >
-                      {t.save}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsAdding(false)}
-                      className="text-[10px] uppercase tracking-wider font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded transition-all"
-                    >
-                      {t.cancel}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {/* Search bar */}
-            <div className="relative">
-              <Search className="w-4 h-4 text-[#c5a059] absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={t.searchMember}
-                className="w-full pl-11 pr-4 py-3 rounded border border-[#c5a059]/20 bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4a0404] text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Members list Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filteredMembers.map((member) => {
-              const getDisplayName = (fullName: string) => {
-                const match = fullName.match(/^(.*?)\s*\((.*?)\)$/);
-                if (match) {
-                  return language === 'hi' ? match[1].trim() : match[2].trim();
-                }
-                return fullName;
-              };
-              // Stats
-              const specificDeposits = deposits.filter(d => d.memberId === member.id && d.status === 'Paid');
-              const totalSavings = specificDeposits.reduce((sum, d) => sum + d.amount, 0);
-              const totalActiveLoans = loans.filter(l => l.memberId === member.id && l.status === 'Active').length;
-
-              return (
-                <div 
-                  key={member.id} 
-                  id={`member-card-${member.id}`}
-                  onClick={() => {
-                    setSelectedMemberId(member.id);
-                    setProfileTab('savings');
-                  }}
-                  className="relative bg-[#F9F7F4] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col w-full sm:w-auto min-h-[250px] overflow-hidden group border border-gray-100 cursor-pointer hover:shadow-[0_12px_40px_rgba(71,11,10,0.15)] transition-shadow duration-300"
-                >
-                  {/* Card Background Decorations */}
-                  <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                    {/* Top Left Curves (Smaller, tighter to corner) */}
-                    <div className="absolute -top-16 -left-16 w-32 h-32 sm:w-48 sm:h-48 bg-[#e1c170] rounded-full opacity-90"></div>
-                    <div className="absolute -top-20 -left-20 w-32 h-32 sm:w-40 sm:h-40 bg-[#9a7940] rounded-full"></div>
-                    <div className="absolute -top-24 -left-24 w-32 h-32 sm:w-32 sm:h-32 bg-[#470b0a] rounded-full"></div>
-                    
-                    {/* Bottom Bar - Fixed height */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[85px] sm:h-[90px] bg-[#470b0a]"></div>
-                    
-                    {/* Bottom Right Gold Curve */}
-                    <div className="absolute -bottom-16 -right-10 w-32 h-32 sm:w-48 sm:h-48 bg-[#b08745] rounded-full opacity-90"></div>
-
-                    {/* Diagonal Texture */}
-                    <div className="absolute bottom-2 left-6 h-3 flex gap-2 sm:gap-3 overflow-hidden opacity-10">
-                      {[...Array(15)].map((_, i) => (
-                        <div key={i} className="w-[2px] h-10 bg-white transform rotate-[30deg] -translate-y-2"></div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Top Section */}
-                  <div className="relative z-10 flex justify-between items-start p-5 sm:p-7 flex-1 pb-24">
-                    
-                    {/* Left Info */}
-                    <div className="flex flex-col flex-1 pr-2 pt-4 pl-8 sm:pl-10 z-10 relative">
-                      {/* Name */}
-                      <h3 className="font-serif font-bold text-[24px] sm:text-[30px] lg:text-[32px] text-[#470b0a] leading-[1.1] drop-shadow-sm mb-2 break-words">
-                        {getDisplayName(member.name)}
-                      </h3>
-                      {/* Badge */}
-                      <div className="mb-4">
-                        <span className="inline-block w-fit bg-[#ebd9b7] text-[#470b0a] text-[11px] sm:text-[13px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                          {language === 'hi' ? 'सदस्य' : 'MEMBER'}
-                        </span>
-                      </div>
-
-                      {/* Details List */}
-                      <div className="flex flex-col gap-2">
-                        {/* Phone */}
-                        <div className="flex items-center gap-[12px]">
-                          <div className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
-                            <Phone className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
-                          </div>
-                          <div className="h-5 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[14px] sm:text-[16px] truncate">{member.phone}</span>
-                        </div>
-                        {/* Date */}
-                        <div className="flex items-center gap-[12px]">
-                          <div className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#470b0a] flex items-center justify-center text-white shrink-0 shadow-sm">
-                            <Calendar className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
-                          </div>
-                          <div className="h-5 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[14px] sm:text-[16px] truncate">{member.joiningDate}</span>
-                        </div>
-                        {/* Deposit */}
-                        <div className="flex items-center gap-[12px]">
-                          <div className="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#b08745] flex items-center justify-center text-[#470b0a] shrink-0 shadow-sm">
-                            <PiggyBank className="w-[10px] h-[10px] sm:w-3 sm:h-3" />
-                          </div>
-                          <div className="h-5 w-px bg-gray-300"></div>
-                          <span className="text-gray-800 font-medium text-[14px] sm:text-[16px] truncate">₹{member.monthlyDeposit.toLocaleString('en-IN')} / {language === 'hi' ? 'महीना' : 'mo'}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Avatar */}
-                    <div className="w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] shrink-0 rounded-full border-[3px] sm:border-[4px] border-white outline outline-[2px] sm:outline-[3px] outline-[#470b0a] shadow-[0_4px_15px_rgba(71,11,10,0.15)] flex items-center justify-center bg-[#ebd9b7] overflow-hidden mt-1 object-cover">
-                      {/* Avatar SVG resembling the generic one in the image */}
-                      <svg viewBox="0 0 100 100" className="w-full h-full text-[#cfb78f]" fill="currentColor">
-                        <circle cx="50" cy="35" r="20" />
-                        <path d="M15,90 C15,65 30,55 50,55 C70,55 85,65 85,90 Z" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Bottom Section */}
-                  <div className="absolute bottom-0 left-0 right-0 z-10 px-4 sm:px-6 flex items-center justify-between h-[85px] sm:h-[90px]">
-                    
-                    {/* Stats */}
-                    <div className="flex gap-3 sm:gap-6 items-center h-full flex-1">
-                      {/* Savings */}
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-[10px] sm:rounded-xl border border-[#b08745] flex items-center justify-center text-[#b08745] shrink-0">
-                          {/* Money Bag Custom Icon */}
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 sm:w-5 sm:h-5">
-                            <path d="M8 8v-1a4 4 0 0 1 8 0v1" />
-                            <path d="M4 10.5a2.5 2.5 0 0 1 2.5-2.5h11a2.5 2.5 0 0 1 2.5 2.5v7A4.5 4.5 0 0 1 15.5 22h-7A4.5 4.5 0 0 1 4 17.5v-7z" />
-                            <text x="12" y="17" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">₹</text>
-                          </svg>
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <p className="text-[#dcab42] text-[8px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">
-                            {language === 'hi' ? 'कुल बचत' : 'TOTAL SAVINGS'}
-                          </p>
-                          <p className="text-white text-[18px] sm:text-[22px] font-bold font-mono leading-none">
-                            ₹{totalSavings.toLocaleString('en-IN')}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="w-px h-8 sm:h-10 bg-white/20"></div>
-
-                      {/* Loans */}
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-[10px] sm:rounded-xl border border-[#b08745] flex items-center justify-center text-[#b08745] shrink-0">
-                          {/* Bank Custom Icon */}
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 sm:w-5 sm:h-5">
-                            <line x1="3" y1="22" x2="21" y2="22"></line>
-                            <line x1="6" y1="18" x2="6" y2="11"></line>
-                            <line x1="10" y1="18" x2="10" y2="11"></line>
-                            <line x1="14" y1="18" x2="14" y2="11"></line>
-                            <line x1="18" y1="18" x2="18" y2="11"></line>
-                            <polygon points="12 2 20 7 4 7"></polygon>
-                          </svg>
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <p className="text-[#dcab42] text-[8px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">
-                            {language === 'hi' ? 'सक्रिय ऋण' : 'ACTIVE LOANS'}
-                          </p>
-                          <p className="text-white text-[18px] sm:text-[22px] font-bold font-mono leading-none">
-                            {totalActiveLoans}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

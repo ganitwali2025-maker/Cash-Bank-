@@ -23,6 +23,11 @@ import LoansTab from './components/LoansTab';
 import EmiPaymentsTab from './components/EmiPaymentsTab';
 import ReportsTab from './components/ReportsTab';
 import WelcomeScreen from './components/WelcomeScreen';
+import TransactionsTab from './components/TransactionsTab';
+import MoreTab from './components/MoreTab';
+import MyProfile from './components/MyProfile';
+import SavingsAccount from './components/SavingsAccount';
+import MyLoan from './components/MyLoan';
 import { translations } from './translations';
 import { 
   CheckCircle2, 
@@ -359,6 +364,28 @@ export default function App() {
               />
             } />
 
+            <Route path="/transactions" element={<TransactionsTab />} />
+            
+            <Route path="/more" element={<MoreTab />} />
+            
+            <Route path="/profile" element={<MyProfile />} />
+            
+            <Route path="/savings/:id" element={
+              <SavingsAccount 
+                members={members}
+                deposits={deposits}
+                language={language}
+              />
+            } />
+            
+            <Route path="/loan/:id" element={
+              <MyLoan 
+                members={members}
+                loans={loans}
+                language={language}
+              />
+            } />
+
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <h2 className="text-4xl font-black text-[#5A0000] mb-2 font-display">404</h2>
@@ -415,9 +442,9 @@ export default function App() {
 
         <button 
           onClick={() => setCurrentTab('members')}
-          className={`flex flex-col items-center gap-1 ${currentTab === 'members' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-1.5 rounded-xl ${currentTab === 'members' ? 'bg-[#5A0000]/10' : ''}`}>
+          <div className={`p-1.5 rounded-xl ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#5A0000]/10' : ''}`}>
             <Users className="w-6 h-6" />
           </div>
           <span className="text-[10px] font-bold">Members</span>
@@ -437,10 +464,10 @@ export default function App() {
         </button>
 
         <button 
-          onClick={() => setCurrentTab('deposits')}
-          className={`flex flex-col items-center gap-1 ${currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          onClick={() => setCurrentTab('more')}
+          className={`flex flex-col items-center gap-1 ${currentTab === 'more' || currentTab === 'profile' || currentTab === 'transactions' || currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-1.5 rounded-xl ${currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'bg-[#5A0000]/10' : ''}`}>
+          <div className={`p-1.5 rounded-xl ${currentTab === 'more' || currentTab === 'profile' || currentTab === 'transactions' || currentTab === 'deposits' || currentTab === 'loans' || currentTab === 'emis' ? 'bg-[#5A0000]/10' : ''}`}>
             <LayoutGrid className="w-6 h-6" />
           </div>
           <span className="text-[10px] font-bold">More</span>

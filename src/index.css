@@ -1,9 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
-  --font-serif: "Merriweather", "Noto Serif Devanagari", Georgia, serif;
-  --font-display: "Merriweather", "Noto Serif Devanagari", serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
+  --font-serif: "Poppins", "Merriweather", "Noto Serif Devanagari", Georgia, serif;
+  --font-display: "Poppins", "Merriweather", "Noto Serif Devanagari", serif;
+
+  --color-brand-maroon: #6B0000;
+  --color-brand-gold: #D4AF37;
+  --color-brand-cream: #FFF9F4;
+  
+  --color-soft-pink: #FFF0F5;
+  --color-soft-green: #F0FFF4;
+  --color-soft-yellow: #FFFFF0;
+  --color-soft-peach: #FFF5F0;
 
   --color-luxury-maroon: #5A0000;
   --color-luxury-gold: #D4AF37;
