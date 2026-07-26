@@ -399,7 +399,10 @@ export default function App() {
       )}
 
       {/* MOBILE BOTTOM NAVIGATION */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#FFFDF8] border-t border-gray-200 flex items-center justify-between px-6 py-2 pb-6 z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+      <div 
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[#FFFDF8] border-t border-gray-200 flex items-center justify-between px-6 pt-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+        style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
+      >
         <button 
           onClick={() => setCurrentTab('dashboard')}
           className={`flex flex-col items-center gap-1 ${currentTab === 'dashboard' ? 'text-[#5A0000]' : 'text-gray-400'}`}
@@ -447,7 +450,8 @@ export default function App() {
       {/* FLOATING ACTION BUTTON (Mobile) */}
       <button 
         onClick={() => setCurrentTab('members')}
-        className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-[#5A0000] text-white rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(90,0,0,0.3)] z-50 border-4 border-[#FFFDF8]"
+        className="md:hidden fixed left-1/2 -translate-x-1/2 w-16 h-16 bg-[#5A0000] text-white rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(90,0,0,0.3)] z-50 border-4 border-[#FFFDF8]"
+        style={{ bottom: 'max(2rem, calc(2rem + env(safe-area-inset-bottom)))' }}
       >
         <Plus className="w-8 h-8" />
       </button>

@@ -137,7 +137,7 @@ export default function ReportsTab({
       </div>
 
       {/* Aggregate metrics box */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 print:grid-cols-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,130px),1fr))] gap-4 print:grid-cols-4">
         <div className="bg-white p-4 rounded border-l-4 border-[#4a0404] shadow-sm print:border-black">
           <p className="text-[9px] uppercase tracking-wider text-gray-400 font-bold">{t.totalSavingsReceived}</p>
           <h3 className="text-lg font-bold text-emerald-800 font-mono mt-1 font-serif">₹{totalSavings.toLocaleString('en-IN')}</h3>

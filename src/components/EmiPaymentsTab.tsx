@@ -96,7 +96,7 @@ export default function EmiPaymentsTab({
 
         {/* Dues Details Micro Indicators */}
         {currentMonthEmis.length > 0 && (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,110px),1fr))] gap-4">
             <div className="bg-white p-3 rounded border-l-4 border-[#4a0404] shadow-sm">
               <p className="text-[9px] uppercase tracking-wider text-gray-400 font-bold">{language === 'hi' ? 'कुल देय मूलधन' : 'Total Due Principal'}</p>
               <p className="font-bold mt-1 text-gray-800 text-sm sm:text-base font-mono">₹{totalPrincipalDue.toLocaleString('en-IN')}</p>

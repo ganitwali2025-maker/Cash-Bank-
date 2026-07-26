@@ -15,7 +15,13 @@ import {
   Landmark,
   BarChart3,
   User,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  UserPlus,
+  Download,
+  FileText,
+  ArrowRightLeft,
+  FileSpreadsheet,
+  Edit2
 } from 'lucide-react';
 import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -106,8 +112,73 @@ export default function Dashboard({
 
   const todayStr = new Date().toISOString().split('T')[0];
 
+  const [activeCardIndex, setActiveCardIndex] = React.useState(0);
+
+  const handlePrevCard = () => {
+    setActiveCardIndex((prev) => (prev === 0 ? 3 : prev - 1));
+  };
+
+  const handleNextCard = () => {
+    setActiveCardIndex((prev) => (prev === 3 ? 0 : prev + 1));
+  };
+
+  const dashboardCards = [
+    {
+      id: 0,
+      title: 'MONTHLY COLLECTION',
+      amount: expectedMonthlySavings,
+      subtitle: 'Per Month',
+      icon: Calendar,
+      bgClass: 'bg-[#FFF3F3] border-[#5A0000]/10',
+      textClass: 'text-[#5A0000]',
+      amountClass: 'text-[#4A0404]',
+      iconBg: 'bg-[#5A0000]/10',
+      Watermark: Calendar,
+      cardNumber: '**** **** **** 1001'
+    },
+    {
+      id: 1,
+      title: 'TOTAL DEPOSIT',
+      amount: totalSavingsReceived,
+      subtitle: 'Overall Deposited',
+      icon: TrendingUp,
+      bgClass: 'bg-[#FFFBF2] border-[#D4AF37]/10',
+      textClass: 'text-[#D4AF37]',
+      amountClass: 'text-[#856611]',
+      iconBg: 'bg-[#D4AF37]/20',
+      Watermark: TrendingUp,
+      cardNumber: '**** **** **** 1002'
+    },
+    {
+      id: 2,
+      title: 'AVAILABLE BALANCE',
+      amount: availableFund,
+      subtitle: 'Total Available',
+      icon: PiggyBank,
+      bgClass: 'bg-[#F2FCF5] border-green-600/10',
+      textClass: 'text-green-700',
+      amountClass: 'text-green-900',
+      iconBg: 'bg-green-600/10',
+      Watermark: PiggyBank,
+      cardNumber: '**** **** **** 1003'
+    },
+    {
+      id: 3,
+      title: 'OUTSTANDING LOAN',
+      amount: totalOutstandingLoan,
+      subtitle: 'Total Outstanding',
+      icon: Landmark,
+      bgClass: 'bg-[#FFF0F0] border-red-600/10',
+      textClass: 'text-red-700',
+      amountClass: 'text-red-900',
+      iconBg: 'bg-red-600/10',
+      Watermark: Landmark,
+      cardNumber: '**** **** **** 1004'
+    }
+  ];
+
   return (
-    <div className="space-y-5 max-w-lg mx-auto pb-6">
+    <div className="space-y-5 w-full max-w-full mx-auto pb-6">
 
 
       {/* 2. Dashboard Header */}
@@ -122,50 +193,95 @@ export default function Dashboard({
         </button>
       </div>
 
-      {/* 3. Stats Grid (2 Columns) */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {/* Expected Monthly Card */}
-        <div className="bg-[#FFF8F8] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-[#5A0000]/5">
-          <Calendar className="absolute -bottom-2 -right-2 w-16 h-16 text-[#5A0000]/5 pointer-events-none" />
-          <div className="w-10 h-10 rounded-full bg-[#5A0000]/10 flex items-center justify-center text-[#5A0000] mb-3">
-            <Calendar className="w-5 h-5" />
+      {/* 3. Premium Card Slider */}
+      <div className="relative w-full flex flex-col items-center justify-center my-6">
+        {/* Navigation Arrows */}
+        <button 
+          onClick={handlePrevCard} 
+          className="absolute left-0 z-10 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center text-gray-800 hover:scale-110 transition-transform -ml-2 md:-ml-4 border border-gray-100"
+        >
+          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+        
+        {/* Cards Container */}
+        <div className="w-[92%] max-w-[400px] overflow-hidden relative rounded-[24px]">
+          <div 
+            className="flex transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${activeCardIndex * 100}%)` }}
+          >
+            {dashboardCards.map((card, idx) => {
+              const Icon = card.icon;
+              const Watermark = card.Watermark;
+              const isActive = activeCardIndex === idx;
+
+              return (
+                <div key={card.id} className="w-full shrink-0 flex justify-center py-2">
+                  <div 
+                    className={`w-full aspect-[1.7/1] min-h-[190px] rounded-[24px] p-6 shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden border transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
+                  >
+                    {/* Glassmorphism subtle overlay */}
+                    <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]"></div>
+                    
+                    {/* Watermark Icon */}
+                    <Watermark className="absolute -bottom-6 -right-6 w-40 h-40 opacity-[0.04] text-black pointer-events-none -rotate-12" />
+
+                    <div className="relative z-10 h-full flex flex-col justify-between">
+                      {/* Top Row: Icon */}
+                      <div className="flex items-center justify-between">
+                        <div className={`w-12 h-12 rounded-full ${card.iconBg} flex items-center justify-center text-[#5A0000]`}>
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        {/* Optional debit card chip or logo could go here */}
+                      </div>
+
+                      {/* Middle Row: Content */}
+                      <div className="mt-4">
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-gray-600/80 mb-1">
+                          {card.title}
+                        </p>
+                        <h3 className={`text-3xl md:text-4xl font-bold font-serif ${card.amountClass} tracking-tight`}>
+                          ₹{card.amount.toLocaleString('en-IN')}
+                        </h3>
+                        <p className="text-xs text-gray-500 font-medium mt-1">
+                          {card.subtitle}
+                        </p>
+                      </div>
+
+                      {/* Bottom Row: Card Number */}
+                      <div className="mt-6 flex items-center justify-between">
+                        <p className="text-xs sm:text-sm font-mono font-semibold text-gray-600/60 tracking-widest">
+                          {card.cardNumber}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Expected Monthly</p>
-          <h3 className="text-xl font-bold text-gray-900 font-serif">₹{expectedMonthlySavings.toLocaleString('en-IN')}</h3>
-          <p className="text-[10px] text-gray-400 mt-1">Per Month</p>
         </div>
 
-        {/* Expected Savings Card */}
-        <div className="bg-[#FFFBF2] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-[#D4AF37]/10">
-          <TrendingUp className="absolute -bottom-2 -right-2 w-16 h-16 text-[#D4AF37]/10 pointer-events-none" />
-          <div className="w-10 h-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] mb-3">
-            <TrendingUp className="w-5 h-5 text-yellow-700" />
-          </div>
-          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Total Deposit</p>
-          <h3 className="text-xl font-bold text-gray-900 font-serif">₹{totalSavingsReceived.toLocaleString('en-IN')}</h3>
-        </div>
+        <button 
+          onClick={handleNextCard} 
+          className="absolute right-0 z-10 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center text-gray-800 hover:scale-110 transition-transform -mr-2 md:-mr-4 border border-gray-100"
+        >
+          <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+      </div>
 
-        {/* Available Fund Card */}
-        <div className="bg-[#F2FCF5] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-green-600/10">
-          <DollarSign className="absolute -bottom-2 -right-2 w-16 h-16 text-green-600/5 pointer-events-none" />
-          <div className="w-10 h-10 rounded-full bg-green-600/10 flex items-center justify-center text-green-700 mb-3">
-            <PiggyBank className="w-5 h-5" />
-          </div>
-          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">{t.availableFund}</p>
-          <h3 className="text-xl font-bold text-green-800 font-serif">₹{availableFund.toLocaleString('en-IN')}</h3>
-          <p className="text-[10px] text-gray-400 mt-1">Total Available</p>
-        </div>
-
-        {/* Outstanding Loan Card */}
-        <div className="bg-[#FFF0F0] rounded-[20px] p-4 relative overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-red-600/10">
-          <BarChart3 className="absolute -bottom-2 -right-2 w-16 h-16 text-red-600/5 pointer-events-none" />
-          <div className="w-10 h-10 rounded-full bg-red-600/10 flex items-center justify-center text-red-700 mb-3">
-            <Landmark className="w-5 h-5" />
-          </div>
-          <p className="text-[9px] uppercase font-bold tracking-wider text-gray-500 mb-0.5">Outstanding Loan</p>
-          <h3 className="text-xl font-bold text-red-800 font-serif">₹{totalOutstandingLoan.toLocaleString('en-IN')}</h3>
-          <p className="text-[10px] text-gray-400 mt-1">Total Outstanding</p>
-        </div>
+      {/* Pagination Dots */}
+      <div className="flex items-center justify-center gap-2 -mt-2 mb-6">
+        {dashboardCards.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveCardIndex(idx)}
+            className={`transition-colors duration-300 rounded-full w-1.5 h-1.5 ${
+              activeCardIndex === idx 
+                ? 'bg-[#5A0000]' 
+                : 'bg-gray-300 hover:bg-gray-400'
+            }`}
+          />
+        ))}
       </div>
 
       {/* 4. Full Width Interest Card */}
@@ -182,6 +298,37 @@ export default function Dashboard({
         </div>
         <div className="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center text-purple-700">
           <LineChart className="w-5 h-5" />
+        </div>
+      </div>
+
+      {/* QUICK ACTIONS */}
+      <div className="pt-2">
+        <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000] px-1 mb-3">Quick Actions</h3>
+        <div className="flex overflow-x-auto gap-3 pb-2 hide-scrollbar px-1">
+          <button className="flex flex-col items-center justify-center bg-white p-3 rounded-[16px] min-w-[76px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 shrink-0">
+            <UserPlus className="w-6 h-6 text-blue-600 mb-2" />
+            <span className="text-[9px] font-bold text-gray-800">Add Member</span>
+          </button>
+          <button className="flex flex-col items-center justify-center bg-white p-3 rounded-[16px] min-w-[76px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 shrink-0">
+            <Download className="w-6 h-6 text-green-600 mb-2" />
+            <span className="text-[9px] font-bold text-gray-800">Add Deposit</span>
+          </button>
+          <button className="flex flex-col items-center justify-center bg-white p-3 rounded-[16px] min-w-[76px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 shrink-0">
+            <FileText className="w-6 h-6 text-red-600 mb-2" />
+            <span className="text-[9px] font-bold text-gray-800">Add Loan</span>
+          </button>
+          <button className="flex flex-col items-center justify-center bg-white p-3 rounded-[16px] min-w-[76px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 shrink-0">
+            <ArrowRightLeft className="w-6 h-6 text-purple-600 mb-2" />
+            <span className="text-[9px] font-bold text-gray-800">Transactions</span>
+          </button>
+          <button className="flex flex-col items-center justify-center bg-white p-3 rounded-[16px] min-w-[76px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 shrink-0">
+            <FileText className="w-6 h-6 text-orange-500 mb-2" />
+            <span className="text-[9px] font-bold text-gray-800">Statement</span>
+          </button>
+          <button className="flex flex-col items-center justify-center bg-white p-3 rounded-[16px] min-w-[76px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 shrink-0">
+            <Edit2 className="w-6 h-6 text-purple-700 mb-2" />
+            <span className="text-[9px] font-bold text-gray-800">Edit Details</span>
+          </button>
         </div>
       </div>
 
@@ -210,10 +357,10 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* 6. Recent Members Section */}
+      {/* 6. Recent Transactions Section */}
       <div className="pt-2">
         <div className="flex items-center justify-between px-1 mb-4">
-          <h3 className="font-bold text-xs uppercase tracking-wider text-gray-900">Recent Members</h3>
+          <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000]">Recent Transactions</h3>
           <button className="text-[10px] font-bold text-[#5A0000] uppercase tracking-wider flex items-center gap-1 hover:underline">
             View All <ChevronRightIcon className="w-3 h-3" />
           </button>

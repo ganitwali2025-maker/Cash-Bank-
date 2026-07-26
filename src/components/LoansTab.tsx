@@ -195,7 +195,7 @@ export default function LoansTab({
             </div>
 
             {/* Duration and start dates */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,120px),1fr))] gap-3">
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">{t.duration}</label>
                 <select
@@ -251,7 +251,7 @@ export default function LoansTab({
               {selectedMemberId ? (
                 <div className="space-y-4">
                   {/* Summary metric pill */}
-                  <div className="grid grid-cols-3 gap-3 bg-white p-3 rounded border border-[#c5a059]/20 text-[11px] font-semibold">
+                  <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,90px),1fr))] gap-3 bg-white p-3 rounded border border-[#c5a059]/20 text-[11px] font-semibold">
                     <div>
                       <p className="text-gray-400 uppercase text-[9px]">{language === 'hi' ? 'मूलधन स्वीकृत' : 'Sanctioned Principal'}</p>
                       <p className="font-bold text-gray-800 font-mono mt-0.5">₹{principal.toLocaleString('en-IN')}</p>
