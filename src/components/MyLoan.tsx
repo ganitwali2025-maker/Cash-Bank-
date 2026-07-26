@@ -80,27 +80,32 @@ export default function MyLoan({ members, loans, language }: Props) {
 
       <div className="p-4 space-y-4 -mt-2">
         {/* Main Loan Card */}
-        <div className="bg-gradient-to-br from-[#FFF0F5] to-[#FFE4E1] rounded-[24px] p-5 shadow-[0_8px_30px_rgba(255,192,203,0.3)] border border-pink-100 relative overflow-hidden">
-          <Landmark className="absolute right-4 top-4 w-12 h-12 text-[#5A0000]/20" />
-          
-          <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5A0000] mb-1">LOAN ACCOUNT</p>
-          <h2 className="text-3xl font-black font-serif text-[#4a0404] mb-1">₹ {loan.principal.toLocaleString('en-IN')}</h2>
-          <p className="text-[10px] font-medium text-gray-500 mb-6">Loan Amount</p>
-          
-          <div className="flex items-center justify-between border-t border-pink-200/50 pt-4">
+        <div className="bg-[#FFEBEB] rounded-[24px] p-5 shadow-sm text-[#4a0404] relative">
+          <div className="flex justify-between items-start mb-6">
             <div>
-              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Outstanding Balance</p>
-              <p className="font-bold font-serif text-sm text-[#4a0404]">₹ {outstandingBalance.toLocaleString('en-IN')}</p>
+              <p className="text-[10px] font-bold tracking-[0.1em] uppercase opacity-90 mb-1">LOAN ACCOUNT</p>
+              <h2 className="text-3xl font-black font-serif mb-1">₹ {loan.principal.toLocaleString('en-IN')}</h2>
+              <p className="text-[10px] font-medium opacity-80">Loan Amount</p>
+            </div>
+            <div className="text-red-400 opacity-90 mt-1">
+              <Landmark className="w-14 h-14" fill="currentColor" />
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between border-t border-red-200/50 pt-4">
+            <div>
+              <p className="text-[9px] font-bold text-[#4a0404]/60 uppercase tracking-wider mb-0.5">Outstanding Balance</p>
+              <p className="font-bold font-serif text-sm">₹ {outstandingBalance.toLocaleString('en-IN')}</p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Interest</p>
-              <p className="font-bold text-sm text-[#4a0404]">{loan.interestRate}% p.a.</p>
+              <p className="text-[9px] font-bold text-[#4a0404]/60 uppercase tracking-wider mb-0.5">Interest</p>
+              <p className="font-bold text-sm">{loan.interestRate}% p.a.</p>
             </div>
           </div>
         </div>
 
         {/* EMI Details Card */}
-        <div className="bg-white rounded-[24px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50">
+        <div className="bg-white rounded-[24px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
           <div className="grid grid-cols-3 gap-2 mb-6">
             <div>
               <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">EMI Amount</p>
@@ -108,7 +113,7 @@ export default function MyLoan({ members, loans, language }: Props) {
             </div>
             <div className="text-center border-x border-gray-100">
               <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">Next Due Date</p>
-              <p className="font-bold text-xs text-gray-900">{nextEmi ? '05 Next Month' : 'N/A'}</p>
+              <p className="font-bold text-[10px] text-gray-900 mt-1">{nextEmi ? '05 Jun 2025' : 'N/A'}</p>
             </div>
             <div className="text-right">
               <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">EMI Paid</p>
@@ -117,17 +122,17 @@ export default function MyLoan({ members, loans, language }: Props) {
           </div>
 
           {/* Progress Bar */}
-          <div className="mb-6">
-            <div className="flex justify-end mb-1 text-[10px] font-bold text-gray-700">{paidPercentage}%</div>
-            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex-1 h-2.5 bg-red-100 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-[#5A0000] rounded-full transition-all duration-1000 ease-out"
+                className="h-full bg-[#FC3B56] rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${paidPercentage}%` }}
               />
             </div>
+            <span className="text-[10px] font-bold text-gray-700">{paidPercentage}%</span>
           </div>
 
-          <button className="w-full py-3.5 bg-[#5A0000] text-white rounded-[16px] font-bold uppercase tracking-wider text-xs hover:bg-[#4a0404] transition-colors shadow-md">
+          <button className="w-full py-4 bg-[#3E0000] text-white rounded-[16px] font-bold tracking-wider text-xs hover:bg-[#2A0000] transition-colors shadow-md">
             Pay EMI Now
           </button>
         </div>

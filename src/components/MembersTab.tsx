@@ -4,7 +4,9 @@ import {
   Search, 
   UserPlus, 
   ChevronRight,
-  Filter
+  Filter,
+  PiggyBank,
+  Landmark
 } from 'lucide-react';
 import { Member, Deposit, Loan, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -188,59 +190,136 @@ export default function MembersTab({
         {filteredMembers.map((member) => {
           const savingsBalance = getSavingsBalance(member.id);
           const loanBalance = getLoanBalance(member.id);
-          const isActive = savingsBalance > 0 || loanBalance > 0; // Simple logic for active badge
+          const isActive = savingsBalance > 0 || loanBalance > 0;
+          const joinDate = new Date(member.joiningDate);
+          const now = new Date();
+          const monthsDiff = (now.getFullYear() - joinDate.getFullYear()) * 12 + now.getMonth() - joinDate.getMonth();
+          const years = Math.floor(monthsDiff / 12);
+          const months = monthsDiff % 12;
+          const memberSinceStr = years > 0 ? `${years} Yr ${months} Mo` : `${months} Mo`;
 
           return (
             <div 
               key={member.id} 
-              className="bg-white rounded-[24px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-50 flex flex-col"
+              className="bg-[#FFFDF8] rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex flex-col relative overflow-hidden mb-6"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  {/* Photo Avatar */}
-                  <img 
-                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.name}&backgroundColor=5A0000`} 
-                    alt={member.name}
-                    className="w-12 h-12 rounded-full shadow-sm"
-                  />
-                  <div>
-                    <h3 className="font-bold text-gray-900 leading-tight">{member.name}</h3>
-                    <p className="text-[10px] text-gray-500 font-medium">ID: {member.id.replace('member-', 'MB')}</p>
-                    <p className="text-[10px] text-gray-500 font-medium">{member.phone}</p>
+              {/* Maroon Header with Wavy Bottom */}
+              <div className="absolute top-0 left-0 w-full h-[140px] bg-[#3e0303] overflow-hidden">
+                {/* Wavy SVG Divider at the bottom of the maroon box */}
+                <svg className="absolute bottom-[-1px] w-full h-[40px] text-[#FFFDF8]" preserveAspectRatio="none" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" fillOpacity="1" d="M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,128C672,128,768,160,864,170.7C960,181,1056,171,1152,149.3C1248,128,1344,96,1392,80L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+              </div>
+
+              {/* Header Content */}
+              <div className="pt-5 px-5 relative z-10 flex justify-between items-start">
+                <div className="flex-1 flex justify-center items-center gap-2">
+                  <span className="text-[#D4AF37] opacity-80 text-[10px]">🌿</span>
+                  <p className="text-[#D4AF37] text-[10px] sm:text-[11px] tracking-[0.25em] uppercase font-bold drop-shadow-md">
+                    UJJWAL BHAVISYA SAMITI
+                  </p>
+                  <span className="text-[#D4AF37] opacity-80 text-[10px]">🌿</span>
+                </div>
+                <div className="absolute right-4 top-4">
+                  {isActive ? (
+                    <span className="px-3 py-1.5 bg-[#1A3B22] text-[#4ADE80] text-[9px] font-bold uppercase tracking-wider rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#4ADE80] shadow-[0_0_8px_#4ADE80]"></span> ACTIVE
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1.5 bg-white/10 text-white/70 text-[9px] font-bold uppercase tracking-wider rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center gap-2 border border-white/10">
+                      <span className="w-2 h-2 rounded-full bg-white/50"></span> INACTIVE
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Profile Section */}
+              <div className="flex flex-col items-center mt-6 relative z-10">
+                <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                  <div className="w-[90px] h-[90px] rounded-full bg-[#D4AF37] border-4 border-white flex items-center justify-center text-[#5A0000] text-3xl font-black shadow-inner">
+                    {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                   </div>
                 </div>
+
+                <h3 className="font-black text-[#3e0303] text-2xl mt-4 tracking-wide uppercase">{member.name}</h3>
                 
-                {/* Active Badge */}
-                {isActive ? (
-                  <span className="px-3 py-1 bg-green-100 text-green-700 text-[9px] font-bold uppercase tracking-wider rounded-full self-start">
-                    Active
-                  </span>
-                ) : (
-                  <span className="px-3 py-1 bg-red-100 text-red-700 text-[9px] font-bold uppercase tracking-wider rounded-full self-start">
-                    Inactive
-                  </span>
-                )}
-              </div>
-
-              {/* Balances row */}
-              <div className="flex items-center justify-between mb-4 px-2">
-                <div>
-                  <p className="text-[10px] text-gray-500 font-medium">Savings</p>
-                  <p className="text-sm font-bold text-green-600 font-serif">₹{savingsBalance.toLocaleString('en-IN')}</p>
+                <div className="px-4 py-1 border border-[#e4a8a8] text-[#933333] text-[11px] font-bold tracking-[0.15em] rounded-full mt-2 mb-3 bg-[#FFFDF8]">
+                  ID: {member.id.replace('member-', 'MB-')}
                 </div>
-                <div className="text-right">
-                  <p className="text-[10px] text-gray-500 font-medium">Loan</p>
-                  <p className="text-sm font-bold text-red-600 font-serif">₹{loanBalance.toLocaleString('en-IN')}</p>
+
+                <div className="px-5 py-2 bg-[#fdf0f0] rounded-full text-[#933333] flex items-center gap-2 mb-2 shadow-sm border border-[#f5d9d9]">
+                  <span className="text-sm">📞</span>
+                  <p className="text-sm font-bold tracking-wider">+91 {member.phone}</p>
                 </div>
               </div>
 
-              {/* View Button */}
-              <button 
-                onClick={() => navigate(`/savings/${member.id}`)}
-                className="w-full flex items-center justify-end gap-1 text-[#5A0000] text-xs font-bold uppercase tracking-wider hover:opacity-80 transition-opacity"
-              >
-                View <ChevronRight className="w-4 h-4" />
-              </button>
+              {/* Balances Section */}
+              <div className="mx-4 mt-5 mb-6 relative z-10 border border-[#e9d5d5] rounded-[16px] overflow-hidden flex shadow-sm bg-white">
+                <div className="flex-1 bg-gradient-to-br from-[#f6fcf5] to-[#ebf7ea] p-4 flex items-center gap-3 border-r border-[#e9d5d5]">
+                  <div className="w-12 h-12 rounded-full bg-[#dcfce7] flex items-center justify-center text-[#166534] shrink-0 border border-[#bbf7d0] shadow-sm">
+                    <PiggyBank className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Total Savings</p>
+                    <p className="text-xl font-black text-[#166534]">₹{savingsBalance.toLocaleString('en-IN')}</p>
+                    <p className="text-[9px] text-gray-500 font-medium mt-0.5">Total Amount in Savings</p>
+                  </div>
+                </div>
+                <div className="flex-1 bg-gradient-to-br from-[#fff5f5] to-[#ffebeb] p-4 flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#ffe4e6] flex items-center justify-center text-[#9f1239] shrink-0 border border-[#fecdd3] shadow-sm">
+                    <Landmark className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Active Loan</p>
+                    <p className="text-xl font-black text-[#9f1239]">₹{loanBalance.toLocaleString('en-IN')}</p>
+                    <p className="text-[9px] text-gray-500 font-medium mt-0.5">Current Outstanding Loan</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Info & Button */}
+              <div className="bg-[#3e0303] text-white pt-5 px-4 pb-5">
+                <div className="grid grid-cols-4 divide-x divide-white/10 mb-6">
+                  <div className="px-2 flex flex-col gap-1 items-center sm:items-start text-center sm:text-left">
+                    <div className="flex items-center gap-1.5 text-[#D4AF37] mb-1">
+                      <span className="text-[10px]">📅</span>
+                      <p className="text-[8px] uppercase tracking-wider text-white/60">Joined On</p>
+                    </div>
+                    <p className="text-[11px] font-bold">{new Date(member.joiningDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'})}</p>
+                  </div>
+                  
+                  <div className="px-2 flex flex-col gap-1 items-center sm:items-start text-center sm:text-left">
+                    <div className="flex items-center gap-1.5 text-[#D4AF37] mb-1">
+                      <span className="text-[10px]">⏳</span>
+                      <p className="text-[8px] uppercase tracking-wider text-white/60">Member Since</p>
+                    </div>
+                    <p className="text-[11px] font-bold">{memberSinceStr || 'New'}</p>
+                  </div>
+                  
+                  <div className="px-2 flex flex-col gap-1 items-center sm:items-start text-center sm:text-left">
+                    <div className="flex items-center gap-1.5 text-[#D4AF37] mb-1">
+                      <span className="text-[10px]">🛡️</span>
+                      <p className="text-[8px] uppercase tracking-wider text-white/60">KYC Status</p>
+                    </div>
+                    <p className="text-[11px] font-bold text-[#4ADE80]">Verified</p>
+                  </div>
+                  
+                  <div className="px-2 flex flex-col gap-1 items-center sm:items-start text-center sm:text-left">
+                    <div className="flex items-center gap-1.5 text-[#D4AF37] mb-1">
+                      <span className="text-[10px]">📊</span>
+                      <p className="text-[8px] uppercase tracking-wider text-white/60">Member Type</p>
+                    </div>
+                    <p className="text-[11px] font-bold">Regular</p>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => navigate(`/savings/${member.id}`)}
+                  className="w-full border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 py-3.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2"
+                >
+                  View Full Profile <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           );
         })}

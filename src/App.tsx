@@ -15,7 +15,6 @@ import {
 } from './initialData';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import Footer from './components/Footer';
 import Dashboard from './components/Dashboard';
 import MembersTab from './components/MembersTab';
 import MonthlyDepositsTab from './components/MonthlyDepositsTab';
@@ -399,8 +398,6 @@ export default function App() {
           </Routes>
 
         </main>
-        
-        <Footer />
       </div>
 
       {/* FLOATING NOTIFICATION BANNER (TOAST) */}

@@ -62,46 +62,50 @@ export default function SavingsAccount({ members, deposits, language }: Props) {
 
       <div className="p-4 space-y-4 -mt-2">
         {/* Main Golden Card */}
-        <div className="bg-gradient-to-br from-[#E8C34D] to-[#D4AF37] rounded-[24px] p-5 shadow-[0_8px_30px_rgba(212,175,55,0.3)] text-[#4a0404] relative overflow-hidden">
-          {/* Watermark Icon */}
-          <PiggyBank className="absolute -right-4 -bottom-4 w-32 h-32 text-white/10" />
+        <div className="bg-[#FDF3D0] rounded-[24px] p-5 shadow-sm text-[#4a0404] relative">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.1em] uppercase opacity-90 mb-1">Savings Account</p>
+              <h2 className="text-3xl font-black font-serif mb-1">₹ {totalBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h2>
+              <p className="text-[10px] font-medium opacity-80">Total Balance</p>
+            </div>
+            <div className="text-[#D4AF37] opacity-90 mt-1">
+              <PiggyBank className="w-14 h-14" fill="currentColor" />
+            </div>
+          </div>
           
-          <p className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-90 mb-1">Savings Account</p>
-          <h2 className="text-3xl font-black font-serif mb-1">₹ {totalBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h2>
-          <p className="text-[10px] font-medium opacity-80 mb-6">Total Balance</p>
-          
-          <div className="flex items-end justify-between relative z-10">
+          <div className="flex items-end justify-between border-t border-[#D4AF37]/30 pt-4">
             <div>
               <p className="text-[9px] font-medium opacity-80">Account No.</p>
-              <p className="font-bold font-serif text-sm tracking-widest">{member.id.replace('member-', '5010')}</p>
+              <p className="font-bold font-serif text-[11px] tracking-widest">{member.id.replace('member-', '5010')}</p>
             </div>
             <div className="text-right">
               <p className="text-[9px] font-medium opacity-80">Member Name</p>
-              <p className="font-bold text-sm">{member.name}</p>
+              <p className="font-bold text-[11px]">{member.name}</p>
             </div>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-[20px] p-4 flex items-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-50">
-            <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 shrink-0">
-              <Download className="w-5 h-5" />
-            </div>
-            <div>
+          <div className="bg-white rounded-[20px] p-4 flex flex-col justify-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-red-50 flex items-center justify-center text-red-500 shrink-0">
+                <Download className="w-3.5 h-3.5" />
+              </div>
               <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Total Deposit</p>
-              <p className="font-bold text-gray-900">₹{totalBalance.toLocaleString('en-IN')}</p>
             </div>
+            <p className="font-bold text-gray-900 text-lg ml-1">₹{totalBalance.toLocaleString('en-IN')}</p>
           </div>
           
-          <div className="bg-white rounded-[20px] p-4 flex items-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-50">
-            <div className="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-600 shrink-0">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <div>
+          <div className="bg-white rounded-[20px] p-4 flex flex-col justify-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-orange-50 flex items-center justify-center text-orange-500 shrink-0">
+                <TrendingUp className="w-3.5 h-3.5" />
+              </div>
               <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Interest Earned</p>
-              <p className="font-bold text-gray-900">₹{interestEarned.toLocaleString('en-IN')}</p>
             </div>
+            <p className="font-bold text-gray-900 text-lg ml-1">₹{interestEarned.toLocaleString('en-IN')}</p>
           </div>
         </div>
 

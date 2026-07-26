@@ -367,7 +367,8 @@ export default function Dashboard({
         </div>
       </div>
 
-
+      {/* Spacer for bottom navigation and scroll space */}
+      <div className="h-48 w-full"></div>
 
     </div>
   );
