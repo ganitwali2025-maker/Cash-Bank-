@@ -150,8 +150,7 @@ export default function Dashboard({
       stats: [
         { label: 'Total Members', value: totalMembers, icon: Users },
         { label: 'Total Collected', value: `₹${totalSavingsReceived.toLocaleString('en-IN')}`, icon: Wallet },
-        { label: 'Next Collection', value: '05 Aug 2025', icon: History },
-        { label: 'Status', value: 'Active', icon: ShieldCheck, status: true }
+        { label: 'Next Collection', value: '05 Aug 2025', icon: History }
       ]
     },
     {
@@ -168,8 +167,7 @@ export default function Dashboard({
       stats: [
         { label: 'This Month', value: `₹${currentMonthDeposits.reduce((a, b) => a + b.amount, 0).toLocaleString('en-IN')}`, icon: Calendar },
         { label: 'Members Paid', value: paidMembersCount, icon: Users },
-        { label: 'Collection Rate', value: `${collectionPercentage}%`, icon: Percent },
-        { label: 'Status', value: 'Healthy', icon: ShieldCheck, status: true }
+        { label: 'Collection Rate', value: `${collectionPercentage}%`, icon: Percent }
       ]
     },
     {
@@ -186,8 +184,7 @@ export default function Dashboard({
       stats: [
         { label: 'Total Savings', value: `₹${totalSavingsReceived.toLocaleString('en-IN')}`, icon: Wallet },
         { label: 'Interest Earned', value: `₹${totalInterestEarned.toLocaleString('en-IN')}`, icon: TrendingUp },
-        { label: 'Loans Given', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Landmark },
-        { label: 'Status', value: 'Secure', icon: ShieldCheck, status: true }
+        { label: 'Loans Given', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Landmark }
       ]
     },
     {
@@ -204,8 +201,7 @@ export default function Dashboard({
       stats: [
         { label: 'Total Principal', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Wallet },
         { label: 'Principal Paid', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: History },
-        { label: 'Active Loans', value: loans.filter(l => l.status === 'Active').length, icon: Users },
-        { label: 'Status', value: 'Pending', icon: AlertCircle, status: false }
+        { label: 'Active Loans', value: loans.filter(l => l.status === 'Active').length, icon: Users }
       ]
     },
     {
@@ -222,8 +218,7 @@ export default function Dashboard({
       stats: [
         { label: 'This Month', value: `₹${currentMonthInterest.toLocaleString('en-IN')}`, icon: Calendar },
         { label: 'Total Principal', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: Wallet },
-        { label: 'Expected Total', value: `₹${loans.reduce((sum, l) => sum + l.emis.reduce((s, e) => s + e.interestComponent, 0), 0).toLocaleString('en-IN')}`, icon: TrendingUp },
-        { label: 'Status', value: 'Growing', icon: ShieldCheck, status: true }
+        { label: 'Expected Total', value: `₹${loans.reduce((sum, l) => sum + l.emis.reduce((s, e) => s + e.interestComponent, 0), 0).toLocaleString('en-IN')}`, icon: TrendingUp }
       ]
     }
   ];
@@ -232,17 +227,7 @@ export default function Dashboard({
     <div className="space-y-5 w-full max-w-full mx-auto pb-6">
 
 
-      {/* 2. Dashboard Header */}
-      <div className="flex items-center justify-between pt-2 px-1">
-        <div>
-          <h2 className="text-xl font-bold text-[#5A0000] uppercase font-display tracking-wide">Dashboard</h2>
-          <p className="text-[11px] text-gray-500 font-medium">Overall committee status at a glance</p>
-        </div>
-        <button className="flex items-center gap-1.5 px-3 py-2 bg-[#5A0000]/5 text-[#5A0000] rounded-lg text-[10px] font-bold uppercase tracking-wider">
-          <LineChart className="w-3.5 h-3.5" />
-          Overview
-        </button>
-      </div>
+      {/* 2. Dashboard Header Removed */}
 
       {/* 3. Premium Card Slider */}
       <div className="relative w-full flex flex-col items-center justify-center my-6">
@@ -311,7 +296,7 @@ export default function Dashboard({
                       </div>
 
                       {/* Stats Row */}
-                      <div className="flex items-center justify-between bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 md:p-4 mb-5 shadow-inner w-full overflow-x-auto no-scrollbar">
+                      <div className="flex items-center justify-between mb-5 w-full overflow-x-auto no-scrollbar">
                         {card.stats.map((stat, i) => (
                           <React.Fragment key={i}>
                             <div className="flex items-center gap-2 md:gap-3 shrink-0">
@@ -320,14 +305,7 @@ export default function Dashboard({
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-[9px] md:text-[10px] text-white/60 uppercase font-medium">{stat.label}</span>
-                                {stat.label === 'Status' ? (
-                                  <div className="flex items-center gap-1.5 bg-[#2E7D32]/20 border border-[#2E7D32]/30 px-2 py-0.5 rounded-full mt-0.5 w-max">
-                                    <div className={`w-1.5 h-1.5 rounded-full ${stat.status ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                                    <span className={`text-[9px] md:text-[11px] font-bold ${stat.status ? 'text-green-400' : 'text-red-400'}`}>{stat.value}</span>
-                                  </div>
-                                ) : (
-                                  <span className="text-xs md:text-sm text-white font-bold">{stat.value}</span>
-                                )}
+                                <span className="text-xs md:text-sm text-white font-bold">{stat.value}</span>
                               </div>
                             </div>
                             {i < card.stats.length - 1 && <div className="w-[1px] h-8 md:h-10 bg-white/10 mx-2 md:mx-4 shrink-0"></div>}
@@ -390,50 +368,84 @@ export default function Dashboard({
 
 
       {/* 6. Recent Transactions Section */}
-      <div className="pt-2">
-        <div className="flex items-center justify-between px-1 mb-4">
-          <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000]">Recent Transactions</h3>
-          <button className="text-[10px] font-bold text-[#5A0000] uppercase tracking-wider flex items-center gap-1 hover:underline">
-            View All <ChevronRightIcon className="w-3 h-3" />
+      <div className="pt-4">
+        <div className="flex items-center justify-between px-2 mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#5A0000] flex items-center justify-center text-white shadow-md">
+               <History className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm sm:text-base text-gray-900">Recent Transactions</h3>
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium mt-0.5">Latest member collection & payment updates</p>
+            </div>
+          </div>
+          <button className="text-[10px] sm:text-xs font-bold text-[#5A0000] border border-[#5A0000]/20 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#5A0000]/5 transition-colors">
+            View All <ChevronRightIcon className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden divide-y divide-gray-50">
-          {members.slice(0, 5).map(member => {
-            const isPaid = deposits.some(d => d.memberId === member.id && d.monthKey === selectedMonth && d.status === 'Paid');
+        <div className="bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 overflow-y-auto max-h-[400px] no-scrollbar divide-y divide-gray-50">
+          {members.slice(0, 10).map(member => {
+            const deposit = deposits.find(d => d.memberId === member.id && d.monthKey === selectedMonth && d.status === 'Paid');
+            const isPaid = !!deposit;
+            
+            let dateStr = '';
+            if (isPaid && deposit.date) {
+              const d = new Date(deposit.date);
+              dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            } else {
+              const [year, month] = selectedMonth.split('-');
+              const d = new Date(parseInt(year), parseInt(month) - 1, 1);
+              dateStr = d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+            }
             
             return (
               <div key={member.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#5A0000]/5 flex items-center justify-center text-[#5A0000] shrink-0 border border-[#5A0000]/10">
-                    <User className="w-5 h-5" />
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#5A0000]/5 flex items-center justify-center text-[#5A0000] shrink-0 border border-[#5A0000]/10 font-bold text-sm">
+                    {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                   </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 text-sm leading-tight cursor-pointer hover:underline" onClick={() => onNavigateToMember(member.id)}>
+                  <div className="flex flex-col">
+                    <h4 className="font-bold text-gray-900 text-sm cursor-pointer hover:underline" onClick={() => onNavigateToMember(member.id)}>
                       {member.name}
                     </h4>
-                    <p className="text-[10px] text-gray-500 mt-0.5">Deposit Amount</p>
-                    <p className="text-[11px] font-bold text-green-700 font-mono tracking-tight mt-0.5">
-                      ₹{member.monthlyDeposit.toLocaleString('en-IN')}
+                    <p className="text-[11px] text-gray-500 font-medium flex items-center gap-1.5 mt-1">
+                      {isPaid ? (
+                        <>
+                          <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                          <span className="text-green-600">Paid • {dateStr}</span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertCircle className="w-3.5 h-3.5 text-orange-400" />
+                          <span className="text-orange-500">Pending • {dateStr}</span>
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
                 
-                {isPaid ? (
-                  <button
-                    onClick={() => onUndoDeposit(member.id)}
-                    className="text-[10px] font-bold px-4 py-2 border border-gray-200 text-gray-400 rounded-lg uppercase tracking-wider hover:bg-red-50 hover:text-red-500 transition-colors"
-                  >
-                    Paid
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => onRecordDeposit(member.id, member.monthlyDeposit, todayStr)}
-                    className="text-[10px] font-bold px-4 py-2 bg-[#5A0000] text-white hover:bg-[#4a0404] transition-colors rounded-lg uppercase tracking-wider shadow-[0_2px_8px_rgba(90,0,0,0.2)]"
-                  >
-                    Record Payment
-                  </button>
-                )}
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-end">
+                    <p className={`font-bold text-sm ${isPaid ? 'text-green-600' : 'text-gray-900'}`}>
+                      +₹{member.monthlyDeposit.toLocaleString('en-IN')}
+                    </p>
+                  </div>
+                  
+                  {isPaid ? (
+                    <div className="flex items-center gap-1 bg-[#5A0000]/10 text-[#5A0000] px-3 py-1.5 rounded-full border border-[#5A0000]/20">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider">Paid</span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => onRecordDeposit(member.id, member.monthlyDeposit, todayStr)}
+                      className="text-[10px] font-bold px-4 py-2 bg-[#5A0000] text-white hover:bg-[#4a0404] transition-colors rounded-full uppercase tracking-wider shadow-md"
+                    >
+                      Pay
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })}
