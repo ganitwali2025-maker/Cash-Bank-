@@ -122,14 +122,15 @@ export default function Dashboard({
   const todayStr = new Date().toISOString().split('T')[0];
 
   const [activeCardIndex, setActiveCardIndex] = React.useState(0);
+  const [isPaused, setIsPaused] = React.useState(false);
 
-  const handlePrevCard = () => {
-    setActiveCardIndex((prev) => (prev === 0 ? 3 : prev - 1));
-  };
-
-  const handleNextCard = () => {
-    setActiveCardIndex((prev) => (prev === 3 ? 0 : prev + 1));
-  };
+  React.useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveCardIndex((prev) => (prev === 3 ? 0 : prev + 1));
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   const dashboardCards = [
     {
@@ -200,16 +201,17 @@ export default function Dashboard({
 
       {/* 3. Premium Card Slider */}
       <div className="relative w-full flex flex-col items-center justify-center my-6">
-        {/* Navigation Arrows */}
-        <button 
-          onClick={handlePrevCard} 
-          className="absolute left-0 z-10 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center text-gray-800 hover:scale-110 transition-transform -ml-2 md:-ml-4 border border-gray-100"
-        >
-          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-        </button>
+        {/* Navigation Arrows Removed */}
         
         {/* Cards Container */}
-        <div className="w-[92%] max-w-[400px] overflow-hidden relative rounded-[24px]">
+        <div 
+          className="w-[92%] max-w-[400px] overflow-hidden relative rounded-[24px] cursor-pointer"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
+          onClick={() => setActiveCardIndex((prev) => (prev === 3 ? 0 : prev + 1))}
+        >
           <div 
             className="flex transition-transform duration-500 ease-out"
             style={{ transform: `translateX(-${activeCardIndex * 100}%)` }}
@@ -271,32 +273,10 @@ export default function Dashboard({
           </div>
         </div>
 
-        <button 
-          onClick={handleNextCard} 
-          className="absolute right-0 z-10 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center text-gray-800 hover:scale-110 transition-transform -mr-2 md:-mr-4 border border-gray-100"
-        >
-          <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-        </button>
+
       </div>
 
-      {/* Pagination Dots */}
-      <div className="flex items-center justify-center gap-[10px] mt-4 mb-2">
-        {dashboardCards.map((_, idx) => {
-          const isActive = activeCardIndex === idx;
-          return (
-            <button
-              key={idx}
-              onClick={() => setActiveCardIndex(idx)}
-              className={`rounded-full transition-all duration-[250ms] ease-out ${
-                isActive 
-                  ? 'bg-[#6B0000] w-[10px] h-[10px]' 
-                  : 'bg-[#D9DCE3] w-[8px] h-[8px] hover:bg-gray-300'
-              }`}
-              aria-label={`Go to card ${idx + 1}`}
-            />
-          );
-        })}
-      </div>
+
 
       {/* 4. Full Width Interest Card */}
       <div className="bg-[#F8F5FF] rounded-[20px] p-5 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-purple-600/10">
