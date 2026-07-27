@@ -144,7 +144,7 @@ export default function Dashboard({
       amount: expectedMonthlySavings,
       subtitle: 'Regular monthly savings',
       icon: Calendar,
-      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: Calendar,
@@ -161,7 +161,7 @@ export default function Dashboard({
       amount: totalSavingsReceived,
       subtitle: 'Overall Deposited Amount',
       icon: TrendingUp,
-      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: TrendingUp,
@@ -178,7 +178,7 @@ export default function Dashboard({
       amount: availableFund,
       subtitle: 'Total Cash on Hand',
       icon: PiggyBank,
-      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: PiggyBank,
@@ -195,7 +195,7 @@ export default function Dashboard({
       amount: totalOutstandingLoan,
       subtitle: 'Total Amount to be recovered',
       icon: Landmark,
-      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: Landmark,
@@ -212,7 +212,7 @@ export default function Dashboard({
       amount: totalInterestEarned,
       subtitle: 'Overall Interest Earned',
       icon: LineChart,
-      bgClass: 'bg-gradient-to-br from-[#5E1A1A] to-[#401212]',
+      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: LineChart,
@@ -256,8 +256,11 @@ export default function Dashboard({
               return (
                 <div key={card.id} className="w-full shrink-0 flex justify-center py-2">
                   <div 
-                    className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[24px] md:rounded-[32px] p-6 shadow-[0_8px_40px_rgba(0,0,0,0.15)] relative overflow-hidden border border-[#D4AF37]/10 transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
+                    className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[24px] md:rounded-[32px] p-6 shadow-[0_10px_30px_rgba(90,0,0,0.4)] relative overflow-hidden border-[3px] border-[#D4AF37] transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
                   >
+                    {/* Glossy overlay for extra shine */}
+                    <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+
                     {/* Background noise/dots overlay */}
                     <div className="absolute top-0 left-0 w-full h-full opacity-5 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
                     

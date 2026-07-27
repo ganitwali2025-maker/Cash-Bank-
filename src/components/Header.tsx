@@ -69,61 +69,58 @@ export default function Header({
   return (
     <header 
       id="app-header"
-      className="bg-[#5A0000] text-white shadow-[0_4px_20px_rgba(90,0,0,0.15)] h-24 md:h-16 px-5 sm:px-8 flex items-center justify-between transition-all z-50 print:hidden rounded-b-[28px] md:rounded-none md:bg-[#D4AF37] md:text-[#4a0404] sticky top-0"
+      className="relative overflow-hidden bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)] text-white shadow-[0_4px_20px_rgba(90,0,0,0.3)] h-[80px] sm:h-[86px] px-4 sm:px-6 flex items-center justify-between border-b-[3px] border-[#D4AF37] z-50 sticky top-0 w-full print:hidden rounded-b-[28px] md:rounded-none"
     >
+      {/* Glossy overlay for extra shine */}
+      <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+
       {/* Left section: Hamburger & App title */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4 sm:gap-6 relative z-10">
         {!sidebarOpen && (
           <button
             id="header-sidebar-open-btn"
             onClick={() => setSidebarOpen(true)}
-            className="p-1.5 rounded hover:bg-white/10 md:hover:bg-[#4a0404]/10 transition-colors focus:outline-none"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-black/20 bg-black/20 hover:bg-black/30 flex items-center justify-center transition-colors focus:outline-none shadow-inner"
             aria-label="Open Sidebar"
           >
-            <Menu className="w-6 h-6 text-[#D4AF37] md:text-[#4a0404]" />
+            <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-[#D4AF37]" strokeWidth={2.5} />
           </button>
         )}
         
-        {/* Mobile Title Area */}
-        <div className="md:hidden flex items-center gap-3 pl-1">
-          <div className="flex flex-col">
-            <h1 className="font-bold text-white text-[17px] leading-tight font-display tracking-wide uppercase">
-              CASH BANK
-            </h1>
-            <span className="text-[#D4AF37] text-[11px] font-sans font-medium tracking-wide">
+        {/* Title Area */}
+        <div className="flex flex-col justify-center pt-1">
+          <h1 className="font-black text-white text-[24px] sm:text-[30px] leading-[1] tracking-wide uppercase font-display drop-shadow-md">
+            CASH BANK
+          </h1>
+          <div className="flex items-center justify-center gap-2 mt-1.5">
+            <div className="h-[1px] w-6 sm:w-8 bg-gradient-to-r from-transparent to-[#D4AF37] relative opacity-80">
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-[#D4AF37]"></div>
+            </div>
+            <span className="text-[#D4AF37] text-[11px] sm:text-[13px] font-sans font-medium tracking-wide whitespace-nowrap drop-shadow-sm leading-none">
               {language === 'hi' ? 'उज्जवल भविष्य समिति' : 'Ujjwal Bhavisya Samiti'}
             </span>
-          </div>
-        </div>
-
-        {/* Desktop Title Area */}
-        <div className="hidden md:flex items-center gap-2">
-          <div>
-            <h1 className="font-bold text-sm sm:text-lg tracking-[0.1em] leading-tight uppercase font-display">
-              CASH BANK
-            </h1>
-            <span className="text-[#D4AF37] md:text-[#4a0404]/80 text-[11px] sm:text-[10px] font-sans font-bold tracking-wide block mt-0.5 uppercase tracking-[0.15em]">
-              {language === 'hi' ? 'उज्जवल भविष्य समिति' : 'Ujjwal Bhavisya Samiti'}
-            </span>
+            <div className="h-[1px] w-6 sm:w-8 bg-gradient-to-l from-transparent to-[#D4AF37] relative opacity-80">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-[#D4AF37]"></div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Right section: Icons */}
-      <div className="flex items-center gap-4 sm:gap-6">
+      <div className="flex items-center gap-3 sm:gap-5 relative z-10">
         {/* Month Selector Component (Desktop Only) */}
-        <div className="hidden md:flex items-center bg-[#fdfbf7] rounded-full px-1.5 py-0.5 shadow-sm border border-[#4a0404]/20 shrink-0">
+        <div className="hidden md:flex items-center bg-black/20 rounded-full px-1.5 py-1 border border-white/10 shrink-0 backdrop-blur-sm mr-2">
           <button
             id="header-prev-month"
             onClick={handlePrevMonth}
-            className="p-1 hover:bg-[#4a0404]/5 rounded-full transition-colors text-[#4a0404]"
+            className="p-1 hover:bg-white/10 rounded-full transition-colors text-white/80"
             title="Previous Month"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           
-          <div className="flex items-center gap-1 px-1 font-sans font-bold text-xs text-[#4a0404] uppercase tracking-wider">
-            <span id="current-month-display" className="whitespace-nowrap min-w-[90px] text-center">
+          <div className="flex items-center gap-1 px-3 font-sans font-bold text-xs text-[#D4AF37] uppercase tracking-wider">
+            <span id="current-month-display" className="whitespace-nowrap text-center drop-shadow-sm">
               {formatMonthLabel(selectedMonth, language)}
             </span>
           </div>
@@ -131,28 +128,22 @@ export default function Header({
           <button
             id="header-next-month"
             onClick={handleNextMonth}
-            className="p-1 hover:bg-[#4a0404]/5 rounded-full transition-colors text-[#4a0404]"
+            className="p-1 hover:bg-white/10 rounded-full transition-colors text-white/80"
             title="Next Month"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        {/* User Badges */}
-        <div className="flex items-center gap-3">
-          <InstallPWA />
-          <button className="relative p-1.5 text-white md:text-[#4a0404] hover:bg-white/10 rounded-full transition md:hidden">
-            <Bell className="w-6 h-6" />
-            <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 bg-red-500 border-2 border-[#5A0000] rounded-full text-[8px] text-white flex items-center justify-center font-bold">3</span>
-          </button>
+        <InstallPWA />
+        
+        <button className="relative p-2 text-white hover:bg-white/10 rounded-full transition-colors group">
+          <Bell className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform" strokeWidth={2} />
+          <span className="absolute top-1.5 right-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] bg-[#EF4444] border-2 border-[#6A0000] rounded-full text-[9px] text-white flex items-center justify-center font-bold shadow-md">3</span>
+        </button>
 
-          <div className="hidden md:block text-right">
-            <p className="text-[9px] text-[#4a0404]/60 uppercase tracking-wider font-semibold font-sans">{t.welcome}</p>
-            <p className="text-xs font-bold text-[#4a0404] font-serif uppercase tracking-tight">एडमिन: राम प्रकाश</p>
-          </div>
-          <div className="w-9 h-9 md:w-9 md:h-9 rounded-full border border-[#D4AF37] md:border-[#c5a059]/30 text-[#D4AF37] bg-transparent md:bg-[#4a0404] flex items-center justify-center font-bold shadow-sm">
-            <User className="w-5 h-5" />
-          </div>
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-[2px] border-[#D4AF37] text-[#D4AF37] flex items-center justify-center font-bold shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-[#D4AF37]/10 transition-colors cursor-pointer mr-1">
+          <User className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
         </div>
       </div>
     </header>
