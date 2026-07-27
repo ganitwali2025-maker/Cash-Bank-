@@ -205,7 +205,8 @@ export default function MembersTab({
           return (
             <div 
               key={member.id} 
-              className="bg-[#FFFDF8] rounded-[24px] shadow-[0_10px_30px_rgba(90,0,0,0.2)] flex flex-col relative overflow-hidden mb-6 border-[3px] border-[#D4AF37]"
+              onClick={() => navigate(`/savings/${member.id}`)}
+              className="bg-[#FFFDF8] rounded-[24px] shadow-[0_10px_30px_rgba(90,0,0,0.2)] flex flex-col relative overflow-hidden mb-6 border-[3px] border-[#D4AF37] cursor-pointer hover:scale-[1.02] transition-transform duration-300"
             >
               {/* Maroon Header with Wavy Bottom */}
               <div className="absolute top-0 left-0 w-full h-[140px] bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)] overflow-hidden">
@@ -219,20 +220,27 @@ export default function MembersTab({
 
               {/* Header Content */}
               <div className="pt-5 px-5 relative z-10 flex justify-between items-start">
-                <div className="flex-1 flex justify-center items-center gap-2">
+                <div className="absolute left-4 top-4">
+                  <span className="px-3 py-1.5 bg-white/10 text-white/90 text-[9px] font-bold uppercase tracking-wider rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center gap-2 border border-white/20 backdrop-blur-sm">
+                    <span className="w-2 h-2 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]"></span> ID: {member.id.replace('member-', 'MB-')}
+                  </span>
+                </div>
+                
+                <div className="flex-1 flex justify-center items-center gap-2 mt-1">
                   <span className="text-[#D4AF37] opacity-80 text-[10px]">🌿</span>
                   <p className="text-[#D4AF37] text-[10px] sm:text-[11px] tracking-[0.25em] uppercase font-bold drop-shadow-md">
-                    UJJWAL BHAVISYA SAMITI
+                    UJJWAL BHAVISYA
                   </p>
                   <span className="text-[#D4AF37] opacity-80 text-[10px]">🌿</span>
                 </div>
+                
                 <div className="absolute right-4 top-4">
                   {isActive ? (
                     <span className="px-3 py-1.5 bg-[#1A3B22] text-[#4ADE80] text-[9px] font-bold uppercase tracking-wider rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-[#4ADE80] shadow-[0_0_8px_#4ADE80]"></span> ACTIVE
                     </span>
                   ) : (
-                    <span className="px-3 py-1.5 bg-white/10 text-white/70 text-[9px] font-bold uppercase tracking-wider rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center gap-2 border border-white/10">
+                    <span className="px-3 py-1.5 bg-white/10 text-white/70 text-[9px] font-bold uppercase tracking-wider rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center gap-2 border border-white/10 backdrop-blur-sm">
                       <span className="w-2 h-2 rounded-full bg-white/50"></span> INACTIVE
                     </span>
                   )}
@@ -247,12 +255,7 @@ export default function MembersTab({
                   </div>
                 </div>
 
-                <h3 className="font-black text-[#3e0303] text-2xl mt-4 tracking-wide uppercase">{member.name}</h3>
-                
-                <div className="px-4 py-1 border border-[#e4a8a8] text-[#933333] text-[11px] font-bold tracking-[0.15em] rounded-full mt-2 mb-3 bg-[#FFFDF8]">
-                  ID: {member.id.replace('member-', 'MB-')}
-                </div>
-
+                <h3 className="font-black text-[#3e0303] text-2xl mt-4 tracking-wide uppercase mb-3">{member.name}</h3>
 
               </div>
 
@@ -295,13 +298,6 @@ export default function MembersTab({
                     <p className="text-[12px] font-bold text-white">Regular</p>
                   </div>
                 </div>
-
-                <button 
-                  onClick={() => navigate(`/savings/${member.id}`)}
-                  className="w-full border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 py-3.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2"
-                >
-                  View Full Profile <ChevronRight className="w-4 h-4" />
-                </button>
               </div>
             </div>
           );
