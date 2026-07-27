@@ -374,6 +374,7 @@ export default function App() {
               <SavingsAccount 
                 members={members}
                 deposits={deposits}
+                loans={loans}
                 language={language}
               />
             } />
