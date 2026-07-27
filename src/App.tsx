@@ -425,71 +425,61 @@ export default function App() {
 
       {/* MOBILE BOTTOM NAVIGATION */}
       <div 
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-b from-[#FFFDF8] to-[#FCF9F2] border-t-2 border-[#D4AF37]/30 flex items-center justify-between px-4 sm:px-6 pt-3 pb-2 z-50 rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.08)]"
-        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[#FFFDF8] border-t border-gray-200 flex items-center justify-between px-6 pt-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+        style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >
-        {/* Dashboard */}
         <button 
           onClick={() => setCurrentTab('dashboard')}
-          className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${currentTab === 'dashboard' ? 'bg-[#FDF3E7] shadow-[inset_0_0_10px_rgba(90,0,0,0.04),0_4px_12px_rgba(0,0,0,0.06)] rounded-[20px] px-3 sm:px-4 py-2 scale-105' : 'bg-transparent py-2 px-1'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'dashboard' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`${currentTab === 'dashboard' ? 'bg-[#5A0000]/10 rounded-full p-1.5' : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] rounded-full p-2.5 mb-1'}`}>
-            <Home className={`w-5 h-5 ${currentTab === 'dashboard' ? 'text-[#5A0000]' : 'text-slate-500'}`} strokeWidth={currentTab === 'dashboard' ? 2.5 : 2} />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'dashboard' ? 'bg-[#5A0000]/10' : ''}`}>
+            <Home className="w-6 h-6" />
           </div>
-          <span className={`text-[10px] sm:text-[11px] font-bold ${currentTab === 'dashboard' ? 'text-[#5A0000]' : 'text-slate-600'}`}>Dashboard</span>
-          {currentTab === 'dashboard' && <div className="w-5 h-1 rounded-full bg-[#5A0000] mt-0.5" />}
+          <span className="text-[10px] font-bold">Home</span>
         </button>
 
-        {/* Members */}
         <button 
           onClick={() => setCurrentTab('members')}
-          className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#FDF3E7] shadow-[inset_0_0_10px_rgba(90,0,0,0.04),0_4px_12px_rgba(0,0,0,0.06)] rounded-[20px] px-3 sm:px-4 py-2 scale-105' : 'bg-transparent py-2 px-1'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#5A0000]/10 rounded-full p-1.5' : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] rounded-full p-2.5 mb-1'}`}>
-            <Users className={`w-5 h-5 ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#5A0000]' : 'text-slate-500'}`} strokeWidth={currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 2.5 : 2} />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#5A0000]/10' : ''}`}>
+            <Users className="w-6 h-6" />
           </div>
-          <span className={`text-[10px] sm:text-[11px] font-bold ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#5A0000]' : 'text-slate-600'}`}>Members</span>
-          {(currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan') && <div className="w-5 h-1 rounded-full bg-[#5A0000] mt-0.5" />}
+          <span className="text-[10px] font-bold">Members</span>
         </button>
 
         {/* FAB placeholder in Nav */}
-        <div className="w-14 sm:w-16"></div>
+        <div className="w-12"></div>
 
-        {/* Transactions */}
         <button 
           onClick={() => setCurrentTab('transactions')}
-          className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${currentTab === 'transactions' ? 'bg-[#FDF3E7] shadow-[inset_0_0_10px_rgba(90,0,0,0.04),0_4px_12px_rgba(0,0,0,0.06)] rounded-[20px] px-3 sm:px-4 py-2 scale-105' : 'bg-transparent py-2 px-1'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'transactions' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`${currentTab === 'transactions' ? 'bg-[#5A0000]/10 rounded-full p-1.5' : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] rounded-full p-2.5 mb-1'}`}>
-            <ArrowRightLeft className={`w-5 h-5 ${currentTab === 'transactions' ? 'text-[#5A0000]' : 'text-slate-500'}`} strokeWidth={currentTab === 'transactions' ? 2.5 : 2} />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'transactions' ? 'bg-[#5A0000]/10' : ''}`}>
+            <ArrowRightLeft className="w-6 h-6" />
           </div>
-          <span className={`text-[10px] sm:text-[11px] font-bold ${currentTab === 'transactions' ? 'text-[#5A0000]' : 'text-slate-600'}`}>Transactions</span>
-          {currentTab === 'transactions' && <div className="w-5 h-1 rounded-full bg-[#5A0000] mt-0.5" />}
+          <span className="text-[10px] font-bold">Transactions</span>
         </button>
 
-        {/* More */}
         <button 
           onClick={() => setCurrentTab('more')}
-          className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'bg-[#FDF3E7] shadow-[inset_0_0_10px_rgba(90,0,0,0.04),0_4px_12px_rgba(0,0,0,0.06)] rounded-[20px] px-3 sm:px-4 py-2 scale-105' : 'bg-transparent py-2 px-1'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'bg-[#5A0000]/10 rounded-full p-1.5' : 'bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] rounded-full p-2.5 mb-1'}`}>
-            <LayoutGrid className={`w-5 h-5 ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'text-[#5A0000]' : 'text-slate-500'}`} strokeWidth={['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 2.5 : 2} />
+          <div className={`p-1.5 rounded-xl transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'bg-[#5A0000]/10' : ''}`}>
+            <LayoutGrid className="w-6 h-6" />
           </div>
-          <span className={`text-[10px] sm:text-[11px] font-bold ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'text-[#5A0000]' : 'text-slate-600'}`}>More</span>
-          {['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) && <div className="w-5 h-1 rounded-full bg-[#5A0000] mt-0.5" />}
+          <span className="text-[10px] font-bold">More</span>
         </button>
       </div>
 
       {/* FLOATING ACTION BUTTON (Mobile) */}
-      <div className="md:hidden fixed left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center" style={{ bottom: 'max(3rem, calc(3rem + env(safe-area-inset-bottom)))' }}>
-        <div className="absolute inset-0 bg-[#D4AF37] opacity-20 rounded-full blur-[10px] scale-125 pointer-events-none"></div>
-        <button 
-          onClick={() => setCurrentTab('members')}
-          className="relative w-[68px] h-[68px] bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)] text-white rounded-full flex items-center justify-center shadow-[0_10px_25px_rgba(90,0,0,0.4)] border-[6px] border-[#FCF9F2] hover:scale-105 transition-transform"
-        >
-          <Plus className="w-8 h-8" strokeWidth={2.5} />
-        </button>
-      </div>
+      <button 
+        onClick={() => setCurrentTab('members')}
+        className="md:hidden fixed left-1/2 -translate-x-1/2 w-16 h-16 bg-[#5A0000] text-white rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(90,0,0,0.3)] z-50 border-4 border-[#FFFDF8]"
+        style={{ bottom: 'max(2rem, calc(2rem + env(safe-area-inset-bottom)))' }}
+      >
+        <Plus className="w-8 h-8" />
+      </button>
     </div>
   );
 }

@@ -34,7 +34,11 @@ import {
   LayoutGrid,
   Wallet,
   History,
-  ShieldCheck
+  ShieldCheck,
+  Bell,
+  Clock,
+  Flame,
+  IndianRupee
 } from 'lucide-react';
 import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -144,7 +148,7 @@ export default function Dashboard({
       amount: expectedMonthlySavings,
       subtitle: 'Regular monthly savings',
       icon: Calendar,
-      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: Calendar,
@@ -161,7 +165,7 @@ export default function Dashboard({
       amount: totalSavingsReceived,
       subtitle: 'Overall Deposited Amount',
       icon: TrendingUp,
-      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: TrendingUp,
@@ -178,7 +182,7 @@ export default function Dashboard({
       amount: availableFund,
       subtitle: 'Total Cash on Hand',
       icon: PiggyBank,
-      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: PiggyBank,
@@ -195,7 +199,7 @@ export default function Dashboard({
       amount: totalOutstandingLoan,
       subtitle: 'Total Amount to be recovered',
       icon: Landmark,
-      bgClass: 'bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)]',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
       iconBg: 'bg-[#C78726]/40',
       Watermark: Landmark,
@@ -258,8 +262,7 @@ export default function Dashboard({
                   <div 
                     className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[24px] md:rounded-[32px] p-6 shadow-[0_10px_30px_rgba(90,0,0,0.4)] relative overflow-hidden border-[3px] border-[#D4AF37] transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
                   >
-                    {/* Glossy overlay for extra shine */}
-                    <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+                    {/* Glossy overlay removed as requested */}
 
                     {/* Background noise/dots overlay */}
                     <div className="absolute top-0 left-0 w-full h-full opacity-5 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
@@ -370,6 +373,55 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* ALERTS & NOTIFICATIONS */}
+      <div className="pt-6">
+        <div className="flex items-center justify-between px-2 mb-3">
+          <h3 className="font-black text-xs uppercase tracking-wider text-[#5A0000]">Alerts & Notifications</h3>
+        </div>
+        
+        <div className="flex overflow-x-auto gap-3 px-1 pb-2 no-scrollbar snap-x">
+          {/* EMI Due */}
+          <div className="w-[140px] shrink-0 h-[120px] snap-start bg-red-50/50 rounded-2xl p-3 flex flex-col items-center text-center border border-red-100 shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-white border border-red-100 flex items-center justify-center text-red-500 mb-2 shadow-sm shrink-0">
+              <Bell className="w-4 h-4" />
+            </div>
+            <h4 className="text-[10px] font-bold text-red-900 mb-1">EMI Due Alerts</h4>
+            <p className="text-[8px] text-gray-500 font-medium leading-snug px-1">12 Members have EMI due today</p>
+          </div>
+
+          {/* EMI Overdue */}
+          <div className="w-[140px] shrink-0 h-[120px] snap-start bg-amber-50/50 rounded-2xl p-3 flex flex-col items-center text-center border border-amber-100 shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-white border border-amber-100 flex items-center justify-center text-amber-500 mb-2 shadow-sm shrink-0">
+              <Clock className="w-4 h-4" />
+            </div>
+            <h4 className="text-[10px] font-bold text-amber-900 mb-1">EMI Overdue</h4>
+            <p className="text-[8px] text-gray-500 font-medium leading-snug px-1">8 Members have overdue EMI</p>
+          </div>
+
+          {/* New Notifications */}
+          <div className="w-[140px] shrink-0 h-[120px] snap-start bg-blue-50/50 rounded-2xl p-3 flex flex-col items-center text-center border border-blue-100 shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-500 mb-2 shadow-sm shrink-0">
+              <Bell className="w-4 h-4" />
+            </div>
+            <h4 className="text-[10px] font-bold text-blue-900 mb-1">New Notifications</h4>
+            <p className="text-[8px] text-gray-500 font-medium leading-snug px-1">You have 5 new notifications</p>
+          </div>
+
+          {/* Interest Rate */}
+          <div className="w-[140px] shrink-0 h-[120px] snap-start bg-emerald-50/50 rounded-2xl p-3 flex flex-col items-center text-center border border-emerald-100 shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-white border border-emerald-100 flex items-center justify-center text-emerald-500 mb-2 shadow-sm shrink-0">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <h4 className="text-[10px] font-bold text-emerald-900 mb-1">Interest Rate</h4>
+            <p className="text-[8px] text-gray-500 font-medium mb-0.5 leading-none">Current Interest Rate</p>
+            <div className="text-[11px] font-black text-emerald-600 mb-0.5">12.50%</div>
+            <p className="text-[7px] text-gray-400 leading-none">(Per Annum)</p>
+          </div>
+          
+          {/* Right spacer for scroll padding */}
+          <div className="w-2 shrink-0"></div>
+        </div>
+      </div>
       {/* Spacer for bottom navigation and scroll space */}
       <div className="h-48 w-full"></div>
 
