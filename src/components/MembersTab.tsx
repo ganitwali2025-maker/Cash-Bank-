@@ -10,7 +10,8 @@ import {
   Calendar,
   Hourglass,
   ShieldCheck,
-  BarChart2
+  BarChart2,
+  Camera
 } from 'lucide-react';
 import { Member, Deposit, Loan, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -37,6 +38,7 @@ export default function MembersTab({
   loans,
   language,
   onAddMember,
+  onUpdateMember,
 }: MembersTabProps) {
   const t = translations[language];
   const navigate = useNavigate();
@@ -249,10 +251,37 @@ export default function MembersTab({
 
               {/* Profile Section */}
               <div className="flex flex-col items-center mt-6 relative z-10">
-                <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm shadow-[0_0_30px_rgba(212,175,55,0.3)]">
-                  <div className="w-[90px] h-[90px] rounded-full bg-[#D4AF37] border-4 border-white flex items-center justify-center text-[#5A0000] text-3xl font-black shadow-inner">
-                    {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm shadow-[0_0_30px_rgba(212,175,55,0.3)] relative group">
+                  <div className="w-[90px] h-[90px] rounded-full bg-[#D4AF37] border-4 border-white flex items-center justify-center text-[#5A0000] text-3xl font-black shadow-inner overflow-hidden relative">
+                    {member.profileImage ? (
+                      <img src={member.profileImage} alt={member.name} className="w-full h-full object-cover" />
+                    ) : (
+                      member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+                    )}
                   </div>
+                  
+                  {/* Upload button overlay */}
+                  <label 
+                    onClick={(e) => e.stopPropagation()} 
+                    className="absolute bottom-1 right-1 p-2 bg-white rounded-full text-[#5A0000] shadow-md cursor-pointer hover:bg-gray-100 transition-colors border border-gray-100"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            onUpdateMember({ ...member, profileImage: reader.result as string });
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
                 </div>
 
                 <h3 className="font-black text-[#3e0303] text-2xl mt-4 tracking-wide uppercase mb-3">{member.name}</h3>

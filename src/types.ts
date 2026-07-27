@@ -4,6 +4,7 @@ export interface Member {
   phone: string;
   monthlyDeposit: number;
   joiningDate: string;
+  profileImage?: string;
 }
 
 export interface Deposit {
