@@ -88,23 +88,34 @@ const MemberWithdraw: React.FC<MemberWithdrawProps> = ({ members }) => {
         {/* Withdraw Form */}
         <div className="space-y-4 mb-6">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs text-[#6B7280] font-medium ml-1">Date</label>
-              <div className="flex items-center justify-between bg-white border border-[#E5E7EB] rounded-xl px-3 py-2.5 soft-shadow focus-within:border-[#c5a059] transition-colors">
-                <Calendar size={18} className="text-[#6B7280]" />
-                <input type="text" defaultValue="02 Aug 2026" className="w-full text-sm ml-2 outline-none text-[#111827] font-medium" />
-                <Calendar size={18} className="text-[#6B7280]" />
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#111827]">Date <span className="text-red-500">*</span></label>
+              <div className="flex items-center justify-between border border-[#D1D5DB] rounded-lg px-3 py-2.5 focus-within:border-[#16A34A] transition-colors relative">
+                <input 
+                  type="date" 
+                  defaultValue="2026-08-15" 
+                  className="w-full text-sm font-bold text-[#111827] outline-none bg-transparent appearance-none" 
+                />
               </div>
             </div>
-            <div className="space-y-1">
-              <label className="text-xs text-[#6B7280] font-medium ml-1">Month</label>
-              <div className="flex items-center justify-between bg-white border border-[#E5E7EB] rounded-xl px-3 py-2.5 soft-shadow focus-within:border-[#c5a059] transition-colors">
-                <Calendar size={18} className="text-[#6B7280]" />
-                <select className="w-full text-sm ml-2 outline-none text-[#111827] font-medium appearance-none bg-transparent">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#111827]">Month <span className="text-red-500">*</span></label>
+              <div className="flex items-center justify-between border border-[#D1D5DB] rounded-lg px-3 py-2.5 focus-within:border-[#16A34A] transition-colors relative">
+                <select className="w-full text-sm font-bold text-[#111827] outline-none appearance-none bg-transparent pr-6">
+                  <option>January 2026</option>
+                  <option>February 2026</option>
+                  <option>March 2026</option>
+                  <option>April 2026</option>
+                  <option>May 2026</option>
+                  <option>June 2026</option>
+                  <option>July 2026</option>
                   <option>August 2026</option>
                   <option>September 2026</option>
+                  <option>October 2026</option>
+                  <option>November 2026</option>
+                  <option>December 2026</option>
                 </select>
-                <ChevronDown size={18} className="text-[#6B7280]" />
+                <ChevronDown size={18} className="text-[#4B5563] absolute right-3 pointer-events-none" />
               </div>
             </div>
           </div>
@@ -137,6 +148,22 @@ const MemberWithdraw: React.FC<MemberWithdrawProps> = ({ members }) => {
               <input type="text" defaultValue="Personal Use" className="w-full text-sm ml-2 outline-none text-[#111827]" />
             </div>
           </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4 mt-2 border-t border-[#E5E7EB]">
+            <button 
+              onClick={() => navigate(-1)}
+              className="flex-1 py-3.5 rounded-xl border border-red-500 text-red-500 font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors active:scale-95"
+            >
+              <X size={18} strokeWidth={2.5} />
+              Cancel
+            </button>
+            <button className="flex-[1.5] py-3.5 rounded-xl bg-[#991B1B] text-white font-bold flex items-center justify-center gap-2 shadow-md hover:bg-[#7F1D1D] transition-colors active:scale-95">
+              <Save size={18} strokeWidth={2.5} />
+              Save Withdraw
+            </button>
+          </div>
+
         </div>
 
         {/* Balance Summary Cards */}
@@ -162,17 +189,7 @@ const MemberWithdraw: React.FC<MemberWithdrawProps> = ({ members }) => {
 
       </div>
 
-      {/* Sticky Bottom Buttons */}
-      <div className="fixed bottom-16 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-[#c5a059]/20 p-4 flex gap-3 z-30">
-        <button className="flex-1 py-3.5 rounded-[18px] border-2 border-[#4a0404] text-[#4a0404] font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#faf5eb] transition-colors active:scale-95">
-          <X size={18} />
-          Cancel
-        </button>
-        <button className="flex-[1.5] py-3.5 rounded-[18px] bg-[#4a0404] text-[#c5a059] font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#4a0404]/30 hover:bg-[#3a0303] transition-all active:scale-95 border border-[#c5a059]/30">
-          <Save size={18} />
-          Save Withdraw
-        </button>
-      </div>
+
     </div>
   );
 };
