@@ -17,7 +17,7 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import MembersTab from './components/MembersTab';
-import MonthlyDepositsTab from './components/MonthlyDepositsTab';
+import DepositDataSheet from './components/DepositDataSheet';
 import LoansTab from './components/LoansTab';
 import EmiPaymentsTab from './components/EmiPaymentsTab';
 import ReportsTab from './components/ReportsTab';
@@ -325,13 +325,9 @@ export default function App() {
             } />
             
             <Route path="/deposits" element={
-              <MonthlyDepositsTab
+              <DepositDataSheet
                 members={members}
                 deposits={deposits}
-                selectedMonth={selectedMonth}
-                language={language}
-                onRecordDeposit={handleRecordDeposit}
-                onUndoDepositSpecific={handleUndoDepositSpecific}
               />
             } />
             
