@@ -27,6 +27,8 @@ import MoreTab from './components/MoreTab';
 import MyProfile from './components/MyProfile';
 import SavingsAccount from './components/SavingsAccount';
 import MyLoan from './components/MyLoan';
+import MemberDeposit from './components/MemberDeposit';
+import MemberWithdraw from './components/MemberWithdraw';
 import { translations } from './translations';
 import { 
   CheckCircle2, 
@@ -38,7 +40,8 @@ import {
   Plus,
   PieChart,
   LayoutGrid,
-  ArrowRightLeft
+  ArrowRightLeft,
+  User
 } from 'lucide-react';
 
 export default function App() {
@@ -56,7 +59,7 @@ export default function App() {
   // Derived current tab for UI highlighting
   let currentTabRaw = location.pathname.split('/')[1] || 'dashboard';
   // Check if it's a valid TabType, otherwise fallback to dashboard for UI highlights
-  const validTabs = ['dashboard', 'members', 'deposits', 'loans', 'emis', 'reports', 'transactions', 'more', 'profile', 'savings', 'loan'];
+  const validTabs = ['dashboard', 'members', 'deposits', 'loans', 'emis', 'reports', 'transactions', 'more', 'profile', 'savings', 'loan', 'deposit', 'withdraw'];
   const currentTab = validTabs.includes(currentTabRaw) ? currentTabRaw as TabType : 'dashboard';
   
   const setCurrentTab = (tab: TabType) => {
@@ -386,6 +389,9 @@ export default function App() {
                 language={language}
               />
             } />
+            
+            <Route path="/deposit" element={<MemberDeposit />} />
+            <Route path="/withdraw" element={<MemberWithdraw />} />
 
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -426,61 +432,64 @@ export default function App() {
 
       {/* MOBILE BOTTOM NAVIGATION */}
       <div 
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-[#FFFDF8] border-t border-gray-200 flex items-center justify-between px-6 pt-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
-        style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-between px-6 pt-2 pb-2 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
       >
         <button 
           onClick={() => setCurrentTab('dashboard')}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'dashboard' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'dashboard' ? 'text-[#111827]' : 'text-[#6B7280]'}`}
         >
-          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'dashboard' ? 'bg-[#5A0000]/10' : ''}`}>
-            <Home className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-bold">Home</span>
+          <Home className={`w-6 h-6 ${currentTab === 'dashboard' ? 'text-[#16A34A]' : ''}`} />
+          <span className="text-[10px] font-semibold">Home</span>
         </button>
 
         <button 
           onClick={() => setCurrentTab('members')}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${['members', 'savings', 'loan'].includes(currentTab) ? 'text-[#111827]' : 'text-[#6B7280]'}`}
         >
-          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#5A0000]/10' : ''}`}>
-            <Users className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-bold">Members</span>
+          <Users className={`w-6 h-6 ${['members', 'savings', 'loan'].includes(currentTab) ? 'text-[#16A34A]' : ''}`} />
+          <span className="text-[10px] font-semibold">Members</span>
         </button>
 
-        {/* FAB placeholder in Nav */}
-        <div className="w-12"></div>
+        {/* Center Floating Button Container */}
+        <div className="relative w-16 h-16 flex items-center justify-center -mt-8">
+          {currentTab === 'withdraw' ? (
+            <button 
+              onClick={() => setCurrentTab('withdraw')}
+              className="absolute bg-withdraw-gradient text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(220,38,38,0.4)] border-4 border-white transition-transform active:scale-95 z-50"
+            >
+              <ArrowRightLeft className="w-6 h-6" />
+            </button>
+          ) : (
+            <button 
+              onClick={() => setCurrentTab('deposit')}
+              className="absolute bg-deposit-gradient text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(22,163,74,0.4)] border-4 border-white transition-transform active:scale-95 z-50"
+            >
+              <PieChart className="w-6 h-6" />
+            </button>
+          )}
+          
+          <span className={`absolute -bottom-6 text-[10px] font-semibold whitespace-nowrap ${currentTab === 'withdraw' ? 'text-[#DC2626]' : currentTab === 'deposit' ? 'text-[#16A34A]' : 'text-[#111827]'}`}>
+            {currentTab === 'withdraw' ? 'Withdraw' : 'Deposit'}
+          </span>
+        </div>
 
         <button 
-          onClick={() => setCurrentTab('transactions')}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'transactions' ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          onClick={() => setCurrentTab('reports')}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'reports' ? 'text-[#111827]' : 'text-[#6B7280]'}`}
         >
-          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'transactions' ? 'bg-[#5A0000]/10' : ''}`}>
-            <ArrowRightLeft className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-bold">Transactions</span>
+          <PieChart className={`w-6 h-6 ${currentTab === 'reports' ? 'text-[#16A34A]' : ''}`} />
+          <span className="text-[10px] font-semibold">Reports</span>
         </button>
 
         <button 
-          onClick={() => setCurrentTab('more')}
-          className={`flex flex-col items-center gap-1 transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'text-[#5A0000]' : 'text-gray-400'}`}
+          onClick={() => setCurrentTab('profile')}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'profile' ? 'text-[#111827]' : 'text-[#6B7280]'}`}
         >
-          <div className={`p-1.5 rounded-xl transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'bg-[#5A0000]/10' : ''}`}>
-            <LayoutGrid className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-bold">More</span>
+          <User className={`w-6 h-6 ${currentTab === 'profile' ? 'text-[#16A34A]' : ''}`} />
+          <span className="text-[10px] font-semibold">Profile</span>
         </button>
       </div>
-
-      {/* FLOATING ACTION BUTTON (Mobile) */}
-      <button 
-        onClick={() => setCurrentTab('members')}
-        className="md:hidden fixed left-1/2 -translate-x-1/2 w-16 h-16 bg-[#5A0000] text-white rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(90,0,0,0.3)] z-50 border-4 border-[#FFFDF8]"
-        style={{ bottom: 'max(2rem, calc(2rem + env(safe-area-inset-bottom)))' }}
-      >
-        <Plus className="w-8 h-8" />
-      </button>
     </div>
   );
 }

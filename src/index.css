@@ -20,6 +20,21 @@
   --color-luxury-cream: #FFFDF8;
   --color-luxury-cream-dark: #F5F3ED;
 
+  /* Premium Fintech Colors */
+  --color-fintech-bg: #F8FAFC;
+  --color-fintech-card: #FFFFFF;
+  --color-fintech-text-main: #111827;
+  --color-fintech-text-muted: #6B7280;
+  --color-fintech-border: #E5E7EB;
+
+  --color-deposit-primary: #16A34A;
+  --color-deposit-grad-start: #22C55E;
+  --color-deposit-grad-end: #15803D;
+
+  --color-withdraw-primary: #DC2626;
+  --color-withdraw-grad-start: #EF4444;
+  --color-withdraw-grad-end: #B91C1C;
+
   /* Responsive Typography with clamp() */
   --text-xs: clamp(0.65rem, 1.5vw, 0.75rem);
   --text-sm: clamp(0.75rem, 2vw, 0.875rem);
@@ -67,6 +82,41 @@
     max-width: 100%;
     height: auto;
     object-fit: contain;
+  }
+}
+
+/* Premium Fintech Utilities */
+@layer utilities {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  }
+
+  .soft-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+  
+  .soft-shadow-lg {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  }
+
+  .bg-deposit-gradient {
+    background: linear-gradient(135deg, var(--color-deposit-grad-start), var(--color-deposit-grad-end));
+  }
+
+  .bg-withdraw-gradient {
+    background: linear-gradient(135deg, var(--color-withdraw-grad-start), var(--color-withdraw-grad-end));
+  }
+
+  .text-deposit {
+    color: var(--color-deposit-primary);
+  }
+
+  .text-withdraw {
+    color: var(--color-withdraw-primary);
   }
 }
 

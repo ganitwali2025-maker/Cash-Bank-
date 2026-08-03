@@ -41,6 +41,5 @@ export interface Loan {
   emis: Emi[];
 }
 
-export type TabType = 'dashboard' | 'members' | 'deposits' | 'loans' | 'emis' | 'reports' | 'transactions' | 'more' | 'profile' | 'savings' | 'loan';
-
+export type TabType = 'dashboard' | 'members' | 'deposits' | 'loans' | 'emis' | 'reports' | 'transactions' | 'more' | 'profile' | 'savings' | 'loan' | 'deposit' | 'withdraw';
 export type LanguageType = 'hi' | 'en';
