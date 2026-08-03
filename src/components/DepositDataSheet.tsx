@@ -48,21 +48,7 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members, deposits }
       <div className="px-4 pt-6 pb-24">
         
         {/* Filters Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-[#6B7280]">From Date</label>
-            <div className="flex items-center border border-[#E5E7EB] rounded-lg px-2.5 py-2">
-              <Calendar size={14} className="text-[#4B5563]" />
-              <input type="text" defaultValue="01 Aug 2026" className="w-full text-xs font-bold ml-1.5 outline-none text-[#111827]" />
-            </div>
-          </div>
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-[#6B7280]">To Date</label>
-            <div className="flex items-center border border-[#E5E7EB] rounded-lg px-2.5 py-2">
-              <Calendar size={14} className="text-[#4B5563]" />
-              <input type="text" defaultValue="31 Aug 2026" className="w-full text-xs font-bold ml-1.5 outline-none text-[#111827]" />
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="space-y-1">
             <label className="text-[10px] font-bold text-[#6B7280]">Month</label>
             <div className="flex items-center border border-[#E5E7EB] rounded-lg px-2.5 py-2 relative">
