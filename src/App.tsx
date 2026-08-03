@@ -29,6 +29,8 @@ import SavingsAccount from './components/SavingsAccount';
 import MyLoan from './components/MyLoan';
 import MemberDeposit from './components/MemberDeposit';
 import MemberWithdraw from './components/MemberWithdraw';
+import DepositHub from './components/DepositHub';
+import WithdrawHub from './components/WithdrawHub';
 import { translations } from './translations';
 import { 
   CheckCircle2, 
@@ -390,8 +392,24 @@ export default function App() {
               />
             } />
             
-            <Route path="/deposit" element={<MemberDeposit />} />
-            <Route path="/withdraw" element={<MemberWithdraw />} />
+            <Route path="/deposit" element={
+              <DepositHub 
+                members={members}
+                deposits={deposits}
+                selectedMonth={selectedMonth}
+                language={language}
+              />
+            } />
+            <Route path="/deposit-form" element={<MemberDeposit members={members} />} />
+            <Route path="/withdraw" element={
+              <WithdrawHub 
+                members={members}
+                deposits={deposits}
+                selectedMonth={selectedMonth}
+                language={language}
+              />
+            } />
+            <Route path="/withdraw-form" element={<MemberWithdraw members={members} />} />
 
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-20 text-center">

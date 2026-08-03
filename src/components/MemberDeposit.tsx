@@ -1,201 +1,275 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-  ChevronLeft, 
-  FileText, 
+  ArrowLeft, 
+  History, 
   User, 
-  IdCard, 
   Calendar, 
+  ShieldCheck, 
   ChevronDown, 
-  CreditCard, 
-  MessageSquare, 
-  Wallet, 
-  ArrowDown, 
-  Coins, 
-  X, 
-  Save 
+  Banknote,
+  Landmark,
+  PiggyBank,
+  HandCoins,
+  Calculator,
+  MessageSquare,
+  X,
+  Save,
+  CheckCircle2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Member } from '../types';
 
-const MemberDeposit: React.FC = () => {
+interface MemberDepositProps {
+  members: Member[];
+}
+
+const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
   const navigate = useNavigate();
+  const [selectedMemberId, setSelectedMemberId] = useState<string>(members.length > 0 ? members[0].id : '');
+  const [paymentMode, setPaymentMode] = useState<'Cash' | 'UPI' | 'A/C Transfer'>('Cash');
+  const [depositType, setDepositType] = useState<'Saving Account' | 'Loan Account'>('Saving Account');
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-24 font-['Poppins'] animate-fade-in-up">
-      {/* Top App Bar with Green Gradient */}
-      <div className="bg-deposit-gradient pt-safe pb-16 px-4 flex items-center justify-between text-white sticky top-0 z-10">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-white/20 transition-colors">
-          <ChevronLeft size={24} />
-        </button>
-        <h1 className="text-lg font-semibold flex items-center gap-2">
-          💰 Member Deposit
-        </h1>
-        <button className="p-2 -mr-2 rounded-full hover:bg-white/20 transition-colors">
-          <FileText size={24} />
+    <div className="min-h-screen bg-[var(--color-luxury-cream)] pb-24 font-['Inter',sans-serif] text-[#111827]">
+      
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-[var(--color-luxury-cream)] px-4 py-4 flex items-center justify-between border-b border-[#E5E7EB]">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="w-10 h-10 rounded-full bg-[#F0FDF4] text-[#16A34A] flex items-center justify-center hover:bg-[#DCFCE7] transition-colors"
+          >
+            <ArrowLeft size={20} className="stroke-[2.5px]" />
+          </button>
+          <h1 className="text-[22px] font-bold text-[#111827]">Add Deposit</h1>
+        </div>
+        <button 
+          onClick={() => navigate('/deposits')}
+          className="flex items-center gap-1.5 text-[#16A34A] font-semibold text-sm hover:bg-[#F0FDF4] px-3 py-1.5 rounded-full transition-colors"
+        >
+          <History size={16} strokeWidth={2.5} />
+          Deposit History
         </button>
       </div>
 
-      {/* Main Content Sheet (Overlaps the green header) */}
-      <div className="bg-white rounded-t-[24px] -mt-10 px-4 pt-6 pb-6 shadow-[0_-8px_30px_rgba(0,0,0,0.1)] relative z-20 min-h-screen">
+      <div className="px-4 py-5 space-y-5">
         
-        {/* Member Information Card */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-[#F8FAFC] p-3 rounded-2xl border border-[#E5E7EB] soft-shadow">
-            <span className="text-[10px] text-[#6B7280] uppercase tracking-wider font-medium">Member Name</span>
-            <div className="flex items-center gap-2 mt-1">
-              <User size={16} className="text-deposit" />
-              <span className="text-sm font-semibold text-[#111827]">Ujjwal Bhaviha</span>
+        {/* Member Info Card */}
+        <div className="border border-[#E5E7EB] rounded-2xl p-4 flex flex-col md:flex-row gap-4 md:items-center relative bg-white shadow-sm">
+          {/* Left Side */}
+          <div className="flex gap-4 items-start md:w-3/5">
+            <div className="w-16 h-16 rounded-full bg-[#DCFCE7] flex items-center justify-center shrink-0 border-2 border-white shadow-sm">
+              <User size={32} className="text-[#15803D]" fill="currentColor" />
+            </div>
+            <div className="w-full">
+              <p className="text-[11px] font-semibold text-[#6B7280]">Select Member</p>
+              <div className="relative mb-2 mt-0.5">
+                <select 
+                  className="w-full text-lg font-bold text-[#111827] outline-none appearance-none bg-transparent"
+                  value={selectedMemberId}
+                  onChange={(e) => setSelectedMemberId(e.target.value)}
+                >
+                  {members.map(m => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                  {members.length === 0 && <option value="">No members available</option>}
+                </select>
+                <ChevronDown size={18} className="text-[#6B7280] absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+              
+              {(() => {
+                const member = members.find(m => m.id === selectedMemberId);
+                return member ? (
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-semibold text-[#4B5563]">
+                      Member ID <span className="mx-1">:</span> <span className="text-[#16A34A]">{member.id}</span>
+                    </p>
+                    <p className="text-xs font-semibold text-[#4B5563]">
+                      Mobile No <span className="mx-1">:</span> {member.phone}
+                    </p>
+                  </div>
+                ) : null;
+              })()}
             </div>
           </div>
-          <div className="bg-[#F8FAFC] p-3 rounded-2xl border border-[#E5E7EB] soft-shadow">
-            <span className="text-[10px] text-[#6B7280] uppercase tracking-wider font-medium">Member ID</span>
-            <div className="flex items-center gap-2 mt-1">
-              <IdCard size={16} className="text-deposit" />
-              <span className="text-sm font-semibold text-[#111827]">MBR10024</span>
-            </div>
-          </div>
+          
+          {/* Divider */}
+          <div className="hidden md:block w-px h-16 bg-[#E5E7EB]"></div>
+          <div className="block md:hidden h-px w-full bg-[#E5E7EB]"></div>
+
+          {/* Right Side */}
+          {(() => {
+            const member = members.find(m => m.id === selectedMemberId);
+            return member ? (
+              <div className="space-y-3 md:w-2/5">
+                <div className="flex items-start gap-2.5">
+                  <Calendar size={16} className="text-[#4B5563] mt-0.5" />
+                  <div>
+                    <p className="text-[10px] font-semibold text-[#6B7280] leading-none mb-1">Member Since</p>
+                    <p className="text-xs font-bold text-[#111827]">
+                      {member.joiningDate ? new Date(member.joiningDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <ShieldCheck size={16} className="text-[#16A34A] mt-0.5" />
+                  <div>
+                    <p className="text-[10px] font-semibold text-[#6B7280] leading-none mb-1">Membership Status</p>
+                    <span className="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0]">
+                      Active
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : null;
+          })()}
         </div>
 
-        {/* Deposit Form */}
-        <div className="space-y-4 mb-6">
+        {/* Form Container */}
+        <div className="border border-[#E5E7EB] rounded-2xl p-4 bg-white shadow-sm space-y-5">
+          
+          {/* Date & Month */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs text-[#6B7280] font-medium ml-1">Date</label>
-              <div className="flex items-center justify-between bg-white border border-[#E5E7EB] rounded-xl px-3 py-2.5 soft-shadow focus-within:border-[#16A34A] transition-colors">
-                <Calendar size={18} className="text-[#6B7280]" />
-                <input type="text" defaultValue="15 Aug 2026" className="w-full text-sm ml-2 outline-none text-[#111827] font-medium" />
-                <Calendar size={18} className="text-[#6B7280]" />
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#111827]">Date <span className="text-red-500">*</span></label>
+              <div className="flex items-center justify-between border border-[#D1D5DB] rounded-lg px-3 py-2.5 focus-within:border-[#16A34A] transition-colors">
+                <Calendar size={18} className="text-[#4B5563]" />
+                <input type="text" defaultValue="15 Aug 2026" className="w-full text-sm ml-2 font-bold text-[#111827] outline-none" />
+                <Calendar size={18} className="text-[#4B5563]" />
               </div>
             </div>
-            <div className="space-y-1">
-              <label className="text-xs text-[#6B7280] font-medium ml-1">Month</label>
-              <div className="flex items-center justify-between bg-white border border-[#E5E7EB] rounded-xl px-3 py-2.5 soft-shadow focus-within:border-[#16A34A] transition-colors">
-                <Calendar size={18} className="text-[#6B7280]" />
-                <select className="w-full text-sm ml-2 outline-none text-[#111827] font-medium appearance-none bg-transparent">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#111827]">Month <span className="text-red-500">*</span></label>
+              <div className="flex items-center justify-between border border-[#D1D5DB] rounded-lg px-3 py-2.5 focus-within:border-[#16A34A] transition-colors">
+                <Calendar size={18} className="text-[#4B5563]" />
+                <select className="w-full text-sm ml-2 font-bold text-[#111827] outline-none appearance-none bg-transparent">
                   <option>August 2026</option>
                   <option>September 2026</option>
                 </select>
-                <ChevronDown size={18} className="text-[#6B7280]" />
+                <ChevronDown size={18} className="text-[#4B5563]" />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs text-[#6B7280] font-medium ml-1">Payment Mode</label>
-              <div className="flex items-center justify-between bg-white border border-[#E5E7EB] rounded-xl px-3 py-2.5 soft-shadow focus-within:border-[#16A34A] transition-colors">
-                <CreditCard size={18} className="text-[#6B7280]" />
-                <select className="w-full text-sm ml-2 outline-none text-[#111827] font-medium appearance-none bg-transparent">
-                  <option>Cash</option>
-                  <option>UPI</option>
-                  <option>Bank</option>
-                </select>
-                <ChevronDown size={18} className="text-[#6B7280]" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs text-[#6B7280] font-medium ml-1">Account Type</label>
-              <div className="flex items-center justify-between bg-white border border-[#E5E7EB] rounded-xl px-3 py-2.5 soft-shadow focus-within:border-[#16A34A] transition-colors">
-                <div className="flex items-center text-[#6B7280]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M5 6l7-3 7 3"/><path d="M4 10v11"/><path d="M20 10v11"/><path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/></svg>
+          {/* Payment Mode */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-[#111827]">Payment Mode <span className="text-red-500">*</span></label>
+            <div className="grid grid-cols-3 gap-2">
+              <button 
+                onClick={() => setPaymentMode('Cash')}
+                className={`relative flex items-center justify-center gap-2 py-3 rounded-lg border ${paymentMode === 'Cash' ? 'bg-[#F0FDF4] border-[#16A34A]' : 'bg-white border-[#D1D5DB]'} transition-colors`}
+              >
+                <Banknote size={18} className={paymentMode === 'Cash' ? 'text-[#16A34A]' : 'text-[#4B5563]'} />
+                <span className={`text-sm font-bold ${paymentMode === 'Cash' ? 'text-[#111827]' : 'text-[#4B5563]'}`}>Cash</span>
+                {paymentMode === 'Cash' && (
+                  <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full">
+                    <CheckCircle2 size={16} className="text-[#16A34A] fill-[#16A34A] stroke-white" />
+                  </div>
+                )}
+              </button>
+
+              <button 
+                onClick={() => setPaymentMode('UPI')}
+                className={`relative flex items-center justify-center gap-2 py-3 rounded-lg border ${paymentMode === 'UPI' ? 'bg-[#F0FDF4] border-[#16A34A]' : 'bg-white border-[#D1D5DB]'} transition-colors`}
+              >
+                <div className="flex -space-x-1">
+                  <div className="w-3 h-3 rounded-sm bg-orange-500"></div>
+                  <div className="w-3 h-3 rounded-sm bg-green-500"></div>
                 </div>
-                <select className="w-full text-sm ml-2 outline-none text-[#111827] font-medium appearance-none bg-transparent">
-                  <option>Saving Account</option>
-                  <option>Loan EMI</option>
-                </select>
-                <ChevronDown size={18} className="text-[#6B7280]" />
+                <span className={`text-sm font-bold ${paymentMode === 'UPI' ? 'text-[#111827]' : 'text-[#4B5563]'}`}>UPI</span>
+                {paymentMode === 'UPI' && (
+                  <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full">
+                    <CheckCircle2 size={16} className="text-[#16A34A] fill-[#16A34A] stroke-white" />
+                  </div>
+                )}
+              </button>
+
+              <button 
+                onClick={() => setPaymentMode('A/C Transfer')}
+                className={`relative flex items-center justify-center gap-2 py-3 rounded-lg border ${paymentMode === 'A/C Transfer' ? 'bg-[#F0FDF4] border-[#16A34A]' : 'bg-white border-[#D1D5DB]'} transition-colors`}
+              >
+                <Landmark size={18} className={paymentMode === 'A/C Transfer' ? 'text-[#16A34A]' : 'text-[#4B5563]'} />
+                <span className={`text-sm font-bold ${paymentMode === 'A/C Transfer' ? 'text-[#111827]' : 'text-[#4B5563]'}`}>A/C Transfer</span>
+                {paymentMode === 'A/C Transfer' && (
+                  <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full">
+                    <CheckCircle2 size={16} className="text-[#16A34A] fill-[#16A34A] stroke-white" />
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Deposit Type */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-[#111827]">Deposit Type <span className="text-red-500">*</span></label>
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                onClick={() => setDepositType('Saving Account')}
+                className={`relative flex items-center justify-center gap-2 py-3 rounded-lg border ${depositType === 'Saving Account' ? 'bg-[#F0FDF4] border-[#16A34A]' : 'bg-white border-[#D1D5DB]'} transition-colors`}
+              >
+                <PiggyBank size={18} className={depositType === 'Saving Account' ? 'text-[#16A34A]' : 'text-[#4B5563]'} fill={depositType === 'Saving Account' ? 'currentColor' : 'none'} />
+                <span className={`text-sm font-bold ${depositType === 'Saving Account' ? 'text-[#111827]' : 'text-[#4B5563]'}`}>Saving Account</span>
+                {depositType === 'Saving Account' && (
+                  <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full">
+                    <CheckCircle2 size={16} className="text-[#16A34A] fill-[#16A34A] stroke-white" />
+                  </div>
+                )}
+              </button>
+              <button 
+                onClick={() => setDepositType('Loan Account')}
+                className={`relative flex items-center justify-center gap-2 py-3 rounded-lg border ${depositType === 'Loan Account' ? 'bg-[#F0FDF4] border-[#16A34A]' : 'bg-white border-[#D1D5DB]'} transition-colors`}
+              >
+                <HandCoins size={18} className={depositType === 'Loan Account' ? 'text-[#16A34A]' : 'text-[#4B5563]'} />
+                <span className={`text-sm font-bold ${depositType === 'Loan Account' ? 'text-[#111827]' : 'text-[#4B5563]'}`}>Loan Account</span>
+                {depositType === 'Loan Account' && (
+                  <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full">
+                    <CheckCircle2 size={16} className="text-[#16A34A] fill-[#16A34A] stroke-white" />
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Amount */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-[#111827]">Amount (₹) <span className="text-red-500">*</span></label>
+            <div className="flex items-center border border-[#D1D5DB] rounded-lg px-3 py-3 focus-within:border-[#16A34A] focus-within:ring-1 focus-within:ring-[#16A34A] transition-all">
+              <span className="text-xl font-bold text-[#4B5563]">₹</span>
+              <input type="number" defaultValue="500" className="w-full text-xl ml-3 outline-none text-[#111827] font-bold" />
+              <div className="pl-3 border-l border-[#D1D5DB]">
+                <Calculator size={20} className="text-[#16A34A]" />
               </div>
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs text-[#6B7280] font-medium ml-1">Deposit Amount (₹)</label>
-            <div className="flex items-center bg-white border border-[#E5E7EB] rounded-xl px-3 py-3 soft-shadow focus-within:border-[#16A34A] focus-within:ring-1 focus-within:ring-[#16A34A] transition-all">
-              <span className="text-lg font-medium text-[#111827]">₹</span>
-              <input type="number" defaultValue="500" className="w-full text-lg ml-2 outline-none text-[#111827] font-semibold" />
+          {/* Message / Remark */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-[#111827]">Message / Remark (Optional)</label>
+            <div className="flex items-center border border-[#D1D5DB] rounded-lg px-3 py-3 focus-within:border-[#16A34A] transition-colors">
+              <MessageSquare size={18} className="text-[#4B5563]" />
+              <input type="text" defaultValue="Monthly Saving Deposit" className="w-full text-sm ml-3 font-semibold text-[#4B5563] outline-none" />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs text-[#6B7280] font-medium ml-1">Remark (Optional)</label>
-            <div className="flex items-center bg-white border border-[#E5E7EB] rounded-xl px-3 py-3 soft-shadow focus-within:border-[#16A34A] transition-colors">
-              <MessageSquare size={18} className="text-[#6B7280]" />
-              <input type="text" defaultValue="Monthly Saving Deposit" className="w-full text-sm ml-2 outline-none text-[#111827]" />
-            </div>
-          </div>
-        </div>
-
-        {/* Balance Summary Cards */}
-        <div className="grid grid-cols-3 gap-2 mb-8">
-          <div className="bg-white border border-[#E5E7EB] rounded-2xl p-3 flex flex-col items-center justify-center text-center soft-shadow-lg">
-            <span className="text-[10px] text-deposit font-medium mb-2 leading-tight">Previous Balance</span>
-            <Wallet size={20} className="text-[#0891B2] mb-1" />
-            <span className="text-sm font-bold text-[#111827]">₹ 12,500</span>
-          </div>
-          <div className="bg-white border border-[#E5E7EB] rounded-2xl p-3 flex flex-col items-center justify-center text-center soft-shadow-lg">
-            <span className="text-[10px] text-deposit font-medium mb-2 leading-tight">Today's Deposit</span>
-            <ArrowDown size={20} className="text-deposit mb-1" />
-            <span className="text-sm font-bold text-[#111827]">₹ 500</span>
-          </div>
-          <div className="bg-white border border-[#E5E7EB] rounded-2xl p-3 flex flex-col items-center justify-center text-center soft-shadow-lg">
-            <span className="text-[10px] text-deposit font-medium mb-2 leading-tight">Current Balance</span>
-            <Coins size={20} className="text-deposit mb-1" />
-            <span className="text-sm font-bold text-[#111827]">₹ 13,000</span>
-          </div>
-        </div>
-
-        {/* Deposit History */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-3 px-1">
-            <div className="w-6 h-6 rounded-full bg-[#F0FDF4] flex items-center justify-center">
-              <Calendar size={14} className="text-deposit" />
-            </div>
-            <h2 className="text-sm font-bold text-[#111827]">Deposit History</h2>
-          </div>
-          
-          <div className="overflow-hidden rounded-xl border border-[#E5E7EB] soft-shadow">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#15803D] text-white">
-                <tr>
-                  <th className="py-2.5 px-3 font-medium border-r border-[#16A34A]">Date</th>
-                  <th className="py-2.5 px-3 font-medium border-r border-[#16A34A]">Month</th>
-                  <th className="py-2.5 px-3 font-medium border-r border-[#16A34A]">Amount (₹)</th>
-                  <th className="py-2.5 px-3 font-medium border-r border-[#16A34A]">Payment Mode</th>
-                  <th className="py-2.5 px-3 font-medium">Remark</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white text-[#4B5563]">
-                <tr className="border-b border-[#E5E7EB]">
-                  <td className="py-3 px-3 font-medium text-[#111827] border-r border-[#E5E7EB]">15 Aug 2026</td>
-                  <td className="py-3 px-3 border-r border-[#E5E7EB]">August</td>
-                  <td className="py-3 px-3 border-r border-[#E5E7EB]">500</td>
-                  <td className="py-3 px-3 border-r border-[#E5E7EB]">Cash</td>
-                  <td className="py-3 px-3 text-[10px]">Monthly Saving</td>
-                </tr>
-                <tr className="bg-[#F8FAFC]">
-                  <td className="py-3 px-3 font-medium text-[#111827] border-r border-[#E5E7EB]">15 Jul 2026</td>
-                  <td className="py-3 px-3 border-r border-[#E5E7EB]">July</td>
-                  <td className="py-3 px-3 border-r border-[#E5E7EB]">300</td>
-                  <td className="py-3 px-3 border-r border-[#E5E7EB]">UPI</td>
-                  <td className="py-3 px-3 text-[10px]">Monthly Saving</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
 
       </div>
 
-      {/* Sticky Bottom Buttons */}
-      <div className="fixed bottom-16 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-[#E5E7EB] p-4 flex gap-3 z-30">
-        <button className="flex-1 py-3.5 rounded-[18px] border-2 border-[var(--color-deposit-primary)] text-[var(--color-deposit-primary)] font-semibold flex items-center justify-center gap-2 hover:bg-[#F0FDF4] transition-colors active:scale-95">
-          <X size={18} />
+      {/* Bottom Actions */}
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--color-luxury-cream)] border-t border-[#E5E7EB] p-4 flex gap-3 z-30 pb-safe">
+        <button 
+          onClick={() => navigate(-1)}
+          className="flex-1 py-3.5 rounded-xl border border-red-500 text-red-500 font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors active:scale-95"
+        >
+          <X size={18} strokeWidth={2.5} />
           Cancel
         </button>
-        <button className="flex-[1.5] py-3.5 rounded-[18px] bg-deposit-gradient text-white font-semibold flex items-center justify-center gap-2 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all active:scale-95">
-          <Save size={18} />
+        <button className="flex-[1.5] py-3.5 rounded-xl bg-[#065F46] text-white font-bold flex items-center justify-center gap-2 shadow-md hover:bg-[#064E3B] transition-colors active:scale-95">
+          <Save size={18} strokeWidth={2.5} />
           Save Deposit
         </button>
       </div>
+
     </div>
   );
 };
