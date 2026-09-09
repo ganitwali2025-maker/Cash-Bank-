@@ -38,11 +38,16 @@ import {
   Bell,
   Clock,
   Flame,
-  IndianRupee
+  IndianRupee,
+  X,
+  Check,
+  CreditCard,
+  Eye
 } from 'lucide-react';
 import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
 import { translations } from '../translations';
 import { formatMonthLabel } from './Header';
+import { saveDepositToSheet } from '../utils/googleSheet';
 
 interface DashboardProps {
   members: Member[];
@@ -194,6 +199,67 @@ export default function Dashboard({
   });
 
   const todayStr = new Date().toISOString().split('T')[0];
+
+  // 15th of the month rule & Pay Modal states
+  const currentDayOfMonth = now.getDate();
+  const isAfter15th = currentDayOfMonth >= 15;
+  const [showPendingAnyway, setShowPendingAnyway] = React.useState(false);
+
+  const [payModalMember, setPayModalMember] = React.useState<Member | null>(null);
+  const [payAmount, setPayAmount] = React.useState<number>(3000);
+  const [payDate, setPayDate] = React.useState<string>(todayStr);
+  const [payMode, setPayMode] = React.useState<'Cash' | 'UPI' | 'A/C Transfer'>('Cash');
+  const [isSubmittingPay, setIsSubmittingPay] = React.useState(false);
+
+  const openPayModal = (member: Member) => {
+    setPayModalMember(member);
+    setPayAmount(member.monthlyDeposit || 3000);
+    setPayDate(new Date().toISOString().split('T')[0]);
+    setPayMode('Cash');
+  };
+
+  const handlePaySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!payModalMember) return;
+    setIsSubmittingPay(true);
+
+    const mNum = String(payModalMember.id).match(/(\d+)/)?.[1];
+    const formattedMemId = mNum ? `MB-${String(mNum).padStart(3, '0')}` : payModalMember.id;
+
+    // 1. Save to Google Sheet
+    await saveDepositToSheet({
+      action: 'addDeposit',
+      memberId: formattedMemId,
+      memberName: payModalMember.name,
+      month: 'September 2026',
+      date: payDate,
+      amount: Number(payAmount),
+      paymentMode: payMode,
+      depositType: 'Saving Account',
+      remark: 'Direct Pay from Dashboard Alert',
+      status: 'Paid'
+    });
+
+    // 2. Local app update
+    onRecordDeposit(payModalMember.id, Number(payAmount), payDate, selectedMonth);
+
+    // 3. Update local sheet list so member immediately leaves pending list
+    setSheetDeposits(prev => [
+      ...prev,
+      {
+        memberId: formattedMemId,
+        name: payModalMember.name,
+        month: 'September 2026',
+        date: payDate,
+        amount: Number(payAmount),
+        paymentMode: payMode,
+        status: 'Paid'
+      }
+    ]);
+
+    setIsSubmittingPay(false);
+    setPayModalMember(null);
+  };
 
   const [activeCardIndex, setActiveCardIndex] = React.useState(0);
   const [touchStartX, setTouchStartX] = React.useState<number | null>(null);
@@ -481,7 +547,7 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* PENDING DEPOSITS NOTIFICATION ALERT */}
+      {/* PENDING DEPOSITS NOTIFICATION ALERT (Activates after 15th of month) */}
       <div className="mt-4 pt-2">
         <div className="flex items-center justify-between px-1 mb-3">
           <div className="flex items-center gap-2">
@@ -493,12 +559,37 @@ export default function Dashboard({
               Pending Deposit Alerts
             </h3>
           </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
-            {pendingMembersList.length} Pending
-          </span>
+          <div className="flex items-center gap-2">
+            {!isAfter15th && (
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                Active After 15th
+              </span>
+            )}
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+              {pendingMembersList.length} Pending
+            </span>
+          </div>
         </div>
 
-        {pendingMembersList.length === 0 ? (
+        {!isAfter15th && !showPendingAnyway ? (
+          <div className="bg-amber-50/90 border border-amber-200/90 rounded-[20px] p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+              <p className="text-xs font-bold text-amber-900">
+                📅 Har mahine 15 tarik ke baad pending list yahan automatic dikhegi.
+              </p>
+              <p className="text-[10px] text-amber-700 font-medium mt-0.5">
+                Current Date: {currentDayOfMonth} Sep (15th se pehle regular deposit time active hai)
+              </p>
+            </div>
+            <button
+              onClick={() => setShowPendingAnyway(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white rounded-xl text-[10px] font-bold shadow hover:bg-amber-700 transition-all shrink-0 cursor-pointer"
+            >
+              <Eye size={12} />
+              View Pending List ({pendingMembersList.length})
+            </button>
+          </div>
+        ) : pendingMembersList.length === 0 ? (
           <div className="bg-green-50 border border-green-200 rounded-[20px] p-4 text-center">
             <p className="text-xs font-bold text-green-700">🎉 Saare members ka September deposit receive ho gaya hai!</p>
           </div>
@@ -527,7 +618,7 @@ export default function Dashboard({
                   </div>
                 </div>
 
-                {/* Amount & Action Button */}
+                {/* Amount & Direct Pay Action Button */}
                 <div className="flex items-center gap-3">
                   <div className="text-right">
                     <p className="text-xs font-black text-[#5A0000]">₹{member.monthlyDeposit}</p>
@@ -536,10 +627,10 @@ export default function Dashboard({
                     </span>
                   </div>
                   <button 
-                    onClick={() => navigate('/deposit')}
-                    className="px-3 py-1.5 rounded-xl bg-[#5A0000] text-[#D4AF37] text-[10px] font-bold shadow hover:bg-[#4a0404] transition-colors"
+                    onClick={() => openPayModal(member)}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#5A0000] to-[#800000] text-[#D4AF37] text-[10px] font-black tracking-wider uppercase shadow hover:brightness-110 transition-all flex items-center gap-1 cursor-pointer"
                   >
-                    + Add
+                    PAY
                   </button>
                 </div>
               </div>
@@ -547,6 +638,110 @@ export default function Dashboard({
           </div>
         )}
       </div>
+
+      {/* DIRECT PAY MODAL POPUP */}
+      {payModalMember && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200/50 space-y-4">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-[#5A0000]/10 flex items-center justify-center text-[#5A0000]">
+                  <CreditCard size={20} />
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-[#5A0000] uppercase">Pay Deposit</h3>
+                  <p className="text-[11px] font-bold text-gray-700">{payModalMember.name} • <span className="text-amber-700">September 2026</span></p>
+                </div>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setPayModalMember(null)}
+                className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handlePaySubmit} className="space-y-4 pt-1">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-600 mb-1">
+                  Deposit Amount (₹)
+                </label>
+                <input 
+                  type="number"
+                  value={payAmount}
+                  onChange={(e) => setPayAmount(Number(e.target.value))}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-[#5A0000]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-600 mb-1">
+                  Payment Date
+                </label>
+                <input 
+                  type="date"
+                  value={payDate}
+                  onChange={(e) => setPayDate(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:border-[#5A0000]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-600 mb-1">
+                  Payment Mode
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['Cash', 'UPI', 'A/C Transfer'] as const).map(mode => (
+                    <button
+                      type="button"
+                      key={mode}
+                      onClick={() => setPayMode(mode)}
+                      className={`py-2 px-1 text-center rounded-xl text-[10px] font-bold border transition-all cursor-pointer ${
+                        payMode === mode
+                          ? 'bg-[#5A0000] text-[#D4AF37] border-[#5A0000] shadow-sm'
+                          : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                      }`}
+                    >
+                      {mode}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Modal Action Buttons: SUBMIT & CANCEL */}
+              <div className="grid grid-cols-2 gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setPayModalMember(null)}
+                  className="w-full py-2.5 rounded-xl border border-gray-300 text-gray-700 font-bold text-xs hover:bg-gray-100 transition-colors uppercase tracking-wider cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isSubmittingPay}
+                  className="w-full py-2.5 rounded-xl bg-[#5A0000] text-[#D4AF37] font-black text-xs shadow-md hover:bg-[#4a0404] transition-colors uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  {isSubmittingPay ? (
+                    <span>Submitting...</span>
+                  ) : (
+                    <>
+                      <Check size={14} />
+                      Submit
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Spacer for bottom navigation and scroll space */}
       <div className="h-48 w-full"></div>
