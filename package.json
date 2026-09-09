@@ -34,5 +34,8 @@
     "typescript": "~5.8.2",
     "vite": "^6.2.3",
     "vite-plugin-pwa": "^0.21.1"
+  },
+  "overrides": {
+    "qs": "^6.14.1"
   }
 }

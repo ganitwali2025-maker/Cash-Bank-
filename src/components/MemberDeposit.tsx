@@ -14,20 +14,77 @@ import {
   MessageSquare,
   X,
   Save,
-  CheckCircle2
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Member } from '../types';
+import { saveDepositToSheet } from '../utils/googleSheet';
 
 interface MemberDepositProps {
   members: Member[];
 }
 
+const MONTHS = [
+  'January 2026', 'February 2026', 'March 2026', 'April 2026',
+  'May 2026', 'June 2026', 'July 2026', 'August 2026',
+  'September 2026', 'October 2026', 'November 2026', 'December 2026'
+];
+
 const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
   const navigate = useNavigate();
+
+  // Form state
   const [selectedMemberId, setSelectedMemberId] = useState<string>(members.length > 0 ? members[0].id : '');
   const [paymentMode, setPaymentMode] = useState<'Cash' | 'UPI' | 'A/C Transfer'>('Cash');
   const [depositType, setDepositType] = useState<'Saving Account' | 'Loan Account'>('Saving Account');
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [month, setMonth] = useState<string>('August 2026');
+  const [amount, setAmount] = useState<string>('500');
+  const [remark, setRemark] = useState<string>('Monthly Saving Deposit');
+
+  // UI state
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const selectedMember = members.find(m => m.id === selectedMemberId);
+
+  const handleSave = async () => {
+    if (!selectedMember) {
+      setError('Koi member select nahi kiya!');
+      return;
+    }
+    if (!amount || Number(amount) <= 0) {
+      setError('Amount sahi se daalo!');
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+
+    const success = await saveDepositToSheet({
+      action: 'addDeposit',
+      memberId: selectedMember.id,
+      memberName: selectedMember.name,
+      month,
+      date,
+      amount: Number(amount),
+      paymentMode,
+      depositType,
+      remark,
+      status: 'Paid',
+    });
+
+    setSaving(false);
+
+    if (success) {
+      setSaved(true);
+      setTimeout(() => navigate(-1), 1500);
+    } else {
+      setError('Google Sheet mein save nahi hua. Internet check karo!');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[var(--color-luxury-cream)] pb-24 font-['Inter',sans-serif] text-[#111827]">
@@ -77,19 +134,16 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
                 <ChevronDown size={18} className="text-[#6B7280] absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
               
-              {(() => {
-                const member = members.find(m => m.id === selectedMemberId);
-                return member ? (
-                  <div className="space-y-0.5">
-                    <p className="text-xs font-semibold text-[#4B5563]">
-                      Member ID <span className="mx-1">:</span> <span className="text-[#16A34A]">{member.id}</span>
-                    </p>
-                    <p className="text-xs font-semibold text-[#4B5563]">
-                      Mobile No <span className="mx-1">:</span> {member.phone}
-                    </p>
-                  </div>
-                ) : null;
-              })()}
+              {selectedMember && (
+                <div className="space-y-0.5">
+                  <p className="text-xs font-semibold text-[#4B5563]">
+                    Member ID <span className="mx-1">:</span> <span className="text-[#16A34A]">{selectedMember.id}</span>
+                  </p>
+                  <p className="text-xs font-semibold text-[#4B5563]">
+                    Mobile No <span className="mx-1">:</span> {selectedMember.phone}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           
@@ -98,31 +152,30 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
           <div className="block md:hidden h-px w-full bg-[#E5E7EB]"></div>
 
           {/* Right Side */}
-          {(() => {
-            const member = members.find(m => m.id === selectedMemberId);
-            return member ? (
-              <div className="space-y-3 md:w-2/5">
-                <div className="flex items-start gap-2.5">
-                  <Calendar size={16} className="text-[#4B5563] mt-0.5" />
-                  <div>
-                    <p className="text-[10px] font-semibold text-[#6B7280] leading-none mb-1">Member Since</p>
-                    <p className="text-xs font-bold text-[#111827]">
-                      {member.joiningDate ? new Date(member.joiningDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2.5">
-                  <ShieldCheck size={16} className="text-[#16A34A] mt-0.5" />
-                  <div>
-                    <p className="text-[10px] font-semibold text-[#6B7280] leading-none mb-1">Membership Status</p>
-                    <span className="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0]">
-                      Active
-                    </span>
-                  </div>
+          {selectedMember && (
+            <div className="space-y-3 md:w-2/5">
+              <div className="flex items-start gap-2.5">
+                <Calendar size={16} className="text-[#4B5563] mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-semibold text-[#6B7280] leading-none mb-1">Member Since</p>
+                  <p className="text-xs font-bold text-[#111827]">
+                    {selectedMember.joiningDate
+                      ? new Date(selectedMember.joiningDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                      : 'N/A'}
+                  </p>
                 </div>
               </div>
-            ) : null;
-          })()}
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck size={16} className="text-[#16A34A] mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-semibold text-[#6B7280] leading-none mb-1">Membership Status</p>
+                  <span className="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0]">
+                    Active
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Form Container */}
@@ -135,7 +188,8 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
               <div className="flex items-center justify-between border border-[#D1D5DB] rounded-lg px-3 py-2.5 focus-within:border-[#16A34A] transition-colors relative">
                 <input 
                   type="date" 
-                  defaultValue="2026-08-15" 
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                   className="w-full text-sm font-bold text-[#111827] outline-none bg-transparent appearance-none" 
                 />
               </div>
@@ -143,19 +197,12 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-[#111827]">Month <span className="text-red-500">*</span></label>
               <div className="flex items-center justify-between border border-[#D1D5DB] rounded-lg px-3 py-2.5 focus-within:border-[#16A34A] transition-colors relative">
-                <select className="w-full text-sm font-bold text-[#111827] outline-none appearance-none bg-transparent pr-6">
-                  <option>January 2026</option>
-                  <option>February 2026</option>
-                  <option>March 2026</option>
-                  <option>April 2026</option>
-                  <option>May 2026</option>
-                  <option>June 2026</option>
-                  <option>July 2026</option>
-                  <option>August 2026</option>
-                  <option>September 2026</option>
-                  <option>October 2026</option>
-                  <option>November 2026</option>
-                  <option>December 2026</option>
+                <select
+                  value={month}
+                  onChange={(e) => setMonth(e.target.value)}
+                  className="w-full text-sm font-bold text-[#111827] outline-none appearance-none bg-transparent pr-6"
+                >
+                  {MONTHS.map(m => <option key={m}>{m}</option>)}
                 </select>
                 <ChevronDown size={18} className="text-[#4B5563] absolute right-3 pointer-events-none" />
               </div>
@@ -246,7 +293,12 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
             <label className="text-xs font-bold text-[#111827]">Amount (₹) <span className="text-red-500">*</span></label>
             <div className="flex items-center border border-[#D1D5DB] rounded-lg px-3 py-3 focus-within:border-[#16A34A] focus-within:ring-1 focus-within:ring-[#16A34A] transition-all">
               <span className="text-xl font-bold text-[#4B5563]">₹</span>
-              <input type="number" defaultValue="500" className="w-full text-xl ml-3 outline-none text-[#111827] font-bold" />
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full text-xl ml-3 outline-none text-[#111827] font-bold"
+              />
               <div className="pl-3 border-l border-[#D1D5DB]">
                 <Calculator size={20} className="text-[#16A34A]" />
               </div>
@@ -258,22 +310,61 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
             <label className="text-xs font-bold text-[#111827]">Message / Remark (Optional)</label>
             <div className="flex items-center border border-[#D1D5DB] rounded-lg px-3 py-3 focus-within:border-[#16A34A] transition-colors">
               <MessageSquare size={18} className="text-[#4B5563]" />
-              <input type="text" defaultValue="Monthly Saving Deposit" className="w-full text-sm ml-3 font-semibold text-[#4B5563] outline-none" />
+              <input
+                type="text"
+                value={remark}
+                onChange={(e) => setRemark(e.target.value)}
+                className="w-full text-sm ml-3 font-semibold text-[#4B5563] outline-none"
+              />
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2.5 text-sm text-red-600 font-semibold">
+              ⚠️ {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {saved && (
+            <div className="bg-[#F0FDF4] border border-[#BBF7D0] rounded-lg px-3 py-2.5 text-sm text-[#16A34A] font-semibold flex items-center gap-2">
+              <CheckCircle2 size={18} className="fill-[#16A34A] text-white" />
+              Google Sheet mein save ho gaya! Wapas ja raha hoon...
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex gap-3 pt-4 mt-2 border-t border-[#E5E7EB]">
             <button 
               onClick={() => navigate(-1)}
-              className="flex-1 py-3.5 rounded-xl border border-red-500 text-red-500 font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors active:scale-95"
+              disabled={saving}
+              className="flex-1 py-3.5 rounded-xl border border-red-500 text-red-500 font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors active:scale-95 disabled:opacity-50"
             >
               <X size={18} strokeWidth={2.5} />
               Cancel
             </button>
-            <button className="flex-[1.5] py-3.5 rounded-xl bg-[#065F46] text-white font-bold flex items-center justify-center gap-2 shadow-md hover:bg-[#064E3B] transition-colors active:scale-95">
-              <Save size={18} strokeWidth={2.5} />
-              Save Deposit
+            <button
+              onClick={handleSave}
+              disabled={saving || saved}
+              className="flex-[1.5] py-3.5 rounded-xl bg-[#065F46] text-white font-bold flex items-center justify-center gap-2 shadow-md hover:bg-[#064E3B] transition-colors active:scale-95 disabled:opacity-70"
+            >
+              {saving ? (
+                <>
+                  <Loader2 size={18} strokeWidth={2.5} className="animate-spin" />
+                  Saving...
+                </>
+              ) : saved ? (
+                <>
+                  <CheckCircle2 size={18} strokeWidth={2.5} />
+                  Saved!
+                </>
+              ) : (
+                <>
+                  <Save size={18} strokeWidth={2.5} />
+                  Save Deposit
+                </>
+              )}
             </button>
           </div>
 
