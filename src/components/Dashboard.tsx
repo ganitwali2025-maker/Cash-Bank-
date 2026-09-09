@@ -572,8 +572,8 @@ export default function Dashboard({
         </div>
 
         {!isAfter15th ? (
-          <div className="bg-amber-50/90 border border-amber-200/90 rounded-[20px] p-4 text-center shadow-sm">
-            <p className="text-xs font-bold text-amber-950 leading-relaxed">
+          <div className="py-2 px-1 text-center">
+            <p className="text-xs font-bold text-gray-800 leading-relaxed">
               📢 <span className="font-black text-[#5A0000]">{currentMonthName} Month Started:</span> All members please ensure to complete your monthly deposit payment before the 15th of the month.
             </p>
           </div>
