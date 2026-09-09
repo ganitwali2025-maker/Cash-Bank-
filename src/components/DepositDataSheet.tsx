@@ -19,6 +19,36 @@ interface SheetDeposit {
 }
 interface DepositDataSheetProps { members: Member[]; }
 
+// Clean Month string formatter (converts ISO timestamps like 2026-08-31T18:30... to 'September 2026')
+function formatMonthDisplay(val: string): string {
+  if (!val) return 'Unknown Month';
+  const str = String(val).trim();
+  if (/^[A-Za-z]+\s+\d{4}$/.test(str)) return str;
+
+  const d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+  return str;
+}
+
+// Clean Date string formatter (converts ISO timestamps to '09 Sep 2026')
+function formatDateDisplay(val: string): string {
+  if (!val) return '—';
+  const str = String(val).trim();
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    const parts = str.split('-');
+    const dt = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  const d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  return str;
+}
+
 // Resolve member name from ID
 function resolveName(d: SheetDeposit, members: Member[]): string {
   if (d.name && d.name.trim() !== '' && d.name !== d.memberId) return d.name;
@@ -40,12 +70,12 @@ const PaymentCell: React.FC<{ mode: string }> = ({ mode }) => {
   return <span className="font-semibold text-[#111827]">{mode || '—'}</span>;
 };
 
-// Month display name → short
+// Month display color theme
 const MONTH_COLORS: Record<string, { bg: string; border: string; icon: string; dot: string }> = {
   default: { bg: 'bg-amber-50', border: 'border-amber-200', icon: 'text-amber-700', dot: 'bg-amber-500' },
 };
 const getColor = (month: string) => {
-  const m = month.toLowerCase();
+  const m = (month || '').toLowerCase();
   if (m.includes('jan')) return { bg:'bg-blue-50',   border:'border-blue-200',   icon:'text-blue-700',   dot:'bg-blue-500' };
   if (m.includes('feb')) return { bg:'bg-pink-50',   border:'border-pink-200',   icon:'text-pink-700',   dot:'bg-pink-500' };
   if (m.includes('mar')) return { bg:'bg-green-50',  border:'border-green-200',  icon:'text-green-700',  dot:'bg-green-500' };
@@ -80,15 +110,20 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members }) => {
   };
   useEffect(() => { fetchDeposits(); }, []);
 
-  // Resolve names
-  const resolved = allDeposits.map(d => ({ ...d, name: resolveName(d, members) }));
+  // Resolve names & format month/date displays
+  const resolved = allDeposits.map(d => ({
+    ...d,
+    name: resolveName(d, members),
+    monthDisplay: formatMonthDisplay(d.month),
+    dateDisplay: formatDateDisplay(d.date),
+  }));
 
-  // Group by month
-  const monthMap: Record<string, SheetDeposit[]> = {};
+  // Group by formatted month string
+  const monthMap: Record<string, typeof resolved> = {};
   resolved.forEach(d => {
-    if (!d.month) return;
-    if (!monthMap[d.month]) monthMap[d.month] = [];
-    monthMap[d.month].push(d);
+    const key = d.monthDisplay || 'Unknown Month';
+    if (!monthMap[key]) monthMap[key] = [];
+    monthMap[key].push(d);
   });
   const monthList = Object.keys(monthMap);
 
@@ -201,7 +236,7 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members }) => {
   // ═══════════════════════════════════════════
   // SCREEN 2: Month Detail (Table)
   // ═══════════════════════════════════════════
-  const color = getColor(openMonth);
+  const color = getColor(openMonth || '');
   return (
     <div className="min-h-screen bg-[var(--color-luxury-cream)] font-['Inter',sans-serif] flex flex-col">
 
@@ -258,8 +293,8 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members }) => {
                   <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-medium">{d.sn || idx+1}</td>
                   <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-medium text-[#6B7280]">{d.memberId || '—'}</td>
                   <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-bold text-[#111827] text-left min-w-[120px]">{d.name}</td>
-                  <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-medium">{d.month}</td>
-                  <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-medium">{d.date}</td>
+                  <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-medium">{d.monthDisplay}</td>
+                  <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-medium">{d.dateDisplay}</td>
                   <td className="py-2.5 px-3 border-r border-[#E5E7EB] font-bold text-[#111827]">{Number(d.amount).toLocaleString('en-IN')}</td>
                   <td className="py-2.5 px-3 border-r border-[#E5E7EB]"><PaymentCell mode={d.paymentMode} /></td>
                   <td className="py-2.5 px-3 border-r border-[#E5E7EB]">
