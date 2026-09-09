@@ -572,9 +572,12 @@ export default function Dashboard({
         </div>
 
         {!isAfter15th ? (
-          <div className="py-2.5 px-2 text-center">
-            <p className="text-xs sm:text-sm font-bold text-gray-800 leading-relaxed">
-              📢 <span className="font-black text-[#5A0000]">{currentMonthName} Month Started:</span> All members please ensure to complete your monthly deposit payment before the 15th of the month.
+          <div className="py-3 px-2 text-center space-y-1">
+            <h4 className="text-sm sm:text-base md:text-lg font-black text-[#5A0000] tracking-wide">
+              📢 {currentMonthName} Month Started:
+            </h4>
+            <p className="text-xs sm:text-sm md:text-base font-bold text-gray-800 leading-relaxed">
+              All members please ensure to complete your monthly deposit payment before the 15th of the month.
             </p>
           </div>
         ) : pendingMembersList.length === 0 ? (
