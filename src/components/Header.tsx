@@ -69,49 +69,47 @@ export default function Header({
   return (
     <header 
       id="app-header"
-      className="relative overflow-hidden bg-gradient-to-r from-[#080E26] via-[#0E1B4A] to-[#0A1236] text-white shadow-[0_10px_30px_rgba(8,14,38,0.5)] h-[84px] sm:h-[90px] px-4 sm:px-6 flex items-center justify-between z-50 sticky top-0 w-full print:hidden rounded-b-[28px] md:rounded-none border-b border-[#F59E0B]/20"
+      className="relative overflow-hidden bg-[linear-gradient(110deg,#5A0000_30%,#8A0000_50%,#5A0000_70%)] text-white shadow-[0_4px_20px_rgba(90,0,0,0.3)] h-[80px] sm:h-[86px] px-4 sm:px-6 flex items-center justify-between border-b-[3px] border-[#D4AF37] z-50 sticky top-0 w-full print:hidden rounded-b-[28px] md:rounded-none"
     >
-      {/* Light sheen ambient overlay */}
+      {/* Glossy overlay for extra shine */}
       <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
 
       {/* Left section: Hamburger & App title */}
-      <div className="flex items-center gap-3 sm:gap-4 relative z-10">
+      <div className="flex items-center gap-4 sm:gap-6 relative z-10">
         {!sidebarOpen && (
           <button
             id="header-sidebar-open-btn"
             onClick={() => setSidebarOpen(true)}
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors focus:outline-none shadow-md backdrop-blur-md"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-black/20 bg-black/20 hover:bg-black/30 flex items-center justify-center transition-colors focus:outline-none shadow-inner"
             aria-label="Open Sidebar"
           >
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={2.5} />
+            <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-[#D4AF37]" strokeWidth={2.5} />
           </button>
         )}
         
-        {/* Title & Lotus Emblem Area */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#F59E0B] to-[#FCD34D] p-0.5 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.4)]">
-            <div className="w-full h-full bg-[#0E1B4A] rounded-full flex items-center justify-center">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#FCD34D]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C10.5 4.5 9 8 9 11.5C9 14.5 10.3 16.8 12 17.5C13.7 16.8 15 14.5 15 11.5C15 8 13.5 4.5 12 2ZM12 19.5C8.5 19.5 5 17.5 3 15C5.5 15 8.5 14 10.5 12C9 14 8 16.5 8 18.5C9.2 19.1 10.6 19.5 12 19.5ZM12 19.5C13.4 19.5 14.8 19.1 16 18.5C16 16.5 15 14 13.5 12C15.5 14 18.5 15 21 15C19 17.5 15.5 19.5 12 19.5Z" />
-              </svg>
+        {/* Title Area */}
+        <div className="flex flex-col justify-center pt-1">
+          <h1 className="font-black text-white text-[24px] sm:text-[30px] leading-[1] tracking-wide uppercase font-display drop-shadow-md">
+            CASH BANK
+          </h1>
+          <div className="flex items-center justify-center gap-2 mt-1.5">
+            <div className="h-[1px] w-6 sm:w-8 bg-gradient-to-r from-transparent to-[#D4AF37] relative opacity-80">
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-[#D4AF37]"></div>
             </div>
-          </div>
-
-          <div className="flex flex-col justify-center">
-            <h1 className="font-black text-white text-[20px] sm:text-[24px] leading-tight tracking-wider uppercase font-display drop-shadow-md">
-              CASH BANK
-            </h1>
-            <p className="text-[#FCD34D] text-[10px] sm:text-[11px] font-medium tracking-wide whitespace-nowrap opacity-90 leading-none">
-              — {language === 'hi' ? 'उज्जवल भविष्य समिति' : 'Ujjwal Bhavishya Samiti'} —
-            </p>
+            <span className="text-[#D4AF37] text-[11px] sm:text-[13px] font-sans font-medium tracking-wide whitespace-nowrap drop-shadow-sm leading-none">
+              {language === 'hi' ? 'उज्जवल भविष्य समिति' : 'Ujjwal Bhavisya Samiti'}
+            </span>
+            <div className="h-[1px] w-6 sm:w-8 bg-gradient-to-l from-transparent to-[#D4AF37] relative opacity-80">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-[#D4AF37]"></div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Right section: Icons */}
-      <div className="flex items-center gap-2.5 sm:gap-4 relative z-10">
+      <div className="flex items-center gap-3 sm:gap-5 relative z-10">
         {/* Month Selector Component (Desktop Only) */}
-        <div className="hidden md:flex items-center bg-white/10 rounded-full px-1.5 py-1 border border-white/15 shrink-0 backdrop-blur-md mr-2">
+        <div className="hidden md:flex items-center bg-black/20 rounded-full px-1.5 py-1 border border-white/10 shrink-0 backdrop-blur-sm mr-2">
           <button
             id="header-prev-month"
             onClick={handlePrevMonth}
@@ -121,7 +119,7 @@ export default function Header({
             <ChevronLeft className="w-4 h-4" />
           </button>
           
-          <div className="flex items-center gap-1 px-3 font-sans font-bold text-xs text-[#FCD34D] uppercase tracking-wider">
+          <div className="flex items-center gap-1 px-3 font-sans font-bold text-xs text-[#D4AF37] uppercase tracking-wider">
             <span id="current-month-display" className="whitespace-nowrap text-center drop-shadow-sm">
               {formatMonthLabel(selectedMonth, language)}
             </span>
@@ -140,12 +138,12 @@ export default function Header({
         <InstallPWA />
         
         <button className="relative p-2 text-white hover:bg-white/10 rounded-full transition-colors group">
-          <Bell className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform text-white" strokeWidth={2} />
-          <span className="absolute top-1 right-1 w-[16px] h-[16px] bg-[#EF4444] border border-[#0E1B4A] rounded-full text-[9px] text-white flex items-center justify-center font-black shadow-md">3</span>
+          <Bell className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform" strokeWidth={2} />
+          <span className="absolute top-1.5 right-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] bg-[#EF4444] border-2 border-[#6A0000] rounded-full text-[9px] text-white flex items-center justify-center font-bold shadow-md">3</span>
         </button>
 
-        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-[#FCD34D] text-[#FCD34D] flex items-center justify-center font-bold shadow-[0_0_12px_rgba(252,211,77,0.3)] hover:bg-[#FCD34D]/10 transition-colors cursor-pointer">
-          <User className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} />
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-[2px] border-[#D4AF37] text-[#D4AF37] flex items-center justify-center font-bold shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-[#D4AF37]/10 transition-colors cursor-pointer mr-1">
+          <User className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
         </div>
       </div>
     </header>

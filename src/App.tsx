@@ -496,27 +496,27 @@ export default function App() {
 
       {/* MOBILE BOTTOM NAVIGATION */}
       <div 
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 flex items-center justify-between px-6 pt-2.5 z-50 rounded-t-[28px] shadow-[0_-4px_25px_rgba(11,21,56,0.08)]"
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[#FFFDF8] border-t border-gray-200 flex items-center justify-between px-6 pt-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >
         <button 
           onClick={() => setCurrentTab('dashboard')}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'dashboard' ? 'text-[#4F46E5]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'dashboard' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-2 rounded-2xl transition-colors ${currentTab === 'dashboard' ? 'bg-[#4F46E5]/15 text-[#4F46E5]' : ''}`}>
-            <Home className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'dashboard' ? 'bg-[#5A0000]/10' : ''}`}>
+            <Home className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black tracking-tight">Home</span>
+          <span className="text-[10px] font-bold">Home</span>
         </button>
 
         <button 
           onClick={() => setCurrentTab('members')}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#4F46E5]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-2 rounded-2xl transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#4F46E5]/15 text-[#4F46E5]' : ''}`}>
-            <Users className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'members' || currentTab === 'savings' || currentTab === 'loan' ? 'bg-[#5A0000]/10' : ''}`}>
+            <Users className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black tracking-tight">Members</span>
+          <span className="text-[10px] font-bold">Members</span>
         </button>
 
         {/* FAB placeholder in Nav */}
@@ -524,32 +524,32 @@ export default function App() {
 
         <button 
           onClick={() => setCurrentTab('transactions')}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'transactions' ? 'text-[#4F46E5]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'transactions' ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-2 rounded-2xl transition-colors ${currentTab === 'transactions' ? 'bg-[#4F46E5]/15 text-[#4F46E5]' : ''}`}>
-            <ArrowRightLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className={`p-1.5 rounded-xl transition-colors ${currentTab === 'transactions' ? 'bg-[#5A0000]/10' : ''}`}>
+            <ArrowRightLeft className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black tracking-tight">Transactions</span>
+          <span className="text-[10px] font-bold">Transactions</span>
         </button>
 
         <button 
           onClick={() => setCurrentTab('more')}
-          className={`flex flex-col items-center gap-1 transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'text-[#4F46E5]' : 'text-gray-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'text-[#5A0000]' : 'text-gray-400'}`}
         >
-          <div className={`p-2 rounded-2xl transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'bg-[#4F46E5]/15 text-[#4F46E5]' : ''}`}>
-            <LayoutGrid className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className={`p-1.5 rounded-xl transition-colors ${['more', 'profile', 'reports', 'deposits', 'loans', 'emis'].includes(currentTab) ? 'bg-[#5A0000]/10' : ''}`}>
+            <LayoutGrid className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black tracking-tight">More</span>
+          <span className="text-[10px] font-bold">More</span>
         </button>
       </div>
 
       {/* FLOATING ACTION BUTTON (Mobile) */}
       <button 
         onClick={() => setCurrentTab('members')}
-        className="md:hidden fixed left-1/2 -translate-x-1/2 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-tr from-[#4338CA] via-[#4F46E5] to-[#6366F1] text-white rounded-full flex items-center justify-center shadow-[0_8px_25px_rgba(79,70,229,0.5)] z-50 border-4 border-white cursor-pointer active:scale-95 transition-transform"
+        className="md:hidden fixed left-1/2 -translate-x-1/2 w-16 h-16 bg-[#5A0000] text-white rounded-full flex items-center justify-center shadow-[0_8px_16px_rgba(90,0,0,0.3)] z-50 border-4 border-[#FFFDF8]"
         style={{ bottom: 'max(2rem, calc(2rem + env(safe-area-inset-bottom)))' }}
       >
-        <Plus className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={3} />
+        <Plus className="w-8 h-8" />
       </button>
     </div>
   );

@@ -42,8 +42,7 @@ import {
   X,
   Check,
   CreditCard,
-  Eye,
-  Zap
+  Eye
 } from 'lucide-react';
 import { Member, Deposit, Loan, Emi, LanguageType } from '../types';
 import { translations } from '../translations';
@@ -306,34 +305,34 @@ export default function Dashboard({
       id: 0,
       title: `${currentMonthName.toUpperCase()} COLLECTION`,
       amount: liveCurrentMonthCollection,
-      subtitle: `Current Month (${currentMonthLabel}) • Live 🟢`,
-      icon: Briefcase,
-      bgClass: 'bg-gradient-to-br from-[#0B1538] via-[#102058] to-[#0A1336]',
-      amountClass: 'text-[#FBBF24]',
-      iconBg: 'bg-[#2563EB]/30',
-      Watermark: Briefcase,
+      subtitle: `Current Month (${currentMonthLabel}) • Live`,
+      icon: Calendar,
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
+      Watermark: Calendar,
       cardNumber: '**** **** **** 1001',
       stats: [
-        { label: 'TOTAL MEMBERS', value: totalMembers, icon: Users, colorClass: 'bg-purple-500/20 text-purple-300 border-purple-400/30' },
-        { label: 'LIVE RECORDS', value: currentMonthSheetDeposits.length || paidMembersCount, icon: FileText, colorClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' },
-        { label: 'MONTH', value: currentMonthLabel, icon: Calendar, colorClass: 'bg-blue-500/20 text-blue-300 border-blue-400/30' }
+        { label: 'Total Members', value: totalMembers, icon: Users },
+        { label: 'Live Records', value: currentMonthSheetDeposits.length || paidMembersCount, icon: Wallet },
+        { label: 'Month', value: currentMonthLabel, icon: History }
       ]
     },
     {
       id: 1,
       title: 'TOTAL DEPOSIT',
       amount: liveTotalDeposit,
-      subtitle: `Overall Deposited in Sheet (${sheetDeposits.length || deposits.length} records) • Live 🟢`,
+      subtitle: `Overall Deposited in Sheet (${sheetDeposits.length || deposits.length} records)`,
       icon: TrendingUp,
-      bgClass: 'bg-gradient-to-br from-[#0B1538] via-[#102058] to-[#0A1336]',
-      amountClass: 'text-[#FBBF24]',
-      iconBg: 'bg-[#2563EB]/30',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: TrendingUp,
       cardNumber: '**** **** **** 1002',
       stats: [
-        { label: 'THIS MONTH', value: `₹${liveCurrentMonthCollection.toLocaleString('en-IN')}`, icon: Calendar, colorClass: 'bg-purple-500/20 text-purple-300 border-purple-400/30' },
-        { label: 'RECORDS', value: sheetDeposits.length || paidMembersCount, icon: Users, colorClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' },
-        { label: 'SYNC', value: 'Live 🟢', icon: Percent, colorClass: 'bg-blue-500/20 text-blue-300 border-blue-400/30' }
+        { label: 'This Month', value: `₹${liveCurrentMonthCollection.toLocaleString('en-IN')}`, icon: Calendar },
+        { label: 'Total Records', value: sheetDeposits.length || paidMembersCount, icon: Users },
+        { label: 'Sheet Sync', value: 'Live', icon: Percent }
       ]
     },
     {
@@ -342,15 +341,15 @@ export default function Dashboard({
       amount: liveAvailableFund,
       subtitle: 'Total Cash on Hand (Live)',
       icon: PiggyBank,
-      bgClass: 'bg-gradient-to-br from-[#0B1538] via-[#102058] to-[#0A1336]',
-      amountClass: 'text-[#FBBF24]',
-      iconBg: 'bg-[#2563EB]/30',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: PiggyBank,
       cardNumber: '**** **** **** 1003',
       stats: [
-        { label: 'SAVINGS', value: `₹${liveTotalDeposit.toLocaleString('en-IN')}`, icon: Wallet, colorClass: 'bg-purple-500/20 text-purple-300 border-purple-400/30' },
-        { label: 'INTEREST', value: `₹${totalInterestEarned.toLocaleString('en-IN')}`, icon: TrendingUp, colorClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' },
-        { label: 'LOANS', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Landmark, colorClass: 'bg-blue-500/20 text-blue-300 border-blue-400/30' }
+        { label: 'Total Savings', value: `₹${liveTotalDeposit.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Interest Earned', value: `₹${totalInterestEarned.toLocaleString('en-IN')}`, icon: TrendingUp },
+        { label: 'Loans Given', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Landmark }
       ]
     },
     {
@@ -359,15 +358,15 @@ export default function Dashboard({
       amount: totalOutstandingLoan,
       subtitle: 'Total Amount to be recovered',
       icon: Landmark,
-      bgClass: 'bg-gradient-to-br from-[#0B1538] via-[#102058] to-[#0A1336]',
-      amountClass: 'text-[#FBBF24]',
-      iconBg: 'bg-[#2563EB]/30',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: Landmark,
       cardNumber: '**** **** **** 1004',
       stats: [
-        { label: 'PRINCIPAL', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Wallet, colorClass: 'bg-purple-500/20 text-purple-300 border-purple-400/30' },
-        { label: 'RECOVERED', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: History, colorClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' },
-        { label: 'ACTIVE', value: loans.filter(l => l.status === 'Active').length, icon: Users, colorClass: 'bg-blue-500/20 text-blue-300 border-blue-400/30' }
+        { label: 'Total Principal', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Principal Paid', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: History },
+        { label: 'Active Loans', value: loans.filter(l => l.status === 'Active').length, icon: Users }
       ]
     },
     {
@@ -376,15 +375,15 @@ export default function Dashboard({
       amount: totalInterestEarned,
       subtitle: 'Overall Interest Earned',
       icon: LineChart,
-      bgClass: 'bg-gradient-to-br from-[#0B1538] via-[#102058] to-[#0A1336]',
-      amountClass: 'text-[#FBBF24]',
-      iconBg: 'bg-[#2563EB]/30',
+      bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
+      amountClass: 'text-[#E8C34D]',
+      iconBg: 'bg-[#C78726]/40',
       Watermark: LineChart,
       cardNumber: '**** **** **** 1005',
       stats: [
-        { label: 'THIS MONTH', value: `₹${currentMonthInterest.toLocaleString('en-IN')}`, icon: Calendar, colorClass: 'bg-purple-500/20 text-purple-300 border-purple-400/30' },
-        { label: 'PAID BACK', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: Wallet, colorClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' },
-        { label: 'EXPECTED', value: `₹${loans.reduce((sum, l) => sum + l.emis.reduce((s, e) => s + e.interestComponent, 0), 0).toLocaleString('en-IN')}`, icon: TrendingUp, colorClass: 'bg-blue-500/20 text-blue-300 border-blue-400/30' }
+        { label: 'This Month', value: `₹${currentMonthInterest.toLocaleString('en-IN')}`, icon: Calendar },
+        { label: 'Total Principal', value: `₹${totalPrincipalPaidBack.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Expected Total', value: `₹${loans.reduce((sum, l) => sum + l.emis.reduce((s, e) => s + e.interestComponent, 0), 0).toLocaleString('en-IN')}`, icon: TrendingUp }
       ]
     }
   ];
@@ -424,66 +423,73 @@ export default function Dashboard({
               return (
                 <div key={card.id} className="w-full shrink-0 flex justify-center py-2">
                   <div 
-                    className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[28px] md:rounded-[32px] p-5 md:p-6 shadow-[0_12px_35px_rgba(11,21,56,0.35)] relative overflow-hidden border border-blue-400/20 transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
+                    className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[24px] md:rounded-[32px] p-6 shadow-[0_10px_30px_rgba(90,0,0,0.4)] relative overflow-hidden border-[3px] border-[#D4AF37] transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
                   >
                     {/* Background noise/dots overlay */}
                     <div className="absolute top-0 left-0 w-full h-full opacity-5 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
                     
                     {/* Watermark Icon */}
-                    <Watermark className="absolute -bottom-10 -right-10 w-64 h-64 opacity-[0.04] text-white pointer-events-none -rotate-12" />
+                    <Watermark className="absolute -bottom-10 -right-10 w-64 h-64 opacity-[0.03] text-white pointer-events-none -rotate-12" />
 
                     <div className="relative z-10 h-full flex flex-col justify-between">
-                      {/* Top Row: Icon, Title & 3D Wallet Graphic */}
+                      {/* Top Row: Icon, Title & Pill */}
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center text-blue-300 shadow-inner bg-blue-600/30 border border-blue-400/30 shrink-0">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-[#E8C34D] shadow-inner ${card.iconBg} border border-[#E8C34D]/20`}>
                             <Icon className="w-6 h-6 md:w-7 md:h-7" />
                           </div>
                           <div className="flex flex-col">
-                            <h3 className="text-xs md:text-sm font-bold text-white tracking-widest uppercase">{card.title}</h3>
-                            <p className="text-[11px] md:text-xs text-white/70 font-medium mt-0.5">{card.subtitle}</p>
+                            <h3 className="text-sm md:text-base font-bold text-white tracking-widest">{card.title}</h3>
+                            <p className="text-xs md:text-sm text-white/60 font-medium">{card.subtitle}</p>
                           </div>
                         </div>
 
-                        {/* 3D Wallet Graphic Removed */}
+                        {/* +12% Pill */}
+                        <div className="hidden sm:flex flex-col items-end bg-[#EAF5E5] px-3 py-1.5 rounded-lg border border-green-200 shadow-sm ml-2">
+                          <div className="flex items-center gap-1 text-green-700 font-bold text-sm">
+                            <TrendingUp className="w-4 h-4" />
+                            <span>+12%</span>
+                          </div>
+                          <p className="text-[9px] text-green-600/80 font-medium whitespace-nowrap">vs last month</p>
+                        </div>
                       </div>
 
                       {/* Middle Row: Amount */}
-                      <div className="mt-5 mb-4 text-white">
-                        <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black font-sans ${card.amountClass} tracking-tight drop-shadow-md`}>
+                      <div className="mt-8 mb-6 text-white">
+                        <h2 className={`text-5xl md:text-6xl font-black font-sans ${card.amountClass} tracking-tight drop-shadow-md`}>
                           ₹{card.amount.toLocaleString('en-IN')}
                         </h2>
-                        <p className="text-xs md:text-sm text-white/80 font-bold mt-1">
+                        <p className="text-sm md:text-base text-white/90 font-bold mt-1">
                           Per Month
                         </p>
                       </div>
 
                       {/* Stats Row */}
-                      <div className="flex items-center justify-between mb-4 w-full overflow-x-auto no-scrollbar">
+                      <div className="flex items-center justify-between mb-5 w-full overflow-x-auto no-scrollbar">
                         {card.stats.map((stat, i) => (
                           <React.Fragment key={i}>
                             <div className="flex items-center gap-2 md:gap-3 shrink-0">
-                              <div className={`w-8 h-8 md:w-9 md:h-9 rounded-full border flex items-center justify-center ${stat.colorClass}`}>
-                                <stat.icon className="w-4 h-4" />
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 bg-white/5 flex items-center justify-center text-[#E8C34D]">
+                                <stat.icon className="w-4 h-4 md:w-5 md:h-5" />
                               </div>
                               <div className="flex flex-col">
-                                <span className="text-[8px] md:text-[9px] text-white/60 uppercase font-bold tracking-wider">{stat.label}</span>
-                                <span className="text-xs md:text-sm text-white font-black">{stat.value}</span>
+                                <span className="text-[9px] md:text-[10px] text-white/60 uppercase font-medium">{stat.label}</span>
+                                <span className="text-xs md:text-sm text-white font-bold">{stat.value}</span>
                               </div>
                             </div>
-                            {i < card.stats.length - 1 && <div className="w-[1px] h-7 md:h-8 bg-white/10 mx-2 shrink-0"></div>}
+                            {i < card.stats.length - 1 && <div className="w-[1px] h-8 md:h-10 bg-white/10 mx-2 md:mx-4 shrink-0"></div>}
                           </React.Fragment>
                         ))}
                       </div>
 
                       {/* Bottom Footer: Chip & Card Number */}
                       <div className="flex items-center gap-4">
-                        <div className="w-9 h-6 border border-[#FCD34D]/40 rounded bg-gradient-to-br from-[#FCD34D]/40 to-[#B45309]/20 flex items-center justify-center relative overflow-hidden shadow-sm">
-                           <div className="w-full h-[1px] bg-[#FCD34D]/40 absolute top-1/2"></div>
-                           <div className="w-[1px] h-full bg-[#FCD34D]/40 absolute left-1/3"></div>
-                           <div className="w-[1px] h-full bg-[#FCD34D]/40 absolute right-1/3"></div>
+                        <div className="w-10 h-7 border border-[#E8C34D]/40 rounded bg-gradient-to-br from-[#D4AF37]/30 to-[#A57C1B]/10 flex items-center justify-center relative overflow-hidden shadow-sm">
+                           <div className="w-full h-[1px] bg-[#E8C34D]/30 absolute top-1/2"></div>
+                           <div className="w-[1px] h-full bg-[#E8C34D]/30 absolute left-1/3"></div>
+                           <div className="w-[1px] h-full bg-[#E8C34D]/30 absolute right-1/3"></div>
                         </div>
-                        <p className="text-xs md:text-sm font-mono font-bold text-white/70 tracking-widest">
+                        <p className="text-sm md:text-base font-mono font-bold text-white/70 tracking-widest">
                           {card.cardNumber}
                         </p>
                       </div>
@@ -496,15 +502,15 @@ export default function Dashboard({
         </div>
 
         {/* 5 Small Pagination Dots */}
-        <div className="flex items-center justify-center gap-1.5 mt-2 mb-1">
+        <div className="flex items-center justify-center gap-1.5 mt-2.5 mb-1">
           {dashboardCards.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setActiveCardIndex(idx)}
               className={`h-1.5 min-h-[6px] max-h-[6px] rounded-full transition-all duration-300 p-0 border-0 outline-none cursor-pointer ${
                 activeCardIndex === idx
-                  ? 'w-5 min-w-[20px] bg-[#4F46E5]'
-                  : 'w-1.5 min-w-[6px] max-w-[6px] bg-gray-300 hover:bg-gray-400'
+                  ? 'w-5 min-w-[20px] bg-[#4a0404]'
+                  : 'w-1.5 min-w-[6px] max-w-[6px] bg-[#4a0404]/30 hover:bg-[#4a0404]/60'
               }`}
               title={`Card ${idx + 1}`}
             />
@@ -515,42 +521,27 @@ export default function Dashboard({
 
       {/* QUICK ACTIONS */}
       <div className="pt-2">
-        <div className="flex items-center justify-between px-1 mb-3">
-          <div className="flex items-center gap-1.5">
-            <Zap className="w-4 h-4 text-purple-600 fill-purple-600" />
-            <h3 className="font-black text-xs uppercase tracking-wider text-[#0F172A]">QUICK ACTIONS</h3>
-          </div>
-          <span 
-            onClick={() => navigate('/more')}
-            className="text-[11px] font-bold text-purple-600 hover:text-purple-800 transition-colors cursor-pointer flex items-center gap-0.5"
-          >
-            See All →
-          </span>
-        </div>
-
+        <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000] px-1 mb-3">Quick Actions</h3>
         <div className="grid grid-cols-5 sm:grid-cols-5 gap-2 sm:gap-3 px-1">
           {[
-            { icon: <UserPlus className="w-5 h-5" />, label: 'Add Member', route: '/members', bgClass: 'bg-blue-50 text-blue-600 border-blue-100' },
-            { icon: <Download className="w-5 h-5" />, label: 'Deposit', route: '/deposit', bgClass: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
-            { icon: <ArrowUpRight className="w-5 h-5" />, label: 'Withdraw', route: '/withdraw', bgClass: 'bg-rose-50 text-rose-600 border-rose-100' },
-            { icon: <Briefcase className="w-5 h-5" />, label: 'Loan', route: '/loans', bgClass: 'bg-amber-50 text-amber-600 border-amber-100' },
-            { icon: <Book className="w-5 h-5" />, label: 'Passbook', route: '/members', bgClass: 'bg-teal-50 text-teal-600 border-teal-100' },
-            { icon: <FileText className="w-5 h-5" />, label: 'Statement', route: '/reports', bgClass: 'bg-indigo-50 text-indigo-600 border-indigo-100' },
-            { icon: <PieChart className="w-5 h-5" />, label: 'Reports', route: '/reports', bgClass: 'bg-yellow-50 text-yellow-600 border-yellow-100' },
-            { icon: <ArrowRightLeft className="w-5 h-5" />, label: 'Transactions', route: '/transactions', bgClass: 'bg-cyan-50 text-cyan-600 border-cyan-100' },
-            { icon: <Calendar className="w-5 h-5" />, label: 'EMI Collection', route: '/emis', bgClass: 'bg-purple-50 text-purple-600 border-purple-100' },
-            { icon: <LayoutGrid className="w-5 h-5" />, label: 'More', route: '/more', bgClass: 'bg-gray-100 text-gray-600 border-gray-200' },
+            { icon: <UserPlus className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 mb-1.5" />, label: 'Add Member', route: '/members' },
+            { icon: <Download className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 mb-1.5" />, label: 'Deposit', route: '/deposit' },
+            { icon: <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 text-red-500 mb-1.5" />, label: 'Withdraw', route: '/withdraw' },
+            { icon: <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 mb-1.5" />, label: 'Loan', route: '/loans' },
+            { icon: <Book className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500 mb-1.5" />, label: 'Passbook', route: '/members' },
+            { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500 mb-1.5" />, label: 'Statement', route: '/reports' },
+            { icon: <PieChart className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 mb-1.5" />, label: 'Reports', route: '/reports' },
+            { icon: <ArrowRightLeft className="w-5 h-5 sm:w-6 sm:h-6 text-teal-500 mb-1.5" />, label: 'Transactions', route: '/transactions' },
+            { icon: <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500 mb-1.5" />, label: 'EMI Collection', route: '/emis' },
+            { icon: <LayoutGrid className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500 mb-1.5" />, label: 'More', route: '/more' },
           ].map((action, i) => (
             <button 
               key={i} 
               onClick={() => action.route && navigate(action.route)}
-              className="flex flex-col items-center justify-center bg-white py-3 px-1 rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group"
+              className="flex flex-col items-center justify-center bg-white py-3 px-1 rounded-[16px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 hover:bg-gray-50 transition-colors"
             >
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1.5 border transition-transform group-hover:scale-110 ${action.bgClass}`}>
-                {action.icon}
-              </div>
+              {action.icon}
               <span className="text-[9px] font-bold text-gray-800 text-center leading-tight">{action.label}</span>
-              <span className="text-[8px] font-black text-gray-400 mt-0.5 group-hover:translate-x-0.5 transition-transform">→</span>
             </button>
           ))}
         </div>
@@ -560,56 +551,34 @@ export default function Dashboard({
       <div className="mt-4 pt-2">
         <div className="flex items-center justify-between px-1 mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-600 border border-amber-200 flex items-center justify-center">
-              <Bell size={16} className="animate-bounce" fill="#D97706" fillOpacity={0.2} />
+            <div className="relative flex items-center justify-center">
+              <Bell size={18} className="text-[#D97706] animate-bounce" fill="#D97706" fillOpacity={0.2} />
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
             </div>
-            <h3 className="font-black text-xs uppercase tracking-wider text-[#0F172A]">
-              PENDING DEPOSIT ALERTS
+            <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000]">
+              Pending Deposit Alerts
             </h3>
           </div>
           <div className="flex items-center gap-2">
             {!isAfter15th && (
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200 flex items-center gap-1">
-                <Clock size={10} /> Active After 15th
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                Active After 15th
               </span>
             )}
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 flex items-center gap-1">
-              <AlertCircle size={10} /> {pendingMembersList.length} Pending
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+              {pendingMembersList.length} Pending
             </span>
           </div>
         </div>
 
         {!isAfter15th ? (
-          <div className="rounded-[24px] bg-white border border-gray-200/90 shadow-sm p-4 relative overflow-hidden">
-            {/* Top Row: Calendar Badge, Vertical Bar & Notice Text */}
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 shadow-sm">
-                <Calendar size={20} strokeWidth={2} />
-              </div>
-              
-              <div className="w-[3px] bg-indigo-500 rounded-full h-9 shrink-0"></div>
-
-              <div className="flex-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-sm">🇮🇳</span>
-                  <h4 className="text-xs sm:text-sm font-black text-gray-900 tracking-tight">
-                    {currentMonthName} Month Started:
-                  </h4>
-                </div>
-                <p className="text-[11px] sm:text-xs font-bold text-gray-600 mt-0.5 leading-relaxed">
-                  All members please ensure to complete your monthly deposit payment before the 15th of the month.
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Wave Footer Banner with Clean White Style */}
-            <div className="mt-3 pt-2 pb-1 -mx-4 -mb-4 bg-gray-50/80 text-center flex items-center justify-center gap-3 border-t border-gray-100">
-              <span className="h-[1px] w-10 sm:w-16 bg-gray-300"></span>
-              <span className="text-gray-700 font-serif italic text-xs font-bold tracking-widest">
-                Together for a Better Tomorrow
-              </span>
-              <span className="h-[1px] w-10 sm:w-16 bg-gray-300"></span>
-            </div>
+          <div className="py-3 px-2 text-center space-y-1">
+            <h4 className="text-sm sm:text-base md:text-lg font-black text-[#5A0000] tracking-wide">
+              📢 {currentMonthName} Month Started:
+            </h4>
+            <p className="text-xs sm:text-sm md:text-base font-bold text-gray-800 leading-relaxed">
+              All members please ensure to complete your monthly deposit payment before the 15th of the month.
+            </p>
           </div>
         ) : pendingMembersList.length === 0 ? (
           <div className="bg-green-50 border border-green-200 rounded-[20px] p-4 text-center">
@@ -624,13 +593,13 @@ export default function Dashboard({
               >
                 {/* Member Info */}
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-[#0B1538] font-black text-sm shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-[#5A0000] font-black text-sm shrink-0">
                     {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                   </div>
                   <div>
                     <h4 className="text-xs font-black text-gray-900 leading-tight uppercase">{member.name}</h4>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[9px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">
+                      <span className="text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
                         September 2026
                       </span>
                       <span className="text-[9px] font-bold text-gray-500">
@@ -643,14 +612,14 @@ export default function Dashboard({
                 {/* Amount & Direct Pay Action Button */}
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <p className="text-xs font-black text-[#0B1538]">₹{member.monthlyDeposit}</p>
-                    <span className="text-[8px] font-bold text-rose-600 bg-rose-50 px-1 py-0.5 rounded border border-rose-100">
+                    <p className="text-xs font-black text-[#5A0000]">₹{member.monthlyDeposit}</p>
+                    <span className="text-[8px] font-bold text-amber-600 bg-amber-50 px-1 py-0.5 rounded">
                       Pending
                     </span>
                   </div>
                   <button 
                     onClick={() => openPayModal(member)}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#0B1538] via-[#0E1B4A] to-[#4F46E5] text-[#FCD34D] text-[10px] font-black tracking-wider uppercase shadow hover:brightness-110 transition-all flex items-center gap-1 cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#5A0000] to-[#800000] text-[#D4AF37] text-[10px] font-black tracking-wider uppercase shadow hover:brightness-110 transition-all flex items-center gap-1 cursor-pointer"
                   >
                     PAY
                   </button>
@@ -664,16 +633,16 @@ export default function Dashboard({
       {/* DIRECT PAY MODAL POPUP */}
       {payModalMember && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-indigo-100 space-y-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200/50 space-y-4">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#4F46E5]">
+                <div className="w-10 h-10 rounded-2xl bg-[#5A0000]/10 flex items-center justify-center text-[#5A0000]">
                   <CreditCard size={20} />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm text-[#0B1538] uppercase">Pay Deposit</h3>
-                  <p className="text-[11px] font-bold text-gray-700">{payModalMember.name} • <span className="text-indigo-600">September 2026</span></p>
+                  <h3 className="font-black text-sm text-[#5A0000] uppercase">Pay Deposit</h3>
+                  <p className="text-[11px] font-bold text-gray-700">{payModalMember.name} • <span className="text-amber-700">September 2026</span></p>
                 </div>
               </div>
               <button 
@@ -695,7 +664,7 @@ export default function Dashboard({
                   type="number"
                   value={payAmount}
                   onChange={(e) => setPayAmount(Number(e.target.value))}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-[#4F46E5]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-[#5A0000]"
                   required
                 />
               </div>
@@ -708,7 +677,7 @@ export default function Dashboard({
                   type="date"
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:border-[#4F46E5]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:border-[#5A0000]"
                   required
                 />
               </div>
@@ -725,7 +694,7 @@ export default function Dashboard({
                       onClick={() => setPayMode(mode)}
                       className={`py-2 px-1 text-center rounded-xl text-[10px] font-bold border transition-all cursor-pointer ${
                         payMode === mode
-                          ? 'bg-[#0B1538] text-[#FCD34D] border-[#0B1538] shadow-sm'
+                          ? 'bg-[#5A0000] text-[#D4AF37] border-[#5A0000] shadow-sm'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
                       }`}
                     >
@@ -748,7 +717,7 @@ export default function Dashboard({
                 <button
                   type="submit"
                   disabled={isSubmittingPay}
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#0B1538] via-[#0E1B4A] to-[#4F46E5] text-[#FCD34D] font-black text-xs shadow-md hover:brightness-110 transition-colors uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-[#5A0000] text-[#D4AF37] font-black text-xs shadow-md hover:bg-[#4a0404] transition-colors uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   {isSubmittingPay ? (
                     <span>Submitting...</span>
@@ -765,8 +734,8 @@ export default function Dashboard({
         </div>
       )}
 
-      {/* Spacer for bottom navigation */}
-      <div className="h-20 md:h-6 w-full"></div>
+      {/* Spacer for bottom navigation and scroll space */}
+      <div className="h-48 w-full"></div>
 
     </div>
   );
