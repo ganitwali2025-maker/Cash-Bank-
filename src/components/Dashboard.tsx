@@ -128,6 +128,50 @@ export default function Dashboard({
     setSelectedMonth(`${year}-${String(month).padStart(2, '0')}`);
   };
 
+  const SHEET_URL =
+    'https://script.google.com/macros/s/AKfycbylJG300iJuV4Ue7qSPFFJOeP8V9n6gO2ZWihN69zwmoTsHwUTNHArSwrUfrV7H-j2aTA/exec';
+
+  const [sheetDeposits, setSheetDeposits] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetch(`${SHEET_URL}?action=getDeposits`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          setSheetDeposits(data.data);
+        }
+      })
+      .catch(err => console.error('Sheet fetch error on dashboard:', err));
+  }, []);
+
+  // Compute live current month & total deposit
+  const now = new Date();
+  const currentMonthName = now.toLocaleDateString('en-US', { month: 'long' }); // "September"
+  const currentYearStr = String(now.getFullYear()); // "2026"
+  const currentMonthLabel = `${currentMonthName} ${currentYearStr}`; // "September 2026"
+
+  const currentMonthSheetDeposits = sheetDeposits.filter(d => {
+    if (!d) return false;
+    const mStr = String(d.month || '').toLowerCase();
+    const dStr = String(d.date || '').toLowerCase();
+    if (mStr.includes(currentMonthName.toLowerCase())) return true;
+    const mDate = new Date(d.month || d.date);
+    if (!isNaN(mDate.getTime())) {
+      return mDate.toLocaleDateString('en-US', { month: 'long' }).toLowerCase() === currentMonthName.toLowerCase();
+    }
+    return false;
+  });
+
+  const liveCurrentMonthCollection = sheetDeposits.length > 0
+    ? currentMonthSheetDeposits.reduce((sum, d) => sum + Number(d.amount || 0), 0)
+    : deposits.filter(d => d.monthKey === selectedMonth && d.status === 'Paid').reduce((sum, d) => sum + d.amount, 0);
+
+  const liveTotalDeposit = sheetDeposits.length > 0
+    ? sheetDeposits.reduce((sum, d) => sum + Number(d.amount || 0), 0)
+    : totalSavingsReceived;
+
+  const liveAvailableFund = Math.max(0, liveTotalDeposit + totalInterestEarned + totalPrincipalPaidBack - totalLoansDisbursed);
+
   const todayStr = new Date().toISOString().split('T')[0];
 
   const [activeCardIndex, setActiveCardIndex] = React.useState(0);
@@ -144,9 +188,9 @@ export default function Dashboard({
   const dashboardCards = [
     {
       id: 0,
-      title: 'MONTHLY COLLECTION',
-      amount: expectedMonthlySavings,
-      subtitle: 'Regular monthly savings',
+      title: `${currentMonthName.toUpperCase()} COLLECTION`,
+      amount: liveCurrentMonthCollection,
+      subtitle: `Current Month (${currentMonthLabel}) • Live`,
       icon: Calendar,
       bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
@@ -155,15 +199,15 @@ export default function Dashboard({
       cardNumber: '**** **** **** 1001',
       stats: [
         { label: 'Total Members', value: totalMembers, icon: Users },
-        { label: 'Total Collected', value: `₹${totalSavingsReceived.toLocaleString('en-IN')}`, icon: Wallet },
-        { label: 'Next Collection', value: '05 Aug 2025', icon: History }
+        { label: 'Live Records', value: currentMonthSheetDeposits.length || paidMembersCount, icon: Wallet },
+        { label: 'Month', value: currentMonthLabel, icon: History }
       ]
     },
     {
       id: 1,
       title: 'TOTAL DEPOSIT',
-      amount: totalSavingsReceived,
-      subtitle: 'Overall Deposited Amount',
+      amount: liveTotalDeposit,
+      subtitle: `Overall Deposited in Sheet (${sheetDeposits.length || deposits.length} records)`,
       icon: TrendingUp,
       bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
@@ -171,16 +215,16 @@ export default function Dashboard({
       Watermark: TrendingUp,
       cardNumber: '**** **** **** 1002',
       stats: [
-        { label: 'This Month', value: `₹${currentMonthDeposits.reduce((a, b) => a + b.amount, 0).toLocaleString('en-IN')}`, icon: Calendar },
-        { label: 'Members Paid', value: paidMembersCount, icon: Users },
-        { label: 'Collection Rate', value: `${collectionPercentage}%`, icon: Percent }
+        { label: 'This Month', value: `₹${liveCurrentMonthCollection.toLocaleString('en-IN')}`, icon: Calendar },
+        { label: 'Total Records', value: sheetDeposits.length || paidMembersCount, icon: Users },
+        { label: 'Sheet Sync', value: 'Live', icon: Percent }
       ]
     },
     {
       id: 2,
       title: 'AVAILABLE BALANCE',
-      amount: availableFund,
-      subtitle: 'Total Cash on Hand',
+      amount: liveAvailableFund,
+      subtitle: 'Total Cash on Hand (Live)',
       icon: PiggyBank,
       bgClass: 'bg-gradient-to-br from-[#800000] to-[#4a0000]',
       amountClass: 'text-[#E8C34D]',
@@ -188,7 +232,7 @@ export default function Dashboard({
       Watermark: PiggyBank,
       cardNumber: '**** **** **** 1003',
       stats: [
-        { label: 'Total Savings', value: `₹${totalSavingsReceived.toLocaleString('en-IN')}`, icon: Wallet },
+        { label: 'Total Savings', value: `₹${liveTotalDeposit.toLocaleString('en-IN')}`, icon: Wallet },
         { label: 'Interest Earned', value: `₹${totalInterestEarned.toLocaleString('en-IN')}`, icon: TrendingUp },
         { label: 'Loans Given', value: `₹${totalLoansDisbursed.toLocaleString('en-IN')}`, icon: Landmark }
       ]
