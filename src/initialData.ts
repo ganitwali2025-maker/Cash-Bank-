@@ -36,48 +36,5 @@ export const getInitialDeposits = (): Deposit[] => {
 };
 
 export const getInitialLoans = (): Loan[] => {
-  // Loan 1: LOKESH RAJAK
-  const loan1Id = 'loan-1';
-  const loan1 = {
-    id: loan1Id,
-    memberId: 'member-1',
-    principal: 1500,
-    interestRate: 1, // 1%
-    durationMonths: 24,
-    startMonthKey: '2026-03',
-    dateIssued: '2026-03-15',
-    status: 'Active' as const,
-    emis: generateEmiSchedule(loan1Id, 'member-1', 1500, 1, 24, '2026-03')
-  };
-
-  // Loan 2: DIGESH NISHAD
-  const loan2Id = 'loan-2';
-  const loan2 = {
-    id: loan2Id,
-    memberId: 'member-2',
-    principal: 500,
-    interestRate: 1, // 1%
-    durationMonths: 24,
-    startMonthKey: '2026-03',
-    dateIssued: '2026-03-15',
-    status: 'Active' as const,
-    emis: generateEmiSchedule(loan2Id, 'member-2', 500, 1, 24, '2026-03')
-  };
-
-  // Loan 3: GAURAV PANDAY
-  const loan3Id = 'loan-3';
-  const loan3 = {
-    id: loan3Id,
-    memberId: 'member-3',
-    principal: 20000,
-    interestRate: 1, // 1%
-    durationMonths: 24,
-    startMonthKey: '2026-03',
-    dateIssued: '2026-03-15',
-    status: 'Active' as const,
-    emis: generateEmiSchedule(loan3Id, 'member-3', 20000, 1, 24, '2026-03')
-  };
-
-  // Keep EMIs as pending initially, user can mark them paid from the UI.
-  return [loan1, loan2, loan3];
+  return [];
 };
