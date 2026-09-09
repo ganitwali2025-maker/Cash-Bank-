@@ -175,15 +175,6 @@ export default function Dashboard({
   const todayStr = new Date().toISOString().split('T')[0];
 
   const [activeCardIndex, setActiveCardIndex] = React.useState(0);
-  const [isPaused, setIsPaused] = React.useState(false);
-
-  React.useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      setActiveCardIndex((prev) => (prev === 4 ? 0 : prev + 1));
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [isPaused]);
 
   const dashboardCards = [
     {
@@ -281,15 +272,9 @@ export default function Dashboard({
 
       {/* 3. Premium Card Slider */}
       <div className="relative w-full flex flex-col items-center justify-center my-6">
-        {/* Navigation Arrows Removed */}
-        
         {/* Cards Container */}
         <div 
           className="w-[95%] max-w-[550px] overflow-hidden relative rounded-[24px] md:rounded-[32px] cursor-pointer"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
           onClick={() => setActiveCardIndex((prev) => (prev === 4 ? 0 : prev + 1))}
         >
           <div 
@@ -306,8 +291,6 @@ export default function Dashboard({
                   <div 
                     className={`w-full aspect-auto md:aspect-[1.6/1] min-h-[220px] rounded-[24px] md:rounded-[32px] p-6 shadow-[0_10px_30px_rgba(90,0,0,0.4)] relative overflow-hidden border-[3px] border-[#D4AF37] transition-all duration-500 ease-out ${card.bgClass} ${isActive ? 'scale-100 opacity-100' : 'scale-90 opacity-40'}`}
                   >
-                    {/* Glossy overlay removed as requested */}
-
                     {/* Background noise/dots overlay */}
                     <div className="absolute top-0 left-0 w-full h-full opacity-5 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
                     
@@ -327,7 +310,7 @@ export default function Dashboard({
                           </div>
                         </div>
 
-                        {/* +12% Pill (hidden on very small screens for space) */}
+                        {/* +12% Pill */}
                         <div className="hidden sm:flex flex-col items-end bg-[#EAF5E5] px-3 py-1.5 rounded-lg border border-green-200 shadow-sm ml-2">
                           <div className="flex items-center gap-1 text-green-700 font-bold text-sm">
                             <TrendingUp className="w-4 h-4" />
@@ -383,6 +366,23 @@ export default function Dashboard({
             })}
           </div>
         </div>
+
+        {/* 5 Small Pagination Dots */}
+        <div className="flex items-center justify-center gap-2 mt-3">
+          {dashboardCards.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveCardIndex(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                activeCardIndex === idx
+                  ? 'w-7 bg-[#4a0404] border border-[#c5a059]'
+                  : 'w-2.5 bg-[#4a0404]/30 hover:bg-[#4a0404]/60'
+              }`}
+              title={`Card ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </div>
 
 
       </div>
