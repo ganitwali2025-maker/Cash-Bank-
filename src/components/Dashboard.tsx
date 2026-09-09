@@ -175,6 +175,43 @@ export default function Dashboard({
   const todayStr = new Date().toISOString().split('T')[0];
 
   const [activeCardIndex, setActiveCardIndex] = React.useState(0);
+  const [touchStartX, setTouchStartX] = React.useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = React.useState<number | null>(null);
+  const [mouseStartX, setMouseStartX] = React.useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX === null || touchEndX === null) return;
+    const diff = touchStartX - touchEndX;
+    if (diff > 35) {
+      setActiveCardIndex((prev) => (prev < 4 ? prev + 1 : 0));
+    } else if (diff < -35) {
+      setActiveCardIndex((prev) => (prev > 0 ? prev - 1 : 4));
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setMouseStartX(e.clientX);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (mouseStartX === null) return;
+    const diff = mouseStartX - e.clientX;
+    if (diff > 35) {
+      setActiveCardIndex((prev) => (prev < 4 ? prev + 1 : 0));
+    } else if (diff < -35) {
+      setActiveCardIndex((prev) => (prev > 0 ? prev - 1 : 4));
+    }
+    setMouseStartX(null);
+  };
 
   const dashboardCards = [
     {
@@ -274,8 +311,18 @@ export default function Dashboard({
       <div className="relative w-full flex flex-col items-center justify-center my-6">
         {/* Cards Container */}
         <div 
-          className="w-[95%] max-w-[550px] overflow-hidden relative rounded-[24px] md:rounded-[32px] cursor-pointer"
-          onClick={() => setActiveCardIndex((prev) => (prev === 4 ? 0 : prev + 1))}
+          className="w-[95%] max-w-[550px] overflow-hidden relative rounded-[24px] md:rounded-[32px] cursor-grab active:cursor-grabbing select-none touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onClick={(e) => {
+            // Only trigger click if not swiping
+            if (touchStartX === null && mouseStartX === null) {
+              setActiveCardIndex((prev) => (prev === 4 ? 0 : prev + 1));
+            }
+          }}
         >
           <div 
             className="flex transition-transform duration-500 ease-out"
