@@ -445,16 +445,7 @@ export default function Dashboard({
                           </div>
                         </div>
 
-                        {/* 3D Wallet Graphic */}
-                        <div className="relative shrink-0 w-20 h-16 hidden sm:flex items-center justify-center">
-                          <div className="w-16 h-12 bg-gradient-to-br from-indigo-500 via-blue-600 to-indigo-900 rounded-xl shadow-xl transform rotate-6 relative border border-white/30 flex flex-col justify-between p-1.5">
-                            <div className="w-3 h-3 rounded-full bg-amber-400 border border-white shadow-md self-end"></div>
-                            <div className="w-full h-2 bg-white/20 rounded"></div>
-                          </div>
-                          <div className="absolute -top-1 right-1 w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 border border-white shadow-md flex items-center justify-center font-black text-[#0B1538] text-[9px]">
-                            ₹
-                          </div>
-                        </div>
+                        {/* 3D Wallet Graphic Removed */}
                       </div>
 
                       {/* Middle Row: Amount */}
@@ -589,35 +580,35 @@ export default function Dashboard({
         </div>
 
         {!isAfter15th ? (
-          <div className="rounded-[28px] bg-gradient-to-b from-[#F3F6FF] via-[#EAEFFF] to-[#DCE5FF] border border-indigo-100/80 shadow-sm p-4.5 relative overflow-hidden">
+          <div className="rounded-[24px] bg-white border border-gray-200/90 shadow-sm p-4 relative overflow-hidden">
             {/* Top Row: Calendar Badge, Vertical Bar & Notice Text */}
-            <div className="flex items-center gap-3.5 relative z-10">
-              <div className="w-11 h-11 rounded-2xl bg-purple-100 text-purple-600 border border-purple-200 flex items-center justify-center shrink-0 shadow-sm">
-                <Calendar size={22} strokeWidth={2.2} />
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 shadow-sm">
+                <Calendar size={20} strokeWidth={2} />
               </div>
               
-              <div className="w-[3px] bg-indigo-500/80 rounded-full h-10 shrink-0"></div>
+              <div className="w-[3px] bg-indigo-500 rounded-full h-9 shrink-0"></div>
 
               <div className="flex-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-sm">🇮🇳</span>
-                  <h4 className="text-sm font-black text-[#0B1538] tracking-tight">
+                  <h4 className="text-xs sm:text-sm font-black text-gray-900 tracking-tight">
                     {currentMonthName} Month Started:
                   </h4>
                 </div>
-                <p className="text-xs font-bold text-gray-700 mt-0.5 leading-relaxed">
+                <p className="text-[11px] sm:text-xs font-bold text-gray-600 mt-0.5 leading-relaxed">
                   All members please ensure to complete your monthly deposit payment before the 15th of the month.
                 </p>
               </div>
             </div>
 
-            {/* Bottom Wave Footer Banner with Cursive Text */}
-            <div className="mt-4 pt-2.5 pb-2 -mx-5 -mb-5 bg-gradient-to-r from-[#0B1538] via-[#102058] to-[#0A1336] text-center flex items-center justify-center gap-3 border-t border-blue-400/20 shadow-inner">
-              <span className="h-[1px] w-10 sm:w-16 bg-gradient-to-r from-transparent to-[#FCD34D]/60"></span>
-              <span className="text-[#FCD34D] font-serif italic text-xs font-semibold tracking-widest drop-shadow-sm">
+            {/* Bottom Wave Footer Banner with Clean White Style */}
+            <div className="mt-3 pt-2 pb-1 -mx-4 -mb-4 bg-gray-50/80 text-center flex items-center justify-center gap-3 border-t border-gray-100">
+              <span className="h-[1px] w-10 sm:w-16 bg-gray-300"></span>
+              <span className="text-gray-700 font-serif italic text-xs font-bold tracking-widest">
                 Together for a Better Tomorrow
               </span>
-              <span className="h-[1px] w-10 sm:w-16 bg-gradient-to-l from-transparent to-[#FCD34D]/60"></span>
+              <span className="h-[1px] w-10 sm:w-16 bg-gray-300"></span>
             </div>
           </div>
         ) : pendingMembersList.length === 0 ? (
@@ -774,8 +765,8 @@ export default function Dashboard({
         </div>
       )}
 
-      {/* Spacer for bottom navigation and scroll space */}
-      <div className="h-48 w-full"></div>
+      {/* Spacer for bottom navigation */}
+      <div className="h-20 md:h-6 w-full"></div>
 
     </div>
   );
