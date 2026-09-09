@@ -12,13 +12,12 @@ import {
   ShieldCheck,
   Calendar,
   Phone,
+  BellRing,
   Wallet,
   Landmark,
   Settings,
   Clock,
-  ArrowRight,
-  RefreshCw,
-  Loader2
+  ArrowRight
 } from 'lucide-react';
 import { Member, Deposit, Loan, LanguageType } from '../types';
 import { numberToWords } from '../utils/numberToWords';
@@ -40,25 +39,16 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
   const member = members.find(m => m.id === id);
 
   const [sheetDeposits, setSheetDeposits] = useState<any[]>([]);
-  const [loadingSheet, setLoadingSheet] = useState<boolean>(true);
-
-  const fetchSheetData = async () => {
-    setLoadingSheet(true);
-    try {
-      const res = await fetch(`${SHEET_URL}?action=getDeposits`);
-      const data = await res.json();
-      if (data.status === 'success' && Array.isArray(data.data)) {
-        setSheetDeposits(data.data);
-      }
-    } catch (err) {
-      console.error('Error fetching sheet deposits in profile:', err);
-    } finally {
-      setLoadingSheet(false);
-    }
-  };
 
   useEffect(() => {
-    fetchSheetData();
+    fetch(`${SHEET_URL}?action=getDeposits`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          setSheetDeposits(data.data);
+        }
+      })
+      .catch(err => console.error('Error fetching sheet deposits in profile:', err));
   }, []);
 
   if (!member) {
@@ -86,28 +76,36 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
     return false;
   });
 
-  // Calculate live total balance
   const memberLocalDeposits = deposits.filter(d => d.memberId === member.id && d.status === 'Paid');
   
-  const totalBalance = memberSheetDeposits.length > 0
+  // Calculate Live Total Balance from Sheet (or fallback to local)
+  const totalBalance = sheetDeposits.length > 0
     ? memberSheetDeposits.reduce((sum, d) => sum + Number(d.amount || 0), 0)
     : memberLocalDeposits.reduce((sum, d) => sum + d.amount, 0);
 
-  const totalDepositsCount = memberSheetDeposits.length > 0
-    ? memberSheetDeposits.length
-    : memberLocalDeposits.length;
-
-  const lastTransaction = memberSheetDeposits.length > 0
+  const interestEarned = Math.round(totalBalance * 0.05);
+  
+  const lastTransaction = memberSheetDeposits.length > 0 
     ? memberSheetDeposits[memberSheetDeposits.length - 1]
     : (memberLocalDeposits.length > 0 ? memberLocalDeposits[memberLocalDeposits.length - 1] : null);
 
-  const lastTxnDateStr = lastTransaction
-    ? (lastTransaction.date || lastTransaction.timestamp || '—')
-    : '—';
-
   // Active Status logic
-  const memberLoans = loans.filter(l => l.memberId === member.id && l.status === 'Active');
+  const memberLoans = loans.filter(l => l.memberId === member.id);
   const isActive = totalBalance > 0 || memberLoans.length > 0;
+
+  // Find first pending EMI if any
+  let firstPendingEmi = null;
+  let activeLoan = null;
+  for (const loan of memberLoans) {
+    if (loan.status === 'Active') {
+      const pendingEmi = loan.emis.find(e => e.status === 'Pending');
+      if (pendingEmi) {
+        firstPendingEmi = pendingEmi;
+        activeLoan = loan;
+        break;
+      }
+    }
+  }
 
   return (
     <div className="bg-[#FAF8F4] min-h-screen pb-24 font-sans">
@@ -117,10 +115,10 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
           <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-white/10 transition">
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-bold tracking-wider uppercase font-display">Member Profile</h1>
+          <h1 className="text-lg font-bold tracking-wider uppercase font-display">Savings Account</h1>
         </div>
-        <button onClick={fetchSheetData} disabled={loadingSheet} className="p-1.5 rounded-full hover:bg-white/10 transition">
-          <RefreshCw className={`w-5 h-5 ${loadingSheet ? 'animate-spin' : ''}`} />
+        <button className="p-1.5 rounded-full hover:bg-white/10 transition">
+          <MoreVertical className="w-6 h-6" />
         </button>
       </div>
 
@@ -141,7 +139,7 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
           
           {/* Center: Details */}
           <div className="flex-1 min-w-0 z-10 text-left">
-            <h2 className="text-[15px] font-black text-gray-900 uppercase tracking-wide truncate">{member.name}</h2>
+            <h2 className="text-[14px] font-black text-gray-900 uppercase tracking-wide truncate">{member.name}</h2>
             
             <div className="inline-flex items-center gap-1.5 bg-[#FAF8F4] px-2 py-0.5 rounded border border-gray-100 my-1">
               <span className="text-[9px] text-gray-500 font-bold">Member ID:</span>
@@ -156,12 +154,18 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
 
           {/* Right: Badges */}
           <div className="flex flex-col items-end gap-3 shrink-0">
-            <span className="px-2.5 py-1 bg-green-50 text-green-700 text-[9px] font-bold uppercase rounded flex items-center gap-1 border border-green-200">
-              <ShieldCheck className="w-3 h-3" /> Active Member
-            </span>
+            {isActive ? (
+              <span className="px-2 py-1 bg-green-50 text-green-600 text-[8px] font-bold uppercase rounded flex items-center gap-1 border border-green-100">
+                <ShieldCheck className="w-2.5 h-2.5" /> Active Member
+              </span>
+            ) : (
+              <span className="px-2 py-1 bg-gray-50 text-gray-500 text-[8px] font-bold uppercase rounded flex items-center gap-1 border border-gray-100">
+                INACTIVE
+              </span>
+            )}
             
             <div className="text-right">
-              <p className="text-[7px] text-gray-400 font-bold uppercase mb-0.5">Joined On</p>
+              <p className="text-[7px] text-gray-400 font-bold uppercase mb-0.5">Account Opened</p>
               <div className="flex items-center justify-end gap-1 text-gray-700">
                 <span className="text-[9px] font-bold">{new Date(member.joiningDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                 <Calendar className="w-3 h-3 text-[#D4AF37]" />
@@ -170,15 +174,15 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
           </div>
         </div>
 
-        {/* TOTAL SAVINGS BALANCE CARD */}
-        <div className="bg-gradient-to-br from-[#6D0000] to-[#400000] rounded-[22px] p-5 relative overflow-hidden shadow-[0_10px_25px_rgba(109,0,0,0.3)] min-h-[200px] flex flex-col justify-between">
+        {/* TOTAL BALANCE CARD */}
+        <div className="bg-gradient-to-br from-[#6D0000] to-[#400000] rounded-[22px] p-5 relative overflow-hidden shadow-[0_10px_25px_rgba(109,0,0,0.3)] min-h-[220px] flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-48 h-48 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
           
           {/* Top Section */}
           <div className="flex justify-between items-start z-10 relative">
             <div>
               <p className="text-white/80 text-xs font-medium tracking-wide mb-1 flex items-center gap-1.5">
-                Total Savings Balance (Live)
+                Total Balance
               </p>
               <h2 className="text-[32px] font-black text-white tracking-tight leading-none mb-1.5 flex items-start gap-1">
                 <span className="text-xl mt-1 opacity-90">₹</span>
@@ -189,14 +193,14 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
               </p>
             </div>
             
-            {/* 3D Gold Piggy Bank */}
+            {/* 3D Gold Piggy Bank styling */}
             <div className="relative mt-2 mr-2">
               <div className="absolute inset-0 bg-[#D4AF37] blur-lg opacity-40 rounded-full scale-150"></div>
-              <PiggyBank className="w-14 h-14 text-[#F9E596] drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] relative z-10" fill="currentColor" strokeWidth={1} />
+              <PiggyBank className="w-16 h-16 text-[#F9E596] drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] relative z-10" fill="currentColor" strokeWidth={1} />
             </div>
           </div>
 
-          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent my-3"></div>
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent my-4"></div>
 
           {/* Bottom Section */}
           <div className="flex justify-between items-end z-10 relative">
@@ -204,16 +208,16 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
               <p className="text-white/60 text-[9px] font-bold uppercase tracking-wider mb-0.5">Account No.</p>
               <div className="flex items-center gap-1.5">
                 <p className="text-white font-mono font-bold tracking-widest text-sm">{member.id.replace('member-', '5010')}</p>
-                <div className="w-5 h-5 rounded border border-white/20 flex items-center justify-center text-[#D4AF37] bg-white/5 backdrop-blur">
+                <div className="w-5 h-5 rounded border border-white/20 flex items-center justify-center text-[#D4AF37] bg-white/5 backdrop-blur cursor-pointer hover:bg-white/10 transition">
                   <FileText className="w-3 h-3" />
                 </div>
               </div>
             </div>
             <div className="text-right flex flex-col items-end">
               <p className="text-white/60 text-[9px] font-bold uppercase tracking-wider mb-1 flex items-center justify-end gap-1.5">
-                 <Landmark className="w-3 h-3 text-[#D4AF37]" /> Commitment
+                 <Landmark className="w-3 h-3 text-[#D4AF37]" /> Account Type
               </p>
-              <p className="text-white font-bold text-sm tracking-wide">₹{member.monthlyDeposit} / Month</p>
+              <p className="text-white font-bold text-sm tracking-wide">Savings Account</p>
             </div>
           </div>
         </div>
@@ -221,77 +225,177 @@ export default function SavingsAccount({ members, deposits, loans, language }: P
         {/* STATISTICS CARDS (3 Equal Cards) */}
         <div className="grid grid-cols-3 gap-3">
           {/* Total Deposit */}
-          <div className="bg-white rounded-[22px] p-3.5 flex flex-col items-center text-center shadow-[0_4px_15px_rgba(0,0,0,0.04)] border border-green-100">
-            <div className="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center text-green-600 mb-1.5">
-              <Download className="w-4 h-4" />
+          <div className="bg-white rounded-[22px] p-3.5 flex flex-col items-center text-center shadow-[0_8px_20px_rgba(34,197,94,0.12)] border border-green-100">
+            <div className="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center text-green-500 mb-2">
+              <Download className="w-5 h-5" />
             </div>
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mb-0.5">Total Deposit</p>
-            <p className="font-bold text-gray-900 text-xs">₹ {totalBalance.toLocaleString('en-IN')}</p>
+            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mb-1">Total Deposit</p>
+            <p className="font-bold text-gray-900 text-sm">₹ {totalBalance.toLocaleString('en-IN')}</p>
           </div>
 
-          {/* Deposits Count */}
-          <div className="bg-white rounded-[22px] p-3.5 flex flex-col items-center text-center shadow-[0_4px_15px_rgba(0,0,0,0.04)] border border-purple-100">
-            <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 mb-1.5">
-              <Book className="w-4 h-4" />
+          {/* Interest Earned */}
+          <div className="bg-white rounded-[22px] p-3.5 flex flex-col items-center text-center shadow-[0_8px_20px_rgba(249,115,22,0.12)] border border-orange-100">
+            <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 mb-2">
+              <TrendingUp className="w-5 h-5" />
             </div>
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mb-0.5">Paid Months</p>
-            <p className="font-bold text-gray-900 text-xs">{totalDepositsCount} Months</p>
+            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mb-1">Interest Earned</p>
+            <p className="font-bold text-gray-900 text-sm">₹ {interestEarned.toLocaleString('en-IN')}</p>
           </div>
 
-          {/* Outstanding Loan (Default 0) */}
-          <div className="bg-white rounded-[22px] p-3.5 flex flex-col items-center text-center shadow-[0_4px_15px_rgba(0,0,0,0.04)] border border-blue-100">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 mb-1.5">
-              <Wallet className="w-4 h-4" />
+          {/* Last Transaction */}
+          <div className="bg-white rounded-[22px] p-3.5 flex flex-col items-center text-center shadow-[0_8px_20px_rgba(59,130,246,0.12)] border border-blue-100">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 mb-2">
+              <Calendar className="w-5 h-5" />
             </div>
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mb-0.5">Loan Balance</p>
-            <p className="font-bold text-blue-700 text-xs">₹ 0</p>
+            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-tight mb-1">Last Trxn</p>
+            <p className="font-bold text-blue-700 text-[11px] leading-tight">
+              {lastTransaction ? (lastTransaction.date || lastTransaction.timestamp || 'No Data') : 'No Data'}
+            </p>
           </div>
         </div>
 
-        {/* LIVE GOOGLE SHEET DEPOSITS LIST FOR THIS MEMBER */}
-        <div className="bg-white rounded-[22px] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-100">
-          <div className="flex items-center justify-between mb-3 border-b border-gray-100 pb-2.5">
-            <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000] flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#D4AF37]" />
-              Deposit History ({memberSheetDeposits.length || memberLocalDeposits.length})
-            </h3>
-            {loadingSheet && <Loader2 className="w-4 h-4 animate-spin text-[#5A0000]" />}
-          </div>
+        {/* PREMIUM EMI ALERT CARD (Only when active loan exists) */}
+        {firstPendingEmi && activeLoan && (
+          <div className="w-full bg-white rounded-[24px] p-4 sm:p-5 flex flex-col relative shadow-[0_8px_30px_rgba(109,0,0,0.12)] border border-red-50 overflow-hidden">
+            {/* Top Row: Icon & Titles & Badge */}
+            <div className="flex justify-between items-start pl-2">
+              <div className="flex gap-3 items-center">
+                {/* Glowing Bell */}
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-red-50 to-red-100 border border-red-100 flex items-center justify-center text-[#6D0000] shrink-0 relative shadow-[0_4px_15px_rgba(220,38,38,0.2)]">
+                  <BellRing className="w-5 h-5" fill="currentColor" fillOpacity={0.2} />
+                  <span className="absolute top-0 right-0 sm:top-1 sm:right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full animate-ping"></span>
+                  <span className="absolute top-0 right-0 sm:top-1 sm:right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                </div>
+                
+                <div>
+                  <h3 className="text-[13px] sm:text-[15px] font-black text-[#6D0000] tracking-wide uppercase leading-tight">EMI Due Alert</h3>
+                  <p className="text-[10px] sm:text-[11px] text-gray-500 font-medium mt-0.5">Loan EMI Pending</p>
+                </div>
+              </div>
 
-          <div className="space-y-2">
-            {memberSheetDeposits.length > 0 ? (
-              memberSheetDeposits.map((d, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 bg-[#FAF8F4] rounded-xl border border-gray-100">
-                  <div>
-                    <p className="text-xs font-bold text-gray-900">{d.month || 'Deposit'}</p>
-                    <p className="text-[10px] text-gray-500">{d.date || '—'} • {d.paymentMode || 'Cash'}</p>
+              {/* Due Badge */}
+              <div className="bg-red-50 px-2 py-1 sm:px-2.5 sm:py-1 rounded-full flex items-center gap-1 border border-red-100">
+                <Clock className="w-3 h-3 text-[#6D0000]" />
+                <span className="text-[8px] sm:text-[9px] font-bold text-[#6D0000] uppercase">Due Today</span>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="w-full h-[1px] bg-gradient-to-r from-red-50 via-red-100 to-red-50 my-3 sm:my-4 pl-2"></div>
+
+            {/* Bottom Section */}
+            <div className="flex flex-col gap-4 pl-2 pr-2">
+              <div className="flex items-center justify-center gap-8">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Calendar className="w-3.5 h-3.5 text-[#6D0000]" />
+                    <p className="text-[10px] text-gray-500 font-medium">Due Date</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-green-700">+₹{Number(d.amount).toLocaleString('en-IN')}</p>
-                    <span className="text-[8px] font-bold px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full inline-block mt-0.5">
-                      {d.status || 'Paid'}
-                    </span>
-                  </div>
+                  <p className="text-[13px] font-bold text-gray-900">{firstPendingEmi.monthKey}-10</p>
                 </div>
-              ))
-            ) : memberLocalDeposits.length > 0 ? (
-              memberLocalDeposits.map((d, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 bg-[#FAF8F4] rounded-xl border border-gray-100">
-                  <div>
-                    <p className="text-xs font-bold text-gray-900">{d.monthKey}</p>
-                    <p className="text-[10px] text-gray-500">{d.date}</p>
+
+                <div className="w-[1px] h-8 bg-red-100"></div>
+
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Wallet className="w-3.5 h-3.5 text-[#6D0000]" />
+                    <p className="text-[10px] text-gray-500 font-medium">EMI Amount</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-green-700">+₹{d.amount.toLocaleString('en-IN')}</p>
-                    <span className="text-[8px] font-bold px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full inline-block mt-0.5">
-                      Paid
-                    </span>
-                  </div>
+                  <p className="text-[15px] font-black text-[#6D0000]">₹{firstPendingEmi.totalAmount.toLocaleString('en-IN')}</p>
                 </div>
-              ))
-            ) : (
-              <p className="text-center py-6 text-xs text-gray-400 font-medium">Koi deposit history nahi mili</p>
-            )}
+              </div>
+
+              <button className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#6D0000] to-[#A30000] text-white text-[13px] font-bold rounded-xl shadow-[0_8px_15px_rgba(109,0,0,0.3)] hover:scale-[1.02] transition-transform">
+                PAY NOW <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* QUICK SERVICES & LINKS */}
+        <div className="pt-2">
+          <h3 className="font-bold text-[13px] text-gray-900 mb-3 px-1">Quick Links</h3>
+          
+          <div className="bg-white rounded-[22px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-50 overflow-hidden divide-y divide-gray-50">
+            
+            <button onClick={() => navigate('/transactions')} className="w-full flex items-center justify-between p-4 hover:bg-[#FAF8F4] transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-[13px] text-gray-900 mb-0.5">Mini Statement</h4>
+                  <p className="text-[10px] text-gray-500">View recent transactions</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </button>
+            
+            <button onClick={() => navigate('/deposits')} className="w-full flex items-center justify-between p-4 hover:bg-[#FAF8F4] transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                  <Book className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-[13px] text-gray-900 mb-0.5">Passbook</h4>
+                  <p className="text-[10px] text-gray-500">View passbook transactions</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </button>
+            
+            <button onClick={() => navigate('/deposits')} className="w-full flex items-center justify-between p-4 hover:bg-[#FAF8F4] transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform">
+                  <Download className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-[13px] text-gray-900 mb-0.5">Download Statement</h4>
+                  <p className="text-[10px] text-gray-500">Download account statement</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </button>
+
+            <button onClick={() => navigate('/reports')} className="w-full flex items-center justify-between p-4 hover:bg-[#FAF8F4] transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-[13px] text-gray-900 mb-0.5">Interest History</h4>
+                  <p className="text-[10px] text-gray-500">Track all interest payments</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </button>
+
+            <button onClick={() => navigate('/loans')} className="w-full flex items-center justify-between p-4 hover:bg-[#FAF8F4] transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-500 group-hover:scale-110 transition-transform">
+                  <Wallet className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-[13px] text-gray-900 mb-0.5">Loan Details</h4>
+                  <p className="text-[10px] text-gray-500">View active & past loans</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </button>
+            
+            <button onClick={() => navigate('/more')} className="w-full flex items-center justify-between p-4 hover:bg-[#FAF8F4] transition-colors group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 group-hover:scale-110 transition-transform">
+                  <Settings className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-[13px] text-gray-900 mb-0.5">Account Settings</h4>
+                  <p className="text-[10px] text-gray-500">Manage member preferences</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </button>
+
           </div>
         </div>
 
