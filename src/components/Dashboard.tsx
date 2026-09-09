@@ -368,15 +368,15 @@ export default function Dashboard({
         </div>
 
         {/* 5 Small Pagination Dots */}
-        <div className="flex items-center justify-center gap-2 mt-3">
+        <div className="flex items-center justify-center gap-1.5 mt-2.5 mb-1">
           {dashboardCards.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setActiveCardIndex(idx)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
+              className={`h-1.5 min-h-[6px] max-h-[6px] rounded-full transition-all duration-300 p-0 border-0 outline-none cursor-pointer ${
                 activeCardIndex === idx
-                  ? 'w-7 bg-[#4a0404] border border-[#c5a059]'
-                  : 'w-2.5 bg-[#4a0404]/30 hover:bg-[#4a0404]/60'
+                  ? 'w-5 min-w-[20px] bg-[#4a0404]'
+                  : 'w-1.5 min-w-[6px] max-w-[6px] bg-[#4a0404]/30 hover:bg-[#4a0404]/60'
               }`}
               title={`Card ${idx + 1}`}
             />
