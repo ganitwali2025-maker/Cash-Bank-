@@ -571,23 +571,11 @@ export default function Dashboard({
           </div>
         </div>
 
-        {!isAfter15th && !showPendingAnyway ? (
-          <div className="bg-amber-50/90 border border-amber-200/90 rounded-[20px] p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div>
-              <p className="text-xs font-bold text-amber-900">
-                📅 Har mahine 15 tarik ke baad pending list yahan automatic dikhegi.
-              </p>
-              <p className="text-[10px] text-amber-700 font-medium mt-0.5">
-                Current Date: {currentDayOfMonth} Sep (15th se pehle regular deposit time active hai)
-              </p>
-            </div>
-            <button
-              onClick={() => setShowPendingAnyway(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white rounded-xl text-[10px] font-bold shadow hover:bg-amber-700 transition-all shrink-0 cursor-pointer"
-            >
-              <Eye size={12} />
-              View Pending List ({pendingMembersList.length})
-            </button>
+        {!isAfter15th ? (
+          <div className="bg-amber-50/90 border border-amber-200/90 rounded-[20px] p-4 text-center">
+            <p className="text-xs font-bold text-amber-900">
+              📌 Har mahine 15 tarik ke baad pending deposit list yahan automatic dikhegi.
+            </p>
           </div>
         ) : pendingMembersList.length === 0 ? (
           <div className="bg-green-50 border border-green-200 rounded-[20px] p-4 text-center">
