@@ -172,6 +172,27 @@ export default function Dashboard({
 
   const liveAvailableFund = Math.max(0, liveTotalDeposit + totalInterestEarned + totalPrincipalPaidBack - totalLoansDisbursed);
 
+  // Members pending for current month (September 2026)
+  const pendingMembersList = members.filter(m => {
+    const mNum = String(m.id).match(/(\d+)/)?.[1];
+    const paidInSheet = sheetDeposits.some(d => {
+      if (!d) return false;
+      const dMemId = String(d.memberId || '').toUpperCase();
+      const matchesId = dMemId === m.id.toUpperCase() || (mNum && (dMemId === `M00${mNum}` || dMemId === `M0${mNum}` || dMemId === `M${mNum}`));
+      const matchesName = d.name && d.name.toLowerCase().trim() === m.name.toLowerCase().trim();
+      if (!matchesId && !matchesName) return false;
+
+      const mStr = String(d.month || '').toLowerCase();
+      if (mStr.includes('september') || mStr.includes('sep')) return true;
+      const mDate = new Date(d.month || d.date);
+      if (!isNaN(mDate.getTime())) {
+        return mDate.toLocaleDateString('en-US', { month: 'long' }).toLowerCase() === 'september';
+      }
+      return false;
+    });
+    return !paidInSheet;
+  });
+
   const todayStr = new Date().toISOString().split('T')[0];
 
   const [activeCardIndex, setActiveCardIndex] = React.useState(0);
@@ -462,6 +483,72 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* PENDING DEPOSITS NOTIFICATION ALERT */}
+      <div className="mt-4 pt-2">
+        <div className="flex items-center justify-between px-1 mb-3">
+          <div className="flex items-center gap-2">
+            <div className="relative flex items-center justify-center">
+              <Bell size={18} className="text-[#D97706] animate-bounce" fill="#D97706" fillOpacity={0.2} />
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
+            </div>
+            <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000]">
+              Pending Deposit Alerts
+            </h3>
+          </div>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+            {pendingMembersList.length} Pending
+          </span>
+        </div>
+
+        {pendingMembersList.length === 0 ? (
+          <div className="bg-green-50 border border-green-200 rounded-[20px] p-4 text-center">
+            <p className="text-xs font-bold text-green-700">🎉 Saare members ka September deposit receive ho gaya hai!</p>
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {pendingMembersList.map(member => (
+              <div 
+                key={member.id}
+                className="bg-white rounded-[20px] p-3.5 border border-amber-200/80 shadow-[0_4px_15px_rgba(217,119,6,0.06)] flex items-center justify-between hover:shadow-md transition-all"
+              >
+                {/* Member Info */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-[#5A0000] font-black text-sm shrink-0">
+                    {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-gray-900 leading-tight uppercase">{member.name}</h4>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                        September 2026
+                      </span>
+                      <span className="text-[9px] font-bold text-gray-500">
+                        ID: {member.id.replace('member-', 'MB-')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Amount & Action Button */}
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-xs font-black text-[#5A0000]">₹{member.monthlyDeposit}</p>
+                    <span className="text-[8px] font-bold text-amber-600 bg-amber-50 px-1 py-0.5 rounded">
+                      Pending
+                    </span>
+                  </div>
+                  <button 
+                    onClick={() => navigate('/deposit')}
+                    className="px-3 py-1.5 rounded-xl bg-[#5A0000] text-[#D4AF37] text-[10px] font-bold shadow hover:bg-[#4a0404] transition-colors"
+                  >
+                    + Add
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Spacer for bottom navigation and scroll space */}
       <div className="h-48 w-full"></div>
