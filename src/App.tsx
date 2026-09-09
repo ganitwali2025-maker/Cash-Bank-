@@ -97,6 +97,56 @@ export default function App() {
   // 3. Custom Toast System State
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
+  const SHEET_URL =
+    'https://script.google.com/macros/s/AKfycbylJG300iJuV4Ue7qSPFFJOeP8V9n6gO2ZWihN69zwmoTsHwUTNHArSwrUfrV7H-j2aTA/exec';
+
+  // Live Sync with Google Sheet for Deposits across the entire App
+  useEffect(() => {
+    const fetchLiveDeposits = async () => {
+      try {
+        const res = await fetch(`${SHEET_URL}?action=getDeposits`);
+        const json = await res.json();
+        if (json.status === 'success' && Array.isArray(json.data)) {
+          const liveDeposits: Deposit[] = json.data.map((d: any, idx: number) => {
+            let mId = d.memberId || 'member-1';
+            const mNumMatch = String(d.memberId).match(/(\d+)/);
+            if (mNumMatch) {
+              mId = `member-${parseInt(mNumMatch[1], 10)}`;
+            } else if (d.name) {
+              const foundM = members.find(m => m.name.toLowerCase().trim() === String(d.name).toLowerCase().trim());
+              if (foundM) mId = foundM.id;
+            }
+
+            let mKey = '2026-09';
+            if (d.month) {
+              const dateObj = new Date(d.month);
+              if (!isNaN(dateObj.getTime())) {
+                const yr = dateObj.getFullYear();
+                const mo = String(dateObj.getMonth() + 1).padStart(2, '0');
+                mKey = `${yr}-${mo}`;
+              }
+            }
+
+            return {
+              id: `sheet_${d.sn || idx}`,
+              memberId: mId,
+              monthKey: mKey,
+              amount: Number(d.amount || 0),
+              date: d.date || '2026-09-09',
+              status: 'Paid'
+            };
+          });
+
+          setDeposits(liveDeposits);
+        }
+      } catch (err) {
+        console.error('App live sheet sync error:', err);
+      }
+    };
+
+    fetchLiveDeposits();
+  }, [members]);
+
   // Auto-save data changes to localStorage
   useEffect(() => {
     localStorage.setItem('ub_members_v3', JSON.stringify(members));

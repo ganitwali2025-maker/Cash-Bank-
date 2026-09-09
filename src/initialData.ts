@@ -15,24 +15,7 @@ export const initialMembers: Member[] = [
 ];
 
 export const getInitialDeposits = (): Deposit[] => {
-  const deposits: Deposit[] = [];
-  // Months: March, April, May, June, July 2026
-  const months = ['2026-03', '2026-04', '2026-05', '2026-06', '2026-07'];
-  
-  initialMembers.forEach(member => {
-    months.forEach((month, idx) => {
-      deposits.push({
-        id: `${member.id}_${month}`,
-        memberId: member.id,
-        monthKey: month,
-        amount: member.monthlyDeposit,
-        date: `${month}-${10 + (idx % 5)}`,
-        status: 'Paid'
-      });
-    });
-  });
-  
-  return deposits;
+  return [];
 };
 
 export const getInitialLoans = (): Loan[] => {
