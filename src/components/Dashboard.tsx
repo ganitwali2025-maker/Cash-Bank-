@@ -385,12 +385,6 @@ export default function Dashboard({
       </div>
 
 
-      </div>
-
-
-
-
-
       {/* QUICK ACTIONS */}
       <div className="pt-2">
         <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000] px-1 mb-3">Quick Actions</h3>
