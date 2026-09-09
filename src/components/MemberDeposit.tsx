@@ -37,9 +37,15 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
   // Form state
   const [selectedMemberId, setSelectedMemberId] = useState<string>(members.length > 0 ? members[0].id : '');
   const [paymentMode, setPaymentMode] = useState<'Cash' | 'UPI' | 'A/C Transfer'>('Cash');
+  const initialDate = new Date().toISOString().split('T')[0];
+  const getMonthYear = (dStr: string) => {
+    const d = new Date(dStr);
+    return isNaN(d.getTime()) ? 'September 2026' : d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  };
+
+  const [date, setDate] = useState<string>(initialDate);
+  const [month, setMonth] = useState<string>(getMonthYear(initialDate));
   const [depositType, setDepositType] = useState<'Saving Account' | 'Loan Account'>('Saving Account');
-  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [month, setMonth] = useState<string>('August 2026');
   const [amount, setAmount] = useState<string>('500');
   const [remark, setRemark] = useState<string>('Monthly Saving Deposit');
 
@@ -189,7 +195,11 @@ const MemberDeposit: React.FC<MemberDepositProps> = ({ members }) => {
                 <input 
                   type="date" 
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => {
+                    const dVal = e.target.value;
+                    setDate(dVal);
+                    setMonth(getMonthYear(dVal));
+                  }}
                   className="w-full text-sm font-bold text-[#111827] outline-none bg-transparent appearance-none" 
                 />
               </div>
