@@ -456,20 +456,13 @@ export default function Dashboard({
       {/* QUICK ACTIONS */}
       <div className="pt-2">
         <h3 className="font-bold text-xs uppercase tracking-wider text-[#5A0000] px-1 mb-3">Quick Actions</h3>
-        <div className="grid grid-cols-4 sm:grid-cols-6 gap-3 px-1">
+        <div className="grid grid-cols-5 sm:grid-cols-5 gap-2 sm:gap-3 px-1">
           {[
             { icon: <UserPlus className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 mb-1.5" />, label: 'Add Member', route: '/members' },
             { icon: <Download className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 mb-1.5" />, label: 'Deposit', route: '/deposit' },
             { icon: <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 text-red-500 mb-1.5" />, label: 'Withdraw', route: '/withdraw' },
-            { icon: <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500 mb-1.5" />, label: 'EMI Collection', route: '/emis' },
             { icon: <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 mb-1.5" />, label: 'Loan', route: '/loans' },
-            { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500 mb-1.5" />, label: 'Statement' },
-            { icon: <PieChart className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 mb-1.5" />, label: 'Reports', route: '/reports' },
-            { icon: <ArrowRightLeft className="w-5 h-5 sm:w-6 sm:h-6 text-teal-500 mb-1.5" />, label: 'Transactions', route: '/transactions' },
-            { icon: <Book className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500 mb-1.5" />, label: 'Passbook' },
-            { icon: <QrCode className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500 mb-1.5" />, label: 'QR Payment' },
-            { icon: <Percent className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500 mb-1.5" />, label: 'Interest' },
-            { icon: <LayoutGrid className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500 mb-1.5" />, label: 'More', route: '/more' },
+            { icon: <Book className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500 mb-1.5" />, label: 'Passbook', route: '/members' },
           ].map((action, i) => (
             <button 
               key={i} 
