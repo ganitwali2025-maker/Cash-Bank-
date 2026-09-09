@@ -633,13 +633,13 @@ export default function Dashboard({
               >
                 {/* Member Info */}
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-[#5A0000] font-black text-sm shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-[#0B1538] font-black text-sm shrink-0">
                     {member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                   </div>
                   <div>
                     <h4 className="text-xs font-black text-gray-900 leading-tight uppercase">{member.name}</h4>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                      <span className="text-[9px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">
                         September 2026
                       </span>
                       <span className="text-[9px] font-bold text-gray-500">
@@ -652,14 +652,14 @@ export default function Dashboard({
                 {/* Amount & Direct Pay Action Button */}
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <p className="text-xs font-black text-[#5A0000]">₹{member.monthlyDeposit}</p>
-                    <span className="text-[8px] font-bold text-amber-600 bg-amber-50 px-1 py-0.5 rounded">
+                    <p className="text-xs font-black text-[#0B1538]">₹{member.monthlyDeposit}</p>
+                    <span className="text-[8px] font-bold text-rose-600 bg-rose-50 px-1 py-0.5 rounded border border-rose-100">
                       Pending
                     </span>
                   </div>
                   <button 
                     onClick={() => openPayModal(member)}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#5A0000] to-[#800000] text-[#D4AF37] text-[10px] font-black tracking-wider uppercase shadow hover:brightness-110 transition-all flex items-center gap-1 cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#0B1538] via-[#0E1B4A] to-[#4F46E5] text-[#FCD34D] text-[10px] font-black tracking-wider uppercase shadow hover:brightness-110 transition-all flex items-center gap-1 cursor-pointer"
                   >
                     PAY
                   </button>
@@ -673,16 +673,16 @@ export default function Dashboard({
       {/* DIRECT PAY MODAL POPUP */}
       {payModalMember && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200/50 space-y-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-indigo-100 space-y-4">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-[#5A0000]/10 flex items-center justify-center text-[#5A0000]">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#4F46E5]">
                   <CreditCard size={20} />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm text-[#5A0000] uppercase">Pay Deposit</h3>
-                  <p className="text-[11px] font-bold text-gray-700">{payModalMember.name} • <span className="text-amber-700">September 2026</span></p>
+                  <h3 className="font-black text-sm text-[#0B1538] uppercase">Pay Deposit</h3>
+                  <p className="text-[11px] font-bold text-gray-700">{payModalMember.name} • <span className="text-indigo-600">September 2026</span></p>
                 </div>
               </div>
               <button 
@@ -704,7 +704,7 @@ export default function Dashboard({
                   type="number"
                   value={payAmount}
                   onChange={(e) => setPayAmount(Number(e.target.value))}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-[#5A0000]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-[#4F46E5]"
                   required
                 />
               </div>
@@ -717,7 +717,7 @@ export default function Dashboard({
                   type="date"
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:border-[#5A0000]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:border-[#4F46E5]"
                   required
                 />
               </div>
@@ -734,7 +734,7 @@ export default function Dashboard({
                       onClick={() => setPayMode(mode)}
                       className={`py-2 px-1 text-center rounded-xl text-[10px] font-bold border transition-all cursor-pointer ${
                         payMode === mode
-                          ? 'bg-[#5A0000] text-[#D4AF37] border-[#5A0000] shadow-sm'
+                          ? 'bg-[#0B1538] text-[#FCD34D] border-[#0B1538] shadow-sm'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
                       }`}
                     >
@@ -757,7 +757,7 @@ export default function Dashboard({
                 <button
                   type="submit"
                   disabled={isSubmittingPay}
-                  className="w-full py-2.5 rounded-xl bg-[#5A0000] text-[#D4AF37] font-black text-xs shadow-md hover:bg-[#4a0404] transition-colors uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#0B1538] via-[#0E1B4A] to-[#4F46E5] text-[#FCD34D] font-black text-xs shadow-md hover:brightness-110 transition-colors uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   {isSubmittingPay ? (
                     <span>Submitting...</span>
