@@ -72,8 +72,8 @@ export default function App() {
     }
   };
   
-  // Set default selected month to July 2026 based on the local time (2026-07)
-  const [selectedMonth, setSelectedMonth] = useState<string>('2026-07');
+  // Set default selected month to September 2026 (2026-09)
+  const [selectedMonth, setSelectedMonth] = useState<string>('2026-09');
   
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);

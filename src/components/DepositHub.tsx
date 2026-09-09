@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -12,6 +12,9 @@ import {
 import { Member, Deposit, LanguageType } from '../types';
 import { formatMonthLabel } from './Header';
 
+const SHEET_URL =
+  'https://script.google.com/macros/s/AKfycbylJG300iJuV4Ue7qSPFFJOeP8V9n6gO2ZWihN69zwmoTsHwUTNHArSwrUfrV7H-j2aTA/exec';
+
 interface DepositHubProps {
   members: Member[];
   deposits: Deposit[];
@@ -21,20 +24,52 @@ interface DepositHubProps {
 
 const DepositHub: React.FC<DepositHubProps> = ({ members, deposits, selectedMonth, language }) => {
   const navigate = useNavigate();
+  const [sheetDeposits, setSheetDeposits] = useState<any[]>([]);
 
-  // Calculations
-  const totalDeposit = deposits
-    .filter(d => d.status === 'Paid')
-    .reduce((sum, d) => sum + d.amount, 0);
+  useEffect(() => {
+    fetch(`${SHEET_URL}?action=getDeposits`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          setSheetDeposits(data.data);
+        }
+      })
+      .catch(err => console.error('Error fetching deposits in DepositHub:', err));
+  }, []);
 
-  const currentMonthDeposits = deposits
-    .filter(d => d.monthKey === selectedMonth && d.status === 'Paid')
-    .reduce((sum, d) => sum + d.amount, 0);
+  // Determine current active month (September 2026)
+  const now = new Date();
+  const currentMonthKey = '2026-09';
+  const currentMonthName = 'September';
 
+  // Live Total Deposit (All Time Total)
+  const totalDeposit = sheetDeposits.length > 0
+    ? sheetDeposits.reduce((sum, d) => sum + Number(d.amount || 0), 0)
+    : deposits.reduce((sum, d) => sum + d.amount, 0);
+
+  // Live September Month Deposits (e.g. ₹3,000)
+  const SeptemberDeposits = sheetDeposits.filter(d => {
+    if (!d) return false;
+    const mStr = String(d.month || '').toLowerCase();
+    if (mStr.includes('september') || mStr.includes('sep')) return true;
+    const mDate = new Date(d.month || d.date);
+    if (!isNaN(mDate.getTime())) {
+      return mDate.toLocaleDateString('en-US', { month: 'long' }).toLowerCase() === 'september';
+    }
+    return false;
+  });
+
+  const currentMonthDeposits = sheetDeposits.length > 0
+    ? SeptemberDeposits.reduce((sum, d) => sum + Number(d.amount || 0), 0)
+    : deposits.filter(d => d.monthKey === currentMonthKey && d.status === 'Paid').reduce((sum, d) => sum + d.amount, 0);
+
+  // Expected monthly savings for 10 members = ₹5,000
   const expectedThisMonth = members.reduce((sum, m) => sum + m.monthlyDeposit, 0);
-  const dueThisMonth = expectedThisMonth - currentMonthDeposits;
+  
+  // Pending / Due Amount = Expected (₹5,000) - Paid (₹3,000) = ₹2,000
+  const dueThisMonth = Math.max(0, expectedThisMonth - currentMonthDeposits);
 
-  const displayMonth = formatMonthLabel(selectedMonth, language);
+  const displayMonth = formatMonthLabel(currentMonthKey, language);
 
   return (
     <div className="font-sans text-[#111827] space-y-6 pb-24 max-w-3xl mx-auto w-full animate-fade-in-up">
@@ -84,7 +119,7 @@ const DepositHub: React.FC<DepositHubProps> = ({ members, deposits, selectedMont
           </div>
           <div>
             <h3 className="text-[13px] font-semibold text-[#111827] mb-1">Due Amount</h3>
-            <p className="text-2xl sm:text-3xl font-bold text-[#D97706] leading-tight">₹ {dueThisMonth > 0 ? dueThisMonth.toLocaleString('en-IN') : '0'}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#D97706] leading-tight">₹ {dueThisMonth.toLocaleString('en-IN')}</p>
             <p className="text-[11px] text-[#6B7280] mt-1">Due for this month</p>
           </div>
         </div>
