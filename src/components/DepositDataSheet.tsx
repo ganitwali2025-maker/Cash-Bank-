@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   ArrowLeft, ChevronRight, Loader2, RefreshCw,
-  AlertCircle, FileSpreadsheet, Wallet, Landmark,
-  FileText, PiggyBank, HandCoins, FolderOpen, Folder,
-  Calendar, Users, IndianRupee
+  AlertCircle, Wallet, Landmark,
+  PiggyBank, HandCoins, FolderOpen,
+  Calendar, Users, IndianRupee, Download
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Member } from '../types';
@@ -131,6 +131,83 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members }) => {
   const monthRows = openMonth ? (monthMap[openMonth] || []) : [];
   const monthTotal = monthRows.reduce((s, d) => s + Number(d.amount || 0), 0);
 
+  // Download PDF Handler
+  const handleDownloadPDF = () => {
+    if (!openMonth || monthRows.length === 0) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Pop-up blocked! PDF download ke liye pop-ups allow karein.');
+      return;
+    }
+
+    const rowsHtml = monthRows.map((d, i) => `
+      <tr>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${d.sn || i + 1}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${d.memberId || '—'}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:left; font-weight:bold;">${d.name || '—'}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${d.monthDisplay}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${d.dateDisplay}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:right; font-weight:bold;">₹${Number(d.amount).toLocaleString('en-IN')}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${d.paymentMode || '—'}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${d.depositType || '—'}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:left;">${d.remark || '—'}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center; font-weight:bold; color:#16a34a;">${d.status || 'Paid'}</td>
+        <td style="padding:6px; border:1px solid #ddd; text-align:center; font-size:10px;">${d.timestamp ? new Date(d.timestamp).toLocaleString('en-IN') : '—'}</td>
+      </tr>
+    `).join('');
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>CASH BANK - ${openMonth} Deposit Statement</title>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; color: #111827; }
+            .header { text-align: center; border-bottom: 2px solid #4a0404; padding-bottom: 12px; margin-bottom: 16px; }
+            .header h1 { margin: 0; color: #4a0404; font-size: 24px; font-weight: 800; letter-spacing: 0.5px; }
+            .header p { margin: 4px 0 0 0; color: #4b5563; font-size: 13px; font-weight: 600; }
+            .summary { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; font-weight: 700; background: #faf5eb; padding: 10px 16px; border-radius: 8px; border: 1px solid #e5d5b7; }
+            table { width: 100%; border-collapse: collapse; font-size: 11px; }
+            th { background-color: #4a0404; color: #c5a059; padding: 8px; border: 1px solid #4a0404; text-align: center; font-weight: 700; }
+            tr:nth-child(even) { background-color: #f9fafb; }
+            @media print {
+              body { padding: 0; }
+              @page { size: landscape; margin: 10mm; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>CASH BANK</h1>
+            <p>Deposit Statement — ${openMonth}</p>
+          </div>
+          <div class="summary">
+            <span>Total Records: ${monthRows.length}</span>
+            <span>Total Amount: ₹${monthTotal.toLocaleString('en-IN')}</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>SN</th><th>Member ID</th><th>Member Name</th><th>Month</th><th>Date</th>
+                <th>Amount (Rs)</th><th>Payment Mode</th><th>Deposit Type</th><th>Remark</th>
+                <th>Status</th><th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+          <script>
+            window.onload = function() {
+              window.print();
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   // ═══════════════════════════════════════════
   // SCREEN 1: Month Folder View
   // ═══════════════════════════════════════════
@@ -252,9 +329,16 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members }) => {
             <p className="text-[10px] text-[#6B7280] mt-0.5">{monthRows.length} records • ₹{monthTotal.toLocaleString('en-IN')}</p>
           </div>
         </div>
-        <div className={`px-2.5 py-1 rounded-full ${color.bg} border ${color.border}`}>
-          <Calendar size={14} className={color.icon} />
-        </div>
+
+        {/* Download PDF Button in Top Header */}
+        <button
+          onClick={handleDownloadPDF}
+          title="Download PDF Statement"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#4a0404] text-[#c5a059] font-bold text-xs shadow-md hover:bg-[#3a0303] active:scale-95 transition-all"
+        >
+          <Download size={15} />
+          <span>Download PDF</span>
+        </button>
       </div>
 
       {/* Content - scrolls with page */}
@@ -319,16 +403,6 @@ const DepositDataSheet: React.FC<DepositDataSheetProps> = ({ members }) => {
               ))}
             </tbody>
           </table>
-        </div>
-
-        {/* Export Buttons */}
-        <div className="flex gap-3 pb-4">
-          <button className="flex-1 py-3.5 rounded-xl border-2 border-[#4a0404] text-[#4a0404] font-bold flex items-center justify-center gap-2 hover:bg-[#faf5eb] transition-colors">
-            <FileText size={17} /> Export PDF
-          </button>
-          <button className="flex-1 py-3.5 rounded-xl bg-[#4a0404] text-[#c5a059] border border-[#c5a059]/30 font-bold flex items-center justify-center gap-2 shadow-lg hover:bg-[#3a0303] transition-colors">
-            <FileSpreadsheet size={17} /> Export Excel
-          </button>
         </div>
 
       </div>
